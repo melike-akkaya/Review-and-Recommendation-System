@@ -9,12 +9,16 @@ npm -version
 v18.17.1
 
 back end:
+jdk21 kullanıldı
 
 database:
 https://www.youtube.com/watch?v=0n41UTkOBb0
 https://www.enterprisedb.com/downloads/postgres-postgresql-downloads buradan 16.2'yi indirmeniz gerekiyor
 kullanıcı adı "postgres" şifre "oguzhan" olmalı
+register server denip aşağıdaki ayarlara sahip bir server oluşturulmalı:
 ![image](https://github.com/HU-BBM384-24/bbm384-project-sombrero/assets/91731736/f0fd10e9-2d01-4e7a-a53b-75caf5543550)
+server'ın içindeki Database satırına sağ tıklayıp "rrss" isimli bir database oluşturulamlı
+oluşturulan database üzerine sağ tıklayıp "restore" denmeli ve paylaşılan .sql uzantılı dosya buraya eklenmeli
 
 
 projeyi çalıştırırken:
