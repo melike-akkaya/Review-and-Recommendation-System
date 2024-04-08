@@ -8,11 +8,13 @@ const CategorySelector = () => {
   const [categories, setCategories] = React.useState([]);
 
   React.useEffect(() => {
-    getCategories().then((response) => {
-      setCategories(response.data);
-    }).catch(error => {
-      console.error(error);
-    })
+    getCategories()
+      .then((response) => {
+        setCategories(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   return (
@@ -33,7 +35,8 @@ const CategorySelector = () => {
             sx={{
               fontSize: "1.2rem",
               color: "#007bff",
-              width: "120px",
+              minWidth: "120px",
+              width: `${category.name.length * 10 + 40}px`,
               "&:hover": { color: "#ff4500" },
             }}
           >
