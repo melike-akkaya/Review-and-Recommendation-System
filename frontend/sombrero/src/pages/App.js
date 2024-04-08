@@ -1,11 +1,8 @@
-import CategorySelector from "./../components/layout/CatergorySelector";
+import MerchantProfile from "./MerchantProfile";
+import React from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <CategorySelector />
-    </div>
-  );
-}
+const App = () => {
+  return <MerchantProfile />;
+};
 
 export default App;
