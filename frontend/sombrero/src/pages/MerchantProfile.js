@@ -10,7 +10,7 @@ import { MerchantInfo } from "../components/merchant/MerchantInfo";
 import Header from "./Header";
 import AddProductDialog from "../components/merchant/AddProductDialog";
 
-export default function Page() {
+export default function MerchantProfile() {
   const [initialMerchant, setInitialMerchant] = useState(null);
   const [initialAuthorizedPerson, setInitialAuthorizedPerson] = useState(null);
   const [isAddProductDialogOpen, setAddProductDialogOpen] = useState(false);

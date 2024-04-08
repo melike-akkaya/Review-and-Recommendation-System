@@ -1,8 +1,8 @@
-import MerchantProfile from "./MerchantProfile";
+import Header from "./Header";
 import React from "react";
 
 const App = () => {
-  return <MerchantProfile />;
+  return <Header />;
 };
 
 export default App;

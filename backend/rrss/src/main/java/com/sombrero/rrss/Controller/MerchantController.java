@@ -36,7 +36,7 @@ public class MerchantController {
             Merchant existingMerchant = optionalMerchant.get();
 
             existingMerchant.setName(updatedMerchantInfo.getName());
-            existingMerchant.setCountry(updatedMerchantInfo.getCountry());
+            //existingMerchant.setCountry(updatedMerchantInfo.getCountry());
             existingMerchant.setImagePath(updatedMerchantInfo.getImagePath());
 
             Merchant updatedMerchant = merchantService.save(existingMerchant);
