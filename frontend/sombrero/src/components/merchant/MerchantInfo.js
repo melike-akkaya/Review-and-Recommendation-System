@@ -10,6 +10,8 @@ import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import UploadIcon from "@mui/icons-material/Upload";
 import SaveIcon from "@mui/icons-material/Save";
+import IconButton from "@mui/material/IconButton";
+import DifferenceIcon from "@mui/icons-material/Difference";
 import { editMerchantInfo } from "../../services/MerchantService";
 import { Alert } from "../alert/Alert";
 
@@ -18,9 +20,24 @@ export function MerchantInfo(initialMerchant) {
   const [editMode, setEditMode] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState(null);
 
   const handleEdit = () => {
     setEditMode(!editMode);
+  };
+
+  const handleUploadImage = () => {
+    const input = document.createElement("input");
+
+    input.type = "file";
+    input.accept = "image/*";
+
+    input.onchange = (event) => {
+      const file = event.target.files[0];
+      console.log("Selected file:", file);
+    };
+
+    input.click(); // click on the input element programmatically to trigger the file selection dialog
   };
 
   const handleSave = () => {
@@ -35,13 +52,18 @@ export function MerchantInfo(initialMerchant) {
     setMerchant({ ...merchant, country: capitalizedCountry });
 
     setEditMode(false);
-    editMerchantInfo(merchant.id, merchant)
+    editMerchantInfo(merchant.id, { ...merchant, avatar: uploadedImage })
       .then(() => {
         setOpenSuccess(true);
       })
       .catch(() => {
         setOpenError(true);
       });
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    setUploadedImage(file);
   };
 
   const handleCloseSuccess = () => {
@@ -56,11 +78,51 @@ export function MerchantInfo(initialMerchant) {
     <Card>
       <CardContent>
         <Stack spacing={2} sx={{ alignItems: "center" }}>
-          <div>
+          <div style={{ position: "relative" }}>
             <StoreIcon
-              src={merchant.avatar}
-              sx={{ height: "80px", width: "80px" }}
+              src={
+                uploadedImage
+                  ? URL.createObjectURL(uploadedImage)
+                  : merchant.avatar
+              }
+              sx={{
+                height: "80px",
+                width: "80px",
+                cursor: editMode ? "pointer" : "default",
+              }}
             />
+            {editMode && (
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  opacity: 0,
+                  width: "100%",
+                  height: "100%",
+                  zIndex: 1,
+                }}
+              />
+            )}
+            {editMode && (
+              <IconButton
+                sx={{
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                  backgroundColor: "rgba(0, 0, 0, 0.7)",
+                  color: "#fff",
+                  zIndex: 2,
+                }}
+                onClick={handleUploadImage}
+                size="small"
+              >
+                <UploadIcon />
+              </IconButton>
+            )}
           </div>
           <Stack spacing={1} sx={{ textAlign: "center" }}>
             <Typography variant="h5">
@@ -76,7 +138,7 @@ export function MerchantInfo(initialMerchant) {
                 merchant.name
               )}
             </Typography>
-            <Typography color="text.secondary" variant="body2">
+            {/* <Typography color="text.secondary" variant="body2">
               {editMode ? (
                 <input
                   type="text"
@@ -88,6 +150,9 @@ export function MerchantInfo(initialMerchant) {
               ) : (
                 `${merchant.country}`
               )}
+            </Typography> */}
+            <Typography color="text.secondary" variant="body2">
+              {merchant.country}
             </Typography>
             <Typography color="text.secondary" variant="body2">
               {merchant.id}
@@ -98,28 +163,25 @@ export function MerchantInfo(initialMerchant) {
       <Divider />
       <CardActions>
         {!editMode ? (
+          <Button
+            fullWidth
+            variant="text"
+            startIcon={<EditIcon />}
+            onClick={handleEdit}
+          >
+            Edit
+          </Button>
+        ) : (
           <>
             <Button
               fullWidth
               variant="text"
-              startIcon={<EditIcon />}
-              onClick={handleEdit}
+              startIcon={<SaveIcon />}
+              onClick={handleSave}
             >
-              Edit
-            </Button>
-            <Button fullWidth variant="text" startIcon={<UploadIcon />}>
-              Upload picture
+              Save
             </Button>
           </>
-        ) : (
-          <Button
-            fullWidth
-            variant="text"
-            startIcon={<SaveIcon />}
-            onClick={handleSave}
-          >
-            Save
-          </Button>
         )}
       </CardActions>
       <Alert

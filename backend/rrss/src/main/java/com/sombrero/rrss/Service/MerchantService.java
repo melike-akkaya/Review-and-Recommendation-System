@@ -18,6 +18,14 @@ public class MerchantService {
     }
 
     public Merchant save(Merchant merchant) {
+        String country = merchant.getCountry();
+        // Check if country starts with lowercase
+        if (country != null && !country.isEmpty() && Character.isLowerCase(country.charAt(0))) {
+            // Capitalize the first letter
+            country = Character.toUpperCase(country.charAt(0)) + country.substring(1);
+            merchant.setCountry(country);
+        }
+        // Save the modified merchant
         return merchantRepository.save(merchant);
     }
 
