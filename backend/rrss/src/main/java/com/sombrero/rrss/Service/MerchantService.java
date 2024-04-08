@@ -4,30 +4,43 @@ import com.sombrero.rrss.Model.Merchant;
 import com.sombrero.rrss.Repository.IMerchantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class MerchantService {
 
     private final IMerchantRepository merchantRepository;
-
     @Autowired
     public MerchantService(IMerchantRepository merchantRepository) {
         this.merchantRepository = merchantRepository;
     }
 
     public Merchant save(Merchant merchant) {
-        String country = merchant.getCountry();
-        // Check if country starts with lowercase
-        if (country != null && !country.isEmpty() && Character.isLowerCase(country.charAt(0))) {
-            // Capitalize the first letter
-            country = Character.toUpperCase(country.charAt(0)) + country.substring(1);
-            merchant.setCountry(country);
+        String[] words = merchant.getCountry().split("[-\\s]"); // split the country name by "-" or " "
+
+        StringBuilder capitalizedCountry = new StringBuilder();
+
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            if (word.equalsIgnoreCase("and") || word.equalsIgnoreCase("of")) {
+                capitalizedCountry.append(word.toLowerCase());
+            } else {
+                capitalizedCountry.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1).toLowerCase());
+            }
+
+            if (i < words.length - 1) {
+                capitalizedCountry.append(" ");
+            }
         }
-        // Save the modified merchant
+
+        merchant.setCountry(capitalizedCountry.toString());
+
         return merchantRepository.save(merchant);
     }
+
 
     public Optional<Merchant> getById(int id) {
         return merchantRepository.findById(id);
