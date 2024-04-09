@@ -20,6 +20,13 @@ register server denip aşağıdaki ayarlara sahip bir server oluşturulmalı:
 server'ın içindeki Database satırına sağ tıklayıp "rrss" isimli bir database oluşturulamlı
 oluşturulan database üzerine sağ tıklayıp "restore" denmeli ve paylaşılan .sql uzantılı dosya buraya eklenmeli
 
+import database:
+https://www.youtube.com/watch?v=3AKIA8pu8YY
+**database import ederken önce droplayıp sonra oluşturmak gerekiyor.
+
+export database:
+https://www.youtube.com/watch?v=VbGVGHZYNLY
+
 
 projeyi çalıştırırken:
 front end için githubdan terminale çekildikten sonra (sombrero klasörü açılmalı) "npm install" ile node projeye eklenmeli. 
