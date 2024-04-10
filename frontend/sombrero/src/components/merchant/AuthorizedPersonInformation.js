@@ -61,10 +61,19 @@ export function AuthorizedPersonInformation(authorizedPerson) {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setInitialAuthorizedPerson((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    let isValid = true;
+
+    if (name === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      isValid = emailRegex.test(value);
+    }
+
+    if (isValid) {
+      setInitialAuthorizedPerson((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
 
   const handleCountryChange = (event) => {

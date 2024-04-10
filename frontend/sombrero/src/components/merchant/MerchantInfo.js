@@ -11,59 +11,64 @@ import EditIcon from "@mui/icons-material/Edit";
 import UploadIcon from "@mui/icons-material/Upload";
 import SaveIcon from "@mui/icons-material/Save";
 import IconButton from "@mui/material/IconButton";
-import DifferenceIcon from "@mui/icons-material/Difference";
 import { editMerchantInfo } from "../../services/MerchantService";
 import { Alert } from "../alert/Alert";
+import { fileToBlob } from "../../commonMethods";
 
 export function MerchantInfo(initialMerchant) {
   const [merchant, setMerchant] = useState(initialMerchant.merchant);
   const [editMode, setEditMode] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
-  const [uploadedImage, setUploadedImage] = useState(null);
 
   const handleEdit = () => {
     setEditMode(!editMode);
   };
 
-  const handleUploadImage = () => {
+  const handleUploadImage = async () => {
     const input = document.createElement("input");
 
     input.type = "file";
     input.accept = "image/*";
 
-    input.onchange = (event) => {
-      const file = event.target.files[0];
-      console.log("Selected file:", file);
+    input.onchange = async (event) => {
+      try {
+        const file = event.target.files[0];
+
+        const blob = await fileToBlob(file);
+
+        setMerchant((prevMerchant) => ({
+          ...prevMerchant,
+          image: blob,
+        }));
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
     };
 
-    input.click(); // click on the input element programmatically to trigger the file selection dialog
+    input.click();
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!merchant.name || !merchant.country) {
       setOpenError(true);
       return;
     }
 
-    const capitalizedCountry =
-      merchant.country.charAt(0).toUpperCase() + merchant.country.slice(1);
-
-    setMerchant({ ...merchant, country: capitalizedCountry });
-
     setEditMode(false);
-    editMerchantInfo(merchant.id, { ...merchant, avatar: uploadedImage })
-      .then(() => {
-        setOpenSuccess(true);
-      })
-      .catch(() => {
-        setOpenError(true);
-      });
-  };
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    setUploadedImage(file);
+    const formData = new FormData();
+    formData.append("name", merchant.name);
+    if (merchant.image instanceof Blob) {
+      formData.append("image", merchant.image);
+    }
+
+    try {
+      await editMerchantInfo(merchant.id, formData);
+      setOpenSuccess(true);
+    } catch (error) {
+      setOpenError(true);
+    }
   };
 
   const handleCloseSuccess = () => {
@@ -79,23 +84,30 @@ export function MerchantInfo(initialMerchant) {
       <CardContent>
         <Stack spacing={2} sx={{ alignItems: "center" }}>
           <div style={{ position: "relative" }}>
-            <StoreIcon
-              src={
-                uploadedImage
-                  ? URL.createObjectURL(uploadedImage)
-                  : merchant.avatar
-              }
-              sx={{
-                height: "80px",
-                width: "80px",
-                cursor: editMode ? "pointer" : "default",
-              }}
-            />
+            {merchant.image ? (
+              <img
+                src={`data:image/jpeg;base64,${merchant.image}`}
+                className="rounded-md w-full object-cover"
+                style={{
+                  height: "80px",
+                  width: "80px",
+                  cursor: editMode ? "pointer" : "default",
+                }}
+              />
+            ) : (
+              <StoreIcon
+                sx={{
+                  height: "80px",
+                  width: "80px",
+                  cursor: editMode ? "pointer" : "default",
+                }}
+              />
+            )}
             {editMode && (
               <input
                 type="file"
                 accept="image/*"
-                onChange={handleImageUpload}
+                onChange={handleUploadImage}
                 style={{
                   position: "absolute",
                   top: 0,
@@ -124,6 +136,7 @@ export function MerchantInfo(initialMerchant) {
               </IconButton>
             )}
           </div>
+
           <Stack spacing={1} sx={{ textAlign: "center" }}>
             <Typography variant="h5">
               {editMode ? (
@@ -138,19 +151,6 @@ export function MerchantInfo(initialMerchant) {
                 merchant.name
               )}
             </Typography>
-            {/* <Typography color="text.secondary" variant="body2">
-              {editMode ? (
-                <input
-                  type="text"
-                  value={merchant.country}
-                  onChange={(e) =>
-                    setMerchant({ ...merchant, country: e.target.value })
-                  }
-                />
-              ) : (
-                `${merchant.country}`
-              )}
-            </Typography> */}
             <Typography color="text.secondary" variant="body2">
               {merchant.country}
             </Typography>
@@ -199,5 +199,3 @@ export function MerchantInfo(initialMerchant) {
     </Card>
   );
 }
-
-export default MerchantInfo;
