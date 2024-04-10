@@ -22,7 +22,7 @@ export default function MerchantProfile() {
           name: response.data.name,
           id: response.data.id,
           country: response.data.country,
-          imagePath: response.data.imagePath,
+          image: response.data.image,
         });
         setInitialAuthorizedPerson({
           id: response.data.id,
