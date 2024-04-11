@@ -1,12 +1,12 @@
 import React from "react";
-import CategorySelector from "./../components/layout/CatergorySelector";
+import ResponsiveAppBar from "../components/layout/ResponsiveAppBar";
 
 const Layout = ({ children }) => {
   return (
     <div>
       <header>
         {/* <h1>header</h1> */}
-        <CategorySelector />
+        <ResponsiveAppBar />
       </header>
       <main>{children}</main>
       {/* <footer>
