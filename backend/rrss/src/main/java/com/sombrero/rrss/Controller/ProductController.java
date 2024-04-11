@@ -21,10 +21,17 @@ public class ProductController {
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }
 
+    //Get by merchant ID
+    @GetMapping("/{merchantId}")
+    public ResponseEntity<Iterable<Product>> getProductsByMerchantId(@PathVariable Integer merchantId) {
+        Iterable<Product> productList = productService.getByMerchantId(merchantId);
+        return new ResponseEntity<>(productList, HttpStatus.OK);
+    }
+
     @PostMapping("/add")
     public ResponseEntity<Product> addProduct(@RequestBody Product product) {
         productService.addProduct(product);
-        return new ResponseEntity<>(product, HttpStatus.CREATED);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{productId}")

@@ -30,4 +30,15 @@ public class ProductService {
     public List<Product> getAll() {
         return productRepository.findAll();
     }
+
+    public List<Product> getByMerchantId(Integer merchantId) {
+        List<Product> products = getAll();
+        List<Product> merchantProducts = new java.util.ArrayList<>();
+        for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).getMerchantId() == merchantId) {
+                merchantProducts.add(products.get(i));
+            }
+        }
+        return merchantProducts;
+    }
 }
