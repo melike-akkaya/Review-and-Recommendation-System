@@ -27,6 +27,8 @@ public class Merchant {
     private String country;
     @Column(name = "email")
     private String email;
-    @Column(name = "image_path")
-    private String imagePath;
+
+    @Column(name = "image")
+    @Lob
+    private byte[] image;
 }

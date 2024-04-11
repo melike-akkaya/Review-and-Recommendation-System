@@ -12,21 +12,10 @@ back end:
 jdk21 kullanıldı
 
 database:
-https://www.youtube.com/watch?v=0n41UTkOBb0
-https://www.enterprisedb.com/downloads/postgres-postgresql-downloads buradan 16.2'yi indirmeniz gerekiyor
-kullanıcı adı "postgres" şifre "oguzhan" olmalı
-register server denip aşağıdaki ayarlara sahip bir server oluşturulmalı:
-![image](https://github.com/HU-BBM384-24/bbm384-project-sombrero/assets/91731736/f0fd10e9-2d01-4e7a-a53b-75caf5543550)
-server'ın içindeki Database satırına sağ tıklayıp "rrss" isimli bir database oluşturulamlı
-oluşturulan database üzerine sağ tıklayıp "restore" denmeli ve paylaşılan .sql uzantılı dosya buraya eklenmeli
-
-import database:
-https://www.youtube.com/watch?v=3AKIA8pu8YY
-**database import ederken önce droplayıp sonra oluşturmak gerekiyor.
-
-export database:
-https://www.youtube.com/watch?v=VbGVGHZYNLY
-
+bu bağlantı linki yoluyla erişilebilir:
+jdbc:postgresql://ep-cool-sound-a42fptxh.us-east-1.aws.neon.tech/rrss?user=rrss_owner&password=C4ZRAxnX3NIo&sslmode=require
+Link DataGrip'te url kısmına yapıştırıldığında direkt açılabiliyor
+![image](https://github.com/HU-BBM384-24/bbm384-project-sombrero/assets/91731736/685a1aa5-8ee1-414f-8b93-f3b01fd3a7f0)
 
 projeyi çalıştırırken:
 front end için githubdan terminale çekildikten sonra (sombrero klasörü açılmalı) "npm install" ile node projeye eklenmeli. 
