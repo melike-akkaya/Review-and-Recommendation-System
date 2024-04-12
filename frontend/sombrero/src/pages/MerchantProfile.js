@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from "react";
+<<<<<<< Updated upstream
+=======
+import { getMerchantInfo } from "../services/MerchantService";
+import { getProductsByMerchantId } from "../services/ProductService";
+>>>>>>> Stashed changes
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Unstable_Grid2";
 import IconButton from "@mui/material/IconButton";
@@ -9,14 +14,27 @@ import { AuthorizedPersonInformation } from "../components/merchant/AuthorizedPe
 import { MerchantInfo } from "../components/merchant/MerchantInfo";
 import Header from "./Header";
 import AddProductDialog from "../components/merchant/AddProductDialog";
+<<<<<<< Updated upstream
+=======
+import ProductList from "../components/merchant/ProductList";
+>>>>>>> Stashed changes
 
 export default function MerchantProfile() {
   const [initialMerchant, setInitialMerchant] = useState(null);
   const [initialAuthorizedPerson, setInitialAuthorizedPerson] = useState(null);
+<<<<<<< Updated upstream
   const [isAddProductDialogOpen, setAddProductDialogOpen] = useState(false);
 
   useEffect(() => {
     getMerchantInfo(1)
+=======
+  const [products, setProducts] = useState([]);
+  const [isAddProductDialogOpen, setAddProductDialogOpen] = useState(false);
+
+  useEffect(() => {
+    const merchantId = 1;
+    getMerchantInfo(merchantId)
+>>>>>>> Stashed changes
       .then((response) => {
         setInitialMerchant({
           name: response.data.name,
@@ -31,9 +49,19 @@ export default function MerchantProfile() {
           email: response.data.email,
           country: response.data.country,
         });
+<<<<<<< Updated upstream
       })
       .catch((error) => {
         console.error("Error fetching merchant info:", error);
+=======
+        return getProductsByMerchantId(merchantId);
+      })
+      .then((productsResponse) => {
+        setProducts(productsResponse);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+>>>>>>> Stashed changes
       });
   }, []);
 
@@ -52,7 +80,11 @@ export default function MerchantProfile() {
                   size="small"
                   color="primary"
                   onClick={() => {
+<<<<<<< Updated upstream
                     // click action for View Analytics button
+=======
+                    // Placeholder for analytics button click action
+>>>>>>> Stashed changes
                   }}
                 >
                   <AnalyticsIcon />
@@ -78,6 +110,10 @@ export default function MerchantProfile() {
             )}
           </Grid>
         </Grid>
+<<<<<<< Updated upstream
+=======
+        {products.length > 0 && <ProductList products={products} />}
+>>>>>>> Stashed changes
       </Stack>
     </Header>
   );
