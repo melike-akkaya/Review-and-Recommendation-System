@@ -30,9 +30,16 @@ public class ProductController {
 
     @PostMapping("/add")
     public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-        productService.addProduct(product);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        System.out.println("Received product: " + product);
+        try {
+            productService.addProduct(product);
+            return new ResponseEntity<>(product, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println("Error processing product: " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
 
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<Product> deleteProduct(@PathVariable Integer productId) {

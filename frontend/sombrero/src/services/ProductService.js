@@ -1,15 +1,13 @@
+
 import axios from "axios";
 
-const REST_API_BASE_URL = "http://localhost:8080";
+const BASE_URL = "http://localhost:8080"; // Update this with your actual backend URL
 
-export const getProducts = () => axios.get(`${REST_API_BASE_URL}/product/`);
-
-export const addProduct = (product) => {
-  
-    return axios.post(`${REST_API_BASE_URL}/product/add`, product, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      body: JSON.stringify(product),
-    });
+export const addProduct = async (productData) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/product/add`, productData);
+    return response.data; // Return the newly created product data if needed
+  } catch (error) {
+    throw error; // Throw the error to handle it in the component
+  }
 };
