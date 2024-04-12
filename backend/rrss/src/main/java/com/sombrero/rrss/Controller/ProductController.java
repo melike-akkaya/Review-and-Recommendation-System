@@ -3,7 +3,6 @@ package com.sombrero.rrss.Controller;
 import com.sombrero.rrss.Model.Product;
 import com.sombrero.rrss.Service.ProductService;
 
-import com.sombrero.rrss.Service.ProductService;
 import lombok.AllArgsConstructor;
 
 import org.springframework.http.HttpStatus;
