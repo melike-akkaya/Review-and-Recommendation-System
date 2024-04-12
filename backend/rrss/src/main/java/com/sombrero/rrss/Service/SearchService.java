@@ -22,14 +22,14 @@ public class SearchService {
     private IProductRepository productRepository;
 
     public List<User> searchUsers(String query) {
-        return userRepository.findByNameLikeIgnoreCase(query);
+        return userRepository.findByNameIgnoreCaseContaining(query);
     }
 
     public List<Product> searchProducts(String query) {
-        return productRepository.findByNameLikeIgnoreCase(query);
+        return productRepository.findByNameIgnoreCaseContaining(query);
     }
 
     public List<Merchant> searchMerchants(String query) {
-        return merchantRepository.findByNameLikeIgnoreCase(query);
+        return merchantRepository.findByNameIgnoreCaseContaining(query);
     }
 }

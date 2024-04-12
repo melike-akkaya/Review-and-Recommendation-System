@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface IMerchantRepository extends JpaRepository<Merchant, Integer> {
-    List<Merchant> findByNameLikeIgnoreCase(String name);
+    List<Merchant> findByNameIgnoreCaseContaining(String name);
 }
