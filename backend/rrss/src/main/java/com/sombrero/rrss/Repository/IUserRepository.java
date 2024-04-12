@@ -1,12 +1,12 @@
 package com.sombrero.rrss.Repository;
 
-import com.sombrero.rrss.Model.Product;
+import com.sombrero.rrss.Model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface IProductRepository extends JpaRepository<Product, Integer> {
-    List<Product> findByNameIgnoreCaseContaining(String name);
+public interface IUserRepository extends JpaRepository<User, Integer> {
+    List<User> findByNameIgnoreCaseContaining(String name);
 }

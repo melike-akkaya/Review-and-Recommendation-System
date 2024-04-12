@@ -13,11 +13,11 @@ export default function AddProductDialog({ open, setOpen }) {
 
     const initialProductState = {
         name: "",
-        style: "",
-        imagePaths: "",  
+        label: "", 
         category: "",
         price: "",
-        merchantId: 1,  
+        image_path: "",
+        merchant: axios.get('http://localhost:8080/merchant/1')
     };
 
     const [product, setProduct] = useState(initialProductState);
@@ -29,7 +29,7 @@ export default function AddProductDialog({ open, setOpen }) {
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.post('http://localhost:8080/product/add', product);
+            const response = await axios.post('http://localhost:8080/products/add', product);
             console.log('Product added successfully:', response.data);
             handleClose();
         } catch (error) {
@@ -43,7 +43,7 @@ export default function AddProductDialog({ open, setOpen }) {
             <Dialog onClose={handleClose} open={open}>
                 <DialogTitle>Add Product</DialogTitle>
                 <Grid container spacing={2} alignItems="center">
-                    {["name", "price", "category", "style", "imagePaths"].map((field) => (
+                    {["name", "price", "category", "label", "image_path"].map((field) => (
                         <Grid item xs={12} key={field}>
                             <TextField
                                 label={field.charAt(0).toUpperCase() + field.slice(1)}

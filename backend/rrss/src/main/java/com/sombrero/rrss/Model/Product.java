@@ -13,19 +13,24 @@ import java.util.List;
 @Entity
 @Table(name = "product")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer productId;
     @Column(name = "name")
     private String name;
-    @Column(name = "style")
-    private String style;
-    @Column(name = "image_paths")
-    private String imagePaths;
-    @Column(name = "category")
-    private String category;
     @Column(name = "price")
     private double price;
-    @Column(name = "merchant_id")
-    private int merchantId;
+    @Column(name = "label")
+    private String label;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+    @ManyToOne
+    @JoinColumn(name = "merchant_id")
+    private Merchant merchant;
+
+    @Column(name = "image_path")
+    @Lob
+    private byte[] image_path;
 }
