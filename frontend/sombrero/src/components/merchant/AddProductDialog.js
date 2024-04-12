@@ -34,7 +34,7 @@ export default function AddProductDialog({ open, setOpen }) {
             handleClose();
         } catch (error) {
             console.error('Error adding product:', error);
-            // Optionally show error message to user
+          
         }
     };
 
