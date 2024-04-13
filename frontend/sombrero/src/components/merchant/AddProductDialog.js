@@ -13,7 +13,7 @@ import {
   getLastProductId,
 } from "../../services/ProductService";
 
-export default function AddProductDialog({ open, setOpen }) {
+export default function AddProductDialog({ open, setOpen, refreshProducts}) {
   const [categories, setCategories] = React.useState([]);
   const labels = ["elegant", "luxury", "ergonomic", "antique", "modern"];
 
@@ -92,6 +92,7 @@ export default function AddProductDialog({ open, setOpen }) {
       await addLabel(labelObject);
 
       handleClose();
+      refreshProducts();
     } catch (error) {
       console.error("Error adding product:", error);
     }

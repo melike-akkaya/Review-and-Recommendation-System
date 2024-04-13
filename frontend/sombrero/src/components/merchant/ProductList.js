@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -13,7 +13,7 @@ import { useState } from "react";
 const defaultImageBase64 = "iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAAAfElEQVR42u3QMREAAAgEIE1u9LeD5wgR6EqmOGuBAgUKFIhAgQIFIlCgQIEIFChQIAIFChSIQIECBSJQoECBCBQoUCACBQoUiECBAgUiUKBAgQIFChQoUCACBQoUiECBAgUiUKBAgQgUKFAgAgUKFIhAgQIFIlCgQIEI/LNvE8dhTC3llgAAAABJRU5ErkJggg==";
 
 
-const ProductList = ({ products }) => {
+const ProductList = ({ products, refreshProducts}) => {
   const [openConformation, setOpenConformation] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
 
@@ -24,6 +24,7 @@ const ProductList = ({ products }) => {
 
   const handleCloseConformation= () => {
     setOpenConformation(false);
+    refreshProducts();
   };
 
   const handleDelete = async (id) => {
@@ -32,6 +33,7 @@ const ProductList = ({ products }) => {
       await deleteLabel(currentProductId);
     }
     handleCloseConformation();
+    refreshProducts();
   };
 
   const handleEdit = (id) => {};

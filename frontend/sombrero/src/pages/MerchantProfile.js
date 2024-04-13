@@ -18,6 +18,12 @@ export default function MerchantProfile() {
   const [products, setProducts] = useState([]);
   const [isAddProductDialogOpen, setAddProductDialogOpen] = useState(false);
 
+  const fetchProducts = (merchantId) => {
+    getProductsByMerchantId(merchantId)
+      .then(setProducts)
+      .catch(error => console.error("Error fetching products:", error));
+  };
+
   useEffect(() => {
     const merchantId = 1;
     getMerchantInfo(merchantId)
@@ -35,10 +41,7 @@ export default function MerchantProfile() {
           email: response.data.email,
           country: response.data.country,
         });
-        return getProductsByMerchantId(merchantId);
-      })
-      .then((productsResponse) => {
-        setProducts(productsResponse);
+        fetchProducts(merchantId);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -50,6 +53,7 @@ export default function MerchantProfile() {
       <AddProductDialog
         open={isAddProductDialogOpen}
         setOpen={setAddProductDialogOpen}
+        refreshProducts={() => fetchProducts(1)}
       />
       <Stack spacing={3}>
         <Grid container spacing={3}>
@@ -86,7 +90,7 @@ export default function MerchantProfile() {
             )}
           </Grid>
         </Grid>
-        {products.length > 0 && <ProductList products={products} />}
+        {products.length > 0 && (<ProductList products={products} refreshProducts={() => fetchProducts(1)} />)}
       </Stack>
     </Header>
   );
