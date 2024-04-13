@@ -1,32 +1,30 @@
-
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080"; 
+const BASE_URL = "http://localhost:8080";
 
-export const addProduct = async (productData) => {
-  try {
-    const response = await axios.post(`${BASE_URL}/products/add`, productData);
-    return response.data; 
-  } catch (error) {
-    throw error; 
-  }
+export const addProduct = (productData) => {
+  return axios.post(`${BASE_URL}/products/add`, productData);
 };
 
 export const getProductsByMerchantId = async (merchantId) => {
   try {
-      const response = await axios.get(`${BASE_URL}/products/${merchantId}`);
-      return response.data;
+    const response = await axios.get(`${BASE_URL}/products/${merchantId}`);
+    return response.data;
   } catch (error) {
-      throw error;
+    throw error;
   }
 };
 
-export const deleteProduct = async (productId) => {
-  try {
-      const response = await axios.delete(`${BASE_URL}/products/delete/${productId}`);
-      return response.data; 
-  } catch (error) {
-      console.error("Error deleting product:", error);
-      throw error; 
-  }
+export const deleteProduct = (id) => {
+  return axios.delete(`${BASE_URL}/products/delete/${id}`);
 };
+
+export const deleteLabel = (id) => {
+  return axios.delete(`${BASE_URL}/labels/delete/${id}`);
+};
+
+export const addLabel = (label) => {
+  return axios.post(`${BASE_URL}/labels/add`, label);
+};
+
+export const getLastProductId = () => axios.get(`${BASE_URL}/products/lastId`);

@@ -17,9 +17,11 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    public Integer getLastProductId() {
+        return productRepository.findMaxProductId();
+    }
 
     public void addProduct(Product product) {
-
         productRepository.save(product);
     }
 
@@ -36,7 +38,7 @@ public class ProductService {
         List<Product> products = getAll();
         List<Product> merchantProducts = new java.util.ArrayList<>();
         for (int i = 0; i < products.size(); i++) {
-            if (products.get(i).getMerchant().getId() == merchantId) {
+            if (products.get(i).getMerchant() == merchantId) {
                 merchantProducts.add(products.get(i));
             }
         }

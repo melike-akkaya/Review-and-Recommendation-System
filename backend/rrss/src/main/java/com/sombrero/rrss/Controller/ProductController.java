@@ -20,7 +20,6 @@ public class ProductController {
         Iterable<Product> productList = productService.getAll();
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }
-
     //Get by merchant ID
     @GetMapping("/{merchantId}")
     public ResponseEntity<Iterable<Product>> getProductsByMerchantId(@PathVariable Integer merchantId) {
@@ -28,9 +27,19 @@ public class ProductController {
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }
 
+    @GetMapping("/lastId")
+    public ResponseEntity<Integer> getLastProductId() {
+        try {
+            Integer lastProductId = productService.getLastProductId();
+            return new ResponseEntity<>(lastProductId, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println("Error retrieving last product ID: " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/add")
     public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-        System.out.println("Received product: " + product);
         try {
             productService.addProduct(product);
             return new ResponseEntity<>(product, HttpStatus.OK);
@@ -39,7 +48,6 @@ public class ProductController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<Product> deleteProduct(@PathVariable Integer productId) {
