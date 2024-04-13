@@ -1,18 +1,6 @@
 import React, { useState } from "react";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
-<<<<<<< Updated upstream
-
-export default function AddProductDialog({ open, setOpen }) {
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <div>
-      <Dialog onClose={() => handleClose()} open={open}>
-        <DialogTitle>Add Product</DialogTitle>
-=======
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
@@ -198,7 +186,6 @@ export default function AddProductDialog({ open, setOpen }) {
             </Button>
           </Grid>
         </Grid>
->>>>>>> Stashed changes
       </Dialog>
     </div>
   );
