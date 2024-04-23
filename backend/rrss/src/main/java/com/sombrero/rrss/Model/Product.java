@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,20 +17,20 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer productId;
+
     @Column(name = "name")
     private String name;
+
     @Column(name = "price")
     private double price;
-    @Column(name = "label")
-    private String label;
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
-    @ManyToOne
-    @JoinColumn(name = "merchant_id")
-    private Merchant merchant;
 
-    @Column(name = "image_path")
+    @Column(name = "category_id")
+    private int category;
+
+    @Column(name = "merchant_id")
+    private int merchant;
+
+    @Column(name = "image")
     @Lob
-    private byte[] image_path;
+    private byte[] image;
 }
