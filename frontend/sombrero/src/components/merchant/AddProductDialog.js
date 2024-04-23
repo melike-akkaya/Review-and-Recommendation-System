@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 import TextField from "@mui/material/TextField";
@@ -12,10 +12,17 @@ import {
   addProduct,
   getLastProductId,
 } from "../../services/ProductService";
+import { fileToBlob } from "../../commonMethods";
+import { Alert } from "../alert/Alert";
 
-export default function AddProductDialog({ open, setOpen, refreshProducts}) {
+export default function AddProductDialog({ open, setOpen, refreshProducts }) {
   const [categories, setCategories] = React.useState([]);
   const labels = ["elegant", "luxury", "ergonomic", "antique", "modern"];
+  const [fileName, setFileName] = React.useState("");
+
+  const [successAlertOpen, setSuccessAlertOpen] = useState(false);
+  const [errorAlertOpen, setErrorAlertOpen] = useState(false);
+  const [pendingAlertOpen, setPendingAlertOpen] = useState(false);
 
   React.useEffect(() => {
     getCategories()
@@ -54,29 +61,53 @@ export default function AddProductDialog({ open, setOpen, refreshProducts}) {
     setProduct({ ...product, [name]: updatedOptions });
   };
 
-  const handleImageChange = (event) => {
-    setProduct({ ...product, image: event.target.files[0] });
+  const handleImageChange = async (event) => {
+    const file = event.target.files[0];
+    setFileName(file.name);
+    const blob = await fileToBlob(file);
+
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      image: blob,
+    }));
   };
 
   const handleSubmit = async () => {
     try {
-      //adding product:
+      setPendingAlertOpen(true);
+
+      if (
+        product.name.trim() === "" ||
+        product.price.trim() === "" ||
+        product.category.trim() === ""
+      ) {
+        setErrorAlertOpen(true);
+        setPendingAlertOpen(false);
+        return;
+      }
+
+      // Adding product
       const { label, ...productWithoutLabel } = product;
 
       const categoryId = categories.find(
         (cat) => cat.name === product.category
       )?.id;
 
+      productWithoutLabel.image = null;
       productWithoutLabel.category = categoryId;
       productWithoutLabel.merchant = 1;
 
-      await addProduct(productWithoutLabel);
+      const formData = new FormData();
+      formData.append("image", product.image);
+      formData.append("product", JSON.stringify(productWithoutLabel));
 
-      //getting product id:
+      await addProduct(formData);
+
+      // Getting product id
       const response = await getLastProductId();
       const productId = response.data;
 
-      //adding label:
+      // Adding label
       const labelObject = {};
       labelObject.productId = productId;
       label.forEach((labelId) => {
@@ -91,10 +122,14 @@ export default function AddProductDialog({ open, setOpen, refreshProducts}) {
 
       await addLabel(labelObject);
 
+      setSuccessAlertOpen(true);
       handleClose();
       refreshProducts();
     } catch (error) {
       console.error("Error adding product:", error);
+      setErrorAlertOpen(true);
+    } finally {
+      setPendingAlertOpen(false);
     }
   };
 
@@ -164,7 +199,7 @@ export default function AddProductDialog({ open, setOpen, refreshProducts}) {
                   />
                   <label htmlFor="image-file">
                     <Button variant="contained" component="span">
-                      {product.image ? product.image.name : "Choose Image"}
+                      {product.image ? fileName : "Choose Image"}
                     </Button>
                   </label>
                 </div>
@@ -187,6 +222,23 @@ export default function AddProductDialog({ open, setOpen, refreshProducts}) {
             </Button>
           </Grid>
         </Grid>
+        <Alert
+          open={successAlertOpen}
+          onClose={() => setSuccessAlertOpen(false)}
+          severity="success"
+          message="Product added successfully"
+        />
+        <Alert
+          open={errorAlertOpen}
+          onClose={() => setErrorAlertOpen(false)}
+          severity="error"
+          message="Error adding product"
+        />
+        <Alert
+          open={pendingAlertOpen}
+          severity="info"
+          message="Adding product..."
+        />
       </Dialog>
     </div>
   );

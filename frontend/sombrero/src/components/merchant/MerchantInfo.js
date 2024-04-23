@@ -59,9 +59,7 @@ export function MerchantInfo(initialMerchant) {
 
     const formData = new FormData();
     formData.append("name", merchant.name);
-    if (merchant.image instanceof Blob) {
-      formData.append("image", merchant.image);
-    }
+    formData.append("image", merchant.image);
 
     try {
       await editMerchantInfo(merchant.id, formData);

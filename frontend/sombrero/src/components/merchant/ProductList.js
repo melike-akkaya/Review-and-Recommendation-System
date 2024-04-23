@@ -6,37 +6,37 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import { deleteLabel, deleteProduct } from "../../services/ProductService";
-import ConfirmationDialog from "../merchant/ConformationDialog";
 import { useState } from "react";
+import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
+import ConfirmationDialog from "./ConformationDialog";
 
-//Declare a default image
-const defaultImageBase64 = "iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAAAfElEQVR42u3QMREAAAgEIE1u9LeD5wgR6EqmOGuBAgUKFIhAgQIFIlCgQIEIFChQIAIFChSIQIECBSJQoECBCBQoUCACBQoUiECBAgUiUKBAgQIFChQoUCACBQoUiECBAgUiUKBAgQgUKFAgAgUKFIhAgQIFIlCgQIEI/LNvE8dhTC3llgAAAABJRU5ErkJggg==";
-
-
-const ProductList = ({ products, refreshProducts}) => {
-  const [openConformation, setOpenConformation] = useState(false);
+const ProductList = ({ products, refreshProducts }) => {
+  const [openConfirmation, setOpenConfirmation] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
 
-  const handleOpenConformation = (id) => {
+  const handleOpenConfirmation = (id) => {
     setCurrentProductId(id);
-    setOpenConformation(true);
+    setOpenConfirmation(true);
   };
 
-  const handleCloseConformation= () => {
-    setOpenConformation(false);
-    refreshProducts();
+  const handleCloseConfirmation = () => {
+    setOpenConfirmation(false);
+    setCurrentProductId(null);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
     if (currentProductId) {
       await deleteProduct(currentProductId);
       await deleteLabel(currentProductId);
+      setCurrentProductId(null);
+      setOpenConfirmation(false);
+      refreshProducts();
     }
-    handleCloseConformation();
-    refreshProducts();
   };
 
-  const handleEdit = (id) => {};
+  const handleEdit = (id) => {
+    // Handle edit functionality here
+  };
 
   return (
     <div
@@ -51,42 +51,39 @@ const ProductList = ({ products, refreshProducts}) => {
       {products.map((product) => (
         <Card key={product.id}>
           <CardContent>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-          <img
-            src={product.image ? `data:image/jpeg;base64,${product.image}` : `data:image/png;base64,${defaultImageBase64}`}
-            alt={product.name}
-            className="rounded-md object-cover"
-            style={{
-              height: "80px",
-              width: "80px",
-              marginRight: "20px" 
-            }}
-          />
-          <Typography variant="h5" component="div">
-            {product.name}
-          </Typography>
-          </div>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {product.image ? (
+                <img
+                  src={`data:image/jpeg;base64,${product.image}`}
+                  alt={product.name}
+                  className="rounded-md object-cover"
+                  style={{
+                    height: "80px",
+                    width: "80px",
+                    marginRight: "20px",
+                  }}
+                />
+              ) : (
+                <ShoppingBasketIcon />
+              )}
+
+              <Typography variant="h5" component="div">
+                {product.name}
+              </Typography>
+            </div>
             <Typography color="text.secondary">
               Price: ${product.price}
             </Typography>
           </CardContent>
+
           <CardActions style={{ position: "relative" }}>
             <Button
               size="small"
               color="primary"
-              onClick={() => handleOpenConformation(product.productId)}
+              onClick={() => handleOpenConfirmation(product.productId)}
             >
               Delete
             </Button>
-            <ConfirmationDialog
-              open={openConformation}
-              onClose={handleCloseConformation}
-              onConfirm={handleDelete}
-              title="Confirm Deletion"
-            >
-              Are you sure you want to delete this product?
-            </ConfirmationDialog>
-
             <Button
               style={{ position: "absolute", top: 0, right: 0 }}
               size="small"
@@ -97,6 +94,17 @@ const ProductList = ({ products, refreshProducts}) => {
           </CardActions>
         </Card>
       ))}
+
+      {openConfirmation && (
+        <ConfirmationDialog
+          open={openConfirmation}
+          onClose={handleCloseConfirmation}
+          onConfirm={handleDelete}
+          title="Confirm Deletion"
+        >
+          Are you sure you want to delete this product?
+        </ConfirmationDialog>
+      )}
     </div>
   );
 };

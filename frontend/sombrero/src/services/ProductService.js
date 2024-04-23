@@ -2,8 +2,8 @@ import axios from "axios";
 
 const BASE_URL = "http://localhost:8080";
 
-export const addProduct = (productData) => {
-  return axios.post(`${BASE_URL}/products/add`, productData);
+export const addProduct = (formData) => {
+  return axios.post(`${BASE_URL}/products/add`, formData);
 };
 
 export const getProductsByMerchantId = async (merchantId) => {

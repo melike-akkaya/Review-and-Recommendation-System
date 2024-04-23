@@ -1,11 +1,13 @@
 package com.sombrero.rrss.Controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sombrero.rrss.Model.Product;
 import com.sombrero.rrss.Service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @CrossOrigin("*")
@@ -39,8 +41,14 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
+    public ResponseEntity<Product> addProduct(@RequestParam("product") String productJson, @RequestParam("image") MultipartFile imageFile) {
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Product product = objectMapper.readValue(productJson, Product.class);
+
+            byte[] image = imageFile.getBytes();
+            product.setImage(image);
+
             productService.addProduct(product);
             return new ResponseEntity<>(product, HttpStatus.OK);
         } catch (Exception e) {
@@ -48,6 +56,9 @@ public class ProductController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+
 
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<Product> deleteProduct(@PathVariable Integer productId) {
