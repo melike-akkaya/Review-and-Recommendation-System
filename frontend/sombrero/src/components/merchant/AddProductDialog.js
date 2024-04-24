@@ -38,6 +38,11 @@ export default function AddProductDialog({ open, setOpen, refreshProducts }) {
     setOpen(false);
   };
 
+  const resetProductState = () => {
+    setProduct(initialProductState);
+    setFileName("");
+  };
+
   const initialProductState = {
     name: "",
     label: [],
@@ -125,11 +130,20 @@ export default function AddProductDialog({ open, setOpen, refreshProducts }) {
       setSuccessAlertOpen(true);
       handleClose();
       refreshProducts();
+      resetProductState();
     } catch (error) {
       console.error("Error adding product:", error);
       setErrorAlertOpen(true);
     } finally {
       setPendingAlertOpen(false);
+    }
+  };
+
+  const handlePriceChange = (event) => {
+    const { value } = event.target;
+    // Check if the value is a valid float or integer
+    if (/^\d*\.?\d*$/.test(value)) {
+      setProduct({ ...product, price: value });
     }
   };
 
@@ -144,7 +158,7 @@ export default function AddProductDialog({ open, setOpen, refreshProducts }) {
         <Grid container spacing={2}>
           {[
             { name: "Name", type: "text" },
-            { name: "Price", type: "number" },
+            { name: "Price", type: "text" },
             {
               name: "Category",
               type: "combo",
@@ -210,7 +224,9 @@ export default function AddProductDialog({ open, setOpen, refreshProducts }) {
                   fullWidth
                   type={field.type}
                   value={product[field.name.toLowerCase()]}
-                  onChange={handleChange}
+                  onChange={
+                    field.name === "Price" ? handlePriceChange : handleChange
+                  } // Apply price change handler
                 />
               )}
             </Grid>
