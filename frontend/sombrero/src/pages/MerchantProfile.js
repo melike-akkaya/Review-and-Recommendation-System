@@ -21,7 +21,7 @@ export default function MerchantProfile() {
   const fetchProducts = (merchantId) => {
     getProductsByMerchantId(merchantId)
       .then(setProducts)
-      .catch(error => console.error("Error fetching products:", error));
+      .catch((error) => console.error("Error fetching products:", error));
   };
 
   useEffect(() => {
@@ -49,49 +49,57 @@ export default function MerchantProfile() {
   }, []);
 
   return (
-    <Header>
-      <AddProductDialog
-        open={isAddProductDialogOpen}
-        setOpen={setAddProductDialogOpen}
-        refreshProducts={() => fetchProducts(1)}
-      />
-      <Stack spacing={3}>
-        <Grid container spacing={3}>
-          <Grid item lg={4} md={6} xs={12}>
-            <Stack direction="column" spacing={2}>
-              <Stack direction="row" justifyContent="flex-start" spacing={2}>
-                <IconButton
-                  size="small"
-                  color="primary"
-                  onClick={() => {
-                    // Placeholder for analytics button click action
-                  }}
-                >
-                  <AnalyticsIcon />
-                </IconButton>
-                <IconButton
-                  size="small"
-                  color="primary"
-                  onClick={() => {
-                    setAddProductDialogOpen(true);
-                  }}
-                >
-                  <AddCircleIcon />
-                </IconButton>
+    <div>
+      <Header />
+      <div style={{ padding: "0 20px" }}>
+        <AddProductDialog
+          open={isAddProductDialogOpen}
+          setOpen={setAddProductDialogOpen}
+          refreshProducts={() => fetchProducts(1)}
+        />
+        <Stack spacing={3}>
+          <Grid container spacing={3}>
+            <Grid item lg={4} md={6} xs={12}>
+              <Stack direction="column" spacing={2}>
+                <Stack direction="row" justifyContent="flex-start" spacing={2}>
+                  <IconButton
+                    size="small"
+                    color="primary"
+                    onClick={() => {
+                      // Placeholder for analytics button click action
+                    }}
+                  >
+                    <AnalyticsIcon />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    color="primary"
+                    onClick={() => {
+                      setAddProductDialogOpen(true);
+                    }}
+                  >
+                    <AddCircleIcon />
+                  </IconButton>
+                </Stack>
+                {initialMerchant && <MerchantInfo merchant={initialMerchant} />}
               </Stack>
-              {initialMerchant && <MerchantInfo merchant={initialMerchant} />}
-            </Stack>
+            </Grid>
+            <Grid item lg={8} md={6} xs={12}>
+              {initialAuthorizedPerson && (
+                <AuthorizedPersonInformation
+                  initialAuthorizedPerson={initialAuthorizedPerson}
+                />
+              )}
+            </Grid>
           </Grid>
-          <Grid item lg={8} md={6} xs={12}>
-            {initialAuthorizedPerson && (
-              <AuthorizedPersonInformation
-                initialAuthorizedPerson={initialAuthorizedPerson}
-              />
-            )}
-          </Grid>
-        </Grid>
-        {products.length > 0 && (<ProductList products={products} refreshProducts={() => fetchProducts(1)} />)}
-      </Stack>
-    </Header>
+          {products.length > 0 && (
+            <ProductList
+              products={products}
+              refreshProducts={() => fetchProducts(1)}
+            />
+          )}
+        </Stack>
+      </div>
+    </div>
   );
 }
