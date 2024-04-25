@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
 
   return (
     <div>
-      <header>
+      <header className="fixed-header">
         {/* <IconButton style={{ width: 350, height: 150 }}>
           <img
             src={rrssIcon}
@@ -21,7 +21,7 @@ const Layout = ({ children }) => {
         </IconButton> */}
         <ResponsiveAppBar />
       </header>
-      <main>{children}</main>
+      <main className="header-content">{children}</main>
       {/* <footer>
         <p>footer</p>
       </footer> */}

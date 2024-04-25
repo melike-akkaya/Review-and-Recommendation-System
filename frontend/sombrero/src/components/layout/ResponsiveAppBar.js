@@ -15,6 +15,7 @@ import rrssIcon from "../../assets/rrss-logo-trans.png";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 import { getCategories } from "../../services/CategoryService";
 
@@ -74,6 +75,8 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [categories, setCategories] = React.useState([]);
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     getCategories()
@@ -107,6 +110,16 @@ function ResponsiveAppBar() {
   const handleProfileClick = () => {
     handleCloseUserMenu(); // Close the settings menu
     window.location.href = "/merchant"; // Redirect to the merchant page
+  };
+
+  const handleSearchInputChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      navigate(`/search?q=${searchQuery}`);
+    }
   };
 
   return (
@@ -151,6 +164,9 @@ function ResponsiveAppBar() {
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
               style={{ color: "#222f3e" }}
+              value={searchQuery}
+              onChange={handleSearchInputChange}
+              onKeyPress={handleKeyPress}
             />
           </Search>
 

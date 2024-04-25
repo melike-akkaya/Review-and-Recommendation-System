@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -21,7 +20,6 @@ import java.util.List;
 @RequestMapping("/search")
 public class SearchController {
 
-    @Autowired
     private SearchService searchService;
 
     @GetMapping("/users")
