@@ -49,4 +49,10 @@ public class ReviewController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/allReviews/{productId}")
+    public ResponseEntity<Iterable<Review>> getReviewsByProductId(@PathVariable Integer productId) {
+        Iterable<Review> reviewList = reviewService.getReviewsByProductId(productId);
+        return new ResponseEntity<>(reviewList, HttpStatus.OK);
+    }
+
 }

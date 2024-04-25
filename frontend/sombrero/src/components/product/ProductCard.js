@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, Typography, Avatar, Button } from "@mui/material";
+import { Card, CardContent, Typography, Button } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
-import image from "../../assets/rrss-logo.png";
 import CustomizedRating from "./Rating";
-import { getLabelsByProductId } from "../../services/ProductService";
+import { getLabelsByProductId, getProductById } from "../../services/ProductService";
 
 const ProductCard = ({ id }) => {
   const colors = ["#f44336", "#2196f3", "#4caf50", "#ff9800", "#9c27b0"];
   const [fetchedLabels, setFetchedLabels] = useState([]);
+  const [fetchedProduct, setFetchedProduct] = useState([]);
   const [labels, setLabels] = useState([]);
 
   const fetchLabelById = (productId) => {
@@ -16,10 +16,22 @@ const ProductCard = ({ id }) => {
       .catch((error) => console.error("Error fetching products:", error));
   };
 
+  const fetchProductById = (productId) => {
+    getProductById(productId)
+      .then(setFetchedProduct)
+      .catch((error) => console.error("Error fetching products:", error));
+  };
+
+  useEffect(() => {
+    console.log(fetchedProduct)
+
+  }, [fetchedProduct]);
+
   useEffect(() => {
     const cleanedId = parseInt(id.replace(":", ""), 10);
     fetchLabelById(cleanedId);
-  }, []);
+    fetchProductById(cleanedId);
+  }, [id]);
 
   useEffect(() => {
     if (fetchedLabels.length > 0) {
@@ -57,22 +69,30 @@ const ProductCard = ({ id }) => {
 
   return (
     <Card sx={{ display: "flex", alignItems: "center", minWidth: 275 }}>
-      <Avatar
-        sx={{ width: 600, height: 600, marginRight: 2, borderRadius: "12px" }}
-        alt="Product Image"
-        src={image}
-      />
+      <div style={{ display: "flex", alignItems: "center" }}>
+        {fetchedProduct?.image && (
+          <img
+            src={`data:image/jpeg;base64,${fetchedProduct.image}`}
+            alt={fetchedProduct.name}
+            className="rounded-md object-cover"
+            style={{ height: "500px", width: "500px", marginRight: "20px" }}
+
+          />
+        )}
+      </div>
       <CardContent
         style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
       >
         <div style={{ marginBottom: "auto" }}>
           <Typography variant="h5" component="div">
-            My Card Title
+          {fetchedProduct.name}
           </Typography>
           <Typography variant="body2">
-            This is a simple card created using React JS and Material-UI (MUI)
-            kit.
-          </Typography>
+                {fetchedProduct.description}
+              </Typography>
+              <Typography variant="body2">
+              Price: {fetchedProduct && fetchedProduct.price && `$${fetchedProduct.price}`}
+              </Typography>
           <CustomizedRating />
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", marginTop: "auto" }}>

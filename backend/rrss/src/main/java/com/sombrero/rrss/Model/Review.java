@@ -24,6 +24,9 @@ public class Review{
     @JoinColumn(name = "author_id")
     private Merchant author;
 
+    @Column(name = "author_name")
+    private String authorName;
+
     @Column(name = "rating")
     private Integer rating;
 

@@ -5,6 +5,8 @@ import com.sombrero.rrss.Repository.IReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,4 +34,20 @@ public class ReviewService {
     public void deleteById(int id) {
         reviewRepository.deleteById(id);
     }
+
+    public List<Review> getAll() {
+        return reviewRepository.findAll();
+    }
+
+    public List<Review> getReviewsByProductId(Integer productId) {
+        List<Review> allReviews = getAll();
+        List<Review> productReviews = new ArrayList<>();
+        for (Review review : allReviews) {
+            if (review.getProduct().getProductId() == productId) {
+                productReviews.add(review);
+            }
+        }
+        return productReviews;
+    }
+
 }
