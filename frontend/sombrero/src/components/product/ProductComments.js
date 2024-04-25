@@ -17,7 +17,7 @@ export function ProductComments(props) {
     const {username,text, rating} = props;
 
     return (
-        <Card sx={{ maxWidth: 700 }}>
+        <Card sx={{ maxWidth: 700, marginTop: '40px', marginBottom: '40px'}}>
           <CardHeader
             avatar={
               <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">

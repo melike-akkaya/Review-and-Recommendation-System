@@ -10,10 +10,20 @@ import Rating from '@mui/material/Rating';
 
 export default function MakeComment() {
     const [value, setValue] = React.useState(0);
-    const [text, setText] = React.useState(" ")
+    const [text, setText] = React.useState(" ");
+    const [rating, setRating] = React.useState(0);
+    const [isSent, setIsSent] = React.useState(false);
 
 
-    //const handleComment = () 
+    const handleComment = () => {
+      setIsSent(true);
+      setText(" ");
+      setRating(" ");
+    }
+    const handleText = () => {
+    }
+    const handleRating = () => {
+    }
 
   return (
     <Card sx={{ maxWidth: 700 }}>
@@ -43,7 +53,8 @@ export default function MakeComment() {
       </Box>
       </CardContent>
       <CardActions>
-        <Button size="small">Comment</Button>
+        <Button size="small" onClick = {handleComment}>Comment
+        </Button>
       </CardActions>
     </Card>
   );
