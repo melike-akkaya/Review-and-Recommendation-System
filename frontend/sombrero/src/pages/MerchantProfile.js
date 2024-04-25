@@ -11,6 +11,7 @@ import { MerchantInfo } from "../components/merchant/MerchantInfo";
 import Header from "./Header";
 import AddProductDialog from "../components/merchant/AddProductDialog";
 import ProductList from "../components/merchant/ProductList";
+import { Typography } from "@mui/material";
 
 export default function MerchantProfile() {
   const [initialMerchant, setInitialMerchant] = useState(null);
@@ -51,7 +52,7 @@ export default function MerchantProfile() {
   return (
     <div>
       <Header />
-      <div style={{ padding: "0 20px" }}>
+      <div style={{ padding: "0 200px" }}>
         <AddProductDialog
           open={isAddProductDialogOpen}
           setOpen={setAddProductDialogOpen}
@@ -92,6 +93,14 @@ export default function MerchantProfile() {
               )}
             </Grid>
           </Grid>
+          <Typography
+            variant="h6"
+            color="textSecondary"
+            style={{ marginBottom: "8px", fontWeight: "bold" }}
+          >
+            PRODUCTS
+          </Typography>
+
           {products.length > 0 && (
             <ProductList
               products={products}

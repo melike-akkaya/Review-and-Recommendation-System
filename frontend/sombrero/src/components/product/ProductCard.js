@@ -30,10 +30,6 @@ const ProductCard = ({ id }) => {
     }
   }, [fetchedLabels]);
 
-  useEffect(() => {
-    console.log(labels);
-  }, [labels]);
-
   const renderRandomRectangles = () => {
     const rectangles = [];
     for (let i = 0; i < labels.length; i++) {
