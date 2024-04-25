@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
 
   return (
     <div>
-      <header>
+      <header style={{ marginBottom: "20px" }}>
         {/* <IconButton style={{ width: 350, height: 150 }}>
           <img
             src={rrssIcon}

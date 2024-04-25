@@ -1,28 +1,34 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./Header";
 import { Container } from "@mui/material";
 import ProductCard from "../components/product/ProductCard";
 import { useParams } from "react-router-dom";
 import CommentCard from "../components/product/CommentCard";
+import { getIsEditable, setIsEditableFalse } from "../services/ProductService";
 
 export default function ProductProfile() {
   const { productId } = useParams();
+  const [isEditable, setIsEditable] = useState(false);
 
-  const productList = [
-    { username: "user1", text: "Comment 1" },
-    { username: "user2", text: "Comment 2" },
-    { username: "user3", text: "Comment 3" }
-  ]; 
+  useEffect(() => {
+    setIsEditableFalse();
+
+    const fetchIsEditable = async () => {
+      const editable = await getIsEditable(productId);
+      setIsEditable(editable.data.isEditable === 1);
+    };
+    fetchIsEditable();
+  }, []);
 
   return (
     <div>
-      <div style={{ marginBottom: "20px" }}>
-        <Header />
-      </div>
+      <Header />
       <Container>
-        <ProductCard id={productId} />
+        {/* Pass the isEditable state as a prop */}
+        <ProductCard id={productId} editable={isEditable} />
       </Container>
-      <CommentCard/>
+      {/* Render CommentCard only if isEditable is false */}
+      {!isEditable && <CommentCard />}
     </div>
   );
 }

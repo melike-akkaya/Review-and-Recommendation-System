@@ -5,7 +5,12 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
-import { deleteLabel, deleteProduct } from "../../services/ProductService";
+import {
+  deleteLabel,
+  deleteProduct,
+  getIsEditable,
+  setIsEditableTrue,
+} from "../../services/ProductService";
 import { useState } from "react";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import ConfirmationDialog from "./ConformationDialog";
@@ -34,8 +39,9 @@ const ProductList = ({ products, refreshProducts }) => {
     }
   };
 
-  const handleEdit = (id) => {
-    // Handle edit functionality here
+  const handleEdit = async (productId) => {
+    setIsEditableTrue();
+    window.location.href = "/product/" + productId;
   };
 
   return (
