@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -43,7 +44,7 @@ public class ReviewService {
         List<Review> allReviews = getAll();
         List<Review> productReviews = new ArrayList<>();
         for (Review review : allReviews) {
-            if (review.getProduct().getProductId() == productId) {
+            if (Objects.equals(review.getProductId(), productId)) {
                 productReviews.add(review);
             }
         }

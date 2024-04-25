@@ -24,11 +24,9 @@ export default function ProductProfile() {
     <div>
       <Header />
       <Container>
-        {/* Pass the isEditable state as a prop */}
         <ProductCard id={productId} editable={isEditable} />
       </Container>
-      {/* Render CommentCard only if isEditable is false */}
-      {!isEditable && <CommentCard />}
+      {!isEditable && <CommentCard id={productId} />}
     </div>
   );
 }

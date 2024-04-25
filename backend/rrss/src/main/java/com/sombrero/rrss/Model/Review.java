@@ -16,16 +16,11 @@ public class Review{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer reviewId;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @Column(name = "product_id")
+    private Integer productId;
 
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    private Merchant author;
-
-    @Column(name = "author_name")
-    private String authorName;
+    @Column(name = "author_id")
+    private Integer authorId;
 
     @Column(name = "rating")
     private Integer rating;

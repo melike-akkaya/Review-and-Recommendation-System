@@ -3,17 +3,18 @@ import {
   Card,
   CardContent,
   Typography,
-  Avatar,
   Button,
   Checkbox,
   FormControlLabel,
+  Rating,
 } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
-import CustomizedRating from "./Rating";
-import { getLabelsByProductId, getProductById } from "../../services/ProductService";
+import {
+  getLabelsByProductId,
+  getProductById,
+} from "../../services/ProductService";
 import IconButton from "@mui/material/IconButton";
 import UploadIcon from "@mui/icons-material/Upload";
-import image from "../../assets/rrss-logo.png";
 import { fileToBlob } from "../../commonMethods";
 
 const ProductCard = ({ id, editable }) => {
@@ -21,7 +22,6 @@ const ProductCard = ({ id, editable }) => {
   const [fetchedLabels, setFetchedLabels] = useState([]);
   const [fetchedProduct, setFetchedProduct] = useState([]);
   const [labels, setLabels] = useState([]);
-  const [productImage, setProductImage] = useState(image);
   const [selectedStyles, setSelectedStyles] = useState([]);
   const styleOptions = ["elegant", "luxury", "ergonomic", "antique", "modern"];
 
@@ -36,11 +36,6 @@ const ProductCard = ({ id, editable }) => {
       .then(setFetchedProduct)
       .catch((error) => console.error("Error fetching products:", error));
   };
-
-  useEffect(() => {
-    console.log(fetchedProduct)
-
-  }, [fetchedProduct]);
 
   useEffect(() => {
     const cleanedId = parseInt(id.replace(":", ""), 10);
@@ -106,16 +101,15 @@ const ProductCard = ({ id, editable }) => {
       {editable ? (
         <div style={{ position: "relative" }}>
           <div style={{ display: "flex", alignItems: "center" }}>
-        {fetchedProduct?.image && (
-          <img
-            src={`data:image/jpeg;base64,${fetchedProduct.image}`}
-            alt={fetchedProduct.name}
-            className="rounded-md object-cover"
-            style={{ height: "500px", width: "500px", marginRight: "20px" }}
-
-          />
-        )}
-      </div>
+            {fetchedProduct?.image && (
+              <img
+                src={`data:image/jpeg;base64,${fetchedProduct.image}`}
+                alt={fetchedProduct.name}
+                className="rounded-md object-cover"
+                style={{ height: "500px", width: "500px", marginRight: "20px" }}
+              />
+            )}
+          </div>
           <IconButton
             sx={{
               position: "absolute",
@@ -133,16 +127,15 @@ const ProductCard = ({ id, editable }) => {
         </div>
       ) : (
         <div style={{ display: "flex", alignItems: "center" }}>
-        {fetchedProduct?.image && (
-          <img
-            src={`data:image/jpeg;base64,${fetchedProduct.image}`}
-            alt={fetchedProduct.name}
-            className="rounded-md object-cover"
-            style={{ height: "500px", width: "500px", marginRight: "20px" }}
-
-          />
-        )}
-      </div>
+          {fetchedProduct?.image && (
+            <img
+              src={`data:image/jpeg;base64,${fetchedProduct.image}`}
+              alt={fetchedProduct.name}
+              className="rounded-md object-cover"
+              style={{ height: "500px", width: "500px", marginRight: "20px" }}
+            />
+          )}
+        </div>
       )}
       <CardContent
         style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
@@ -152,12 +145,19 @@ const ProductCard = ({ id, editable }) => {
             {fetchedProduct.name}
           </Typography>
           <Typography variant="body2" contentEditable={editable}>
-                {fetchedProduct.description}
+            {fetchedProduct.description}
           </Typography>
           <Typography variant="body2" contentEditable={editable}>
-              Price: {fetchedProduct && fetchedProduct.price && `$${fetchedProduct.price}`}
-              </Typography>
-          <CustomizedRating />
+            Price:{" "}
+            {fetchedProduct &&
+              fetchedProduct.price &&
+              `$${fetchedProduct.price}`}
+          </Typography>
+          <Rating
+            name="simple-controlled"
+            // value={rating}
+            // onChange={handleRatingChange}
+          />
         </div>
         {editable ? (
           <div style={{ display: "flex", flexWrap: "wrap" }}>
