@@ -48,6 +48,7 @@ export default function AddProductDialog({ open, setOpen, refreshProducts }) {
     label: [],
     category: "",
     price: "",
+    description: "",
     image: null,
   };
 
@@ -163,6 +164,9 @@ export default function AddProductDialog({ open, setOpen, refreshProducts }) {
               name: "Category",
               type: "combo",
               options: categories.map((category) => category.name),
+            },
+            {
+              name:"Description", type:"text"
             },
             {
               name: "Label",
