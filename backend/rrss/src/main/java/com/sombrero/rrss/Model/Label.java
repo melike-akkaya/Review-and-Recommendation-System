@@ -18,17 +18,17 @@ public class Label {
     private Integer productId;
 
     @Column(name = "elegant")
-    private String elegant;
+    private Integer elegant;
 
     @Column(name = "luxury")
-    private double luxury;
+    private Integer luxury;
 
     @Column(name = "ergonomic")
-    private int ergonomic;
+    private Integer ergonomic;
 
     @Column(name = "antique")
-    private int antique;
+    private Integer antique;
 
     @Column(name = "modern")
-    private int modern;
+    private Integer modern;
 }

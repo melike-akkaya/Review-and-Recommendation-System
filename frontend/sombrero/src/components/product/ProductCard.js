@@ -1,19 +1,44 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, Typography, Avatar, Button } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
 import image from "../../assets/rrss-logo.png";
-
 import CustomizedRating from "./Rating";
-
-const colors = ["#f44336", "#2196f3", "#4caf50", "#ff9800", "#9c27b0"];
-const texts = ["label1", "label2", "label3", "label4", "label5"];
+import { getLabelsByProductId } from "../../services/ProductService";
 
 const ProductCard = ({ id }) => {
+  const colors = ["#f44336", "#2196f3", "#4caf50", "#ff9800", "#9c27b0"];
+  const [fetchedLabels, setFetchedLabels] = useState([]);
+  const [labels, setLabels] = useState([]);
+
+  const fetchLabelById = (productId) => {
+    getLabelsByProductId(productId)
+      .then(setFetchedLabels)
+      .catch((error) => console.error("Error fetching products:", error));
+  };
+
+  useEffect(() => {
+    const cleanedId = parseInt(id.replace(":", ""), 10);
+    fetchLabelById(cleanedId);
+  }, []);
+
+  useEffect(() => {
+    if (fetchedLabels.length > 0) {
+      const updatedLabels = Object.keys(fetchedLabels[0]).filter(
+        (attribute) => fetchedLabels[0][attribute] === 1
+      );
+      setLabels(updatedLabels);
+    }
+  }, [fetchedLabels]);
+
+  useEffect(() => {
+    console.log(labels);
+  }, [labels]);
+
   const renderRandomRectangles = () => {
     const rectangles = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < labels.length; i++) {
       const color = colors[i];
-      const text = texts[i];
+      const text = labels[i];
       rectangles.push(
         <div
           key={i}
