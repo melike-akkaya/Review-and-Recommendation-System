@@ -15,11 +15,11 @@ export function ProductComments(props) {
   return (
     <Card sx={{ maxWidth: 700, marginTop: "40px", marginBottom: "40px" }}>
       <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            {username.charAt(0).toUpperCase()}
-          </Avatar>
-        }
+        // avatar={
+        //   <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+        //     //{username.charAt(0).toUpperCase()}
+        //   </Avatar>
+        // }
         action={
           <IconButton aria-label="settings">
             <MoreVertIcon />
