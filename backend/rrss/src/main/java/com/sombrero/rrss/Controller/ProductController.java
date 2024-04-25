@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
 
 @CrossOrigin("*")
 @RestController
@@ -57,13 +59,17 @@ public class ProductController {
         }
     }
 
-
-
-
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<Product> deleteProduct(@PathVariable Integer productId) {
         productService.deleteProduct(productId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/byProductId/{productId}")
+    public ResponseEntity<Product> getProductById(@PathVariable Integer productId) {
+        Optional<Product> productOptional = productService.getProductById(productId);
+        return productOptional.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
 

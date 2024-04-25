@@ -15,6 +15,15 @@ export const getProductsByMerchantId = async (merchantId) => {
   }
 };
 
+export const getProductById = async (productId) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/products/byProductId/${productId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getLabelsByProductId = async (productId) => {
   try {
     const response = await axios.get(`${BASE_URL}/labels/${productId}`);
