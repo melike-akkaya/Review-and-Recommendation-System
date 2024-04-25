@@ -30,7 +30,7 @@ public class Product {
     @Column(name = "merchant_id")
     private Integer merchant;
 
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
 
     @Column(name = "image")
