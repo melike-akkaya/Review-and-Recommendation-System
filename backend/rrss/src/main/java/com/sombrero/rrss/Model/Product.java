@@ -25,10 +25,10 @@ public class Product {
     private double price;
 
     @Column(name = "category_id")
-    private int category;
+    private Integer category;
 
     @Column(name = "merchant_id")
-    private int merchant;
+    private Integer merchant;
 
     @Column(name = "image")
     @Lob

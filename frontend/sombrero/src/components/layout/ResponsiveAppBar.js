@@ -11,64 +11,64 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import SearchIcon from "@mui/icons-material/Search";
-import TextField from "@mui/material/TextField";
+import rrssIcon from "../../assets/rrss-logo-trans.png";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import InputBase from '@mui/material/InputBase';
-import { styled, alpha } from '@mui/material/styles';
+import InputBase from "@mui/material/InputBase";
+import { styled, alpha } from "@mui/material/styles";
 
 import { getCategories } from "../../services/CategoryService";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
-  }));
-  
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
+    marginLeft: theme.spacing(3),
+    width: "auto",
+  },
+}));
+
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: '20ch',
-        },
+  color: "inherit",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: "20ch",
     },
+  },
 }));
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
-    cursor: 'pointer',
-    padding: theme.spacing(1),
-    borderRadius: theme.shape.borderRadius,
-    transition: 'background-color 0.3s',
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.1),
-    },
-  }));
+  cursor: "pointer",
+  padding: theme.spacing(1),
+  borderRadius: theme.shape.borderRadius,
+  transition: "background-color 0.3s",
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.white, 0.1),
+  },
+}));
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -110,21 +110,30 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ backgroundColor: "#c8d6e5" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
-            <StyledTypography variant="h6" sx={{ mr: 2, flexGrow: 1 }} onClick={handleRRSSClick}>
-              RRSS
+            <StyledTypography
+              variant="h6"
+              sx={{ mr: 2, flexGrow: 1 }}
+              onClick={handleRRSSClick}
+            >
+              <img
+                src={rrssIcon}
+                alt="RRSS"
+                style={{ height: "30px", marginRight: "5px" }}
+              />
             </StyledTypography>
+
             <ButtonGroup variant="text" aria-label="Basic button group">
               {categories.map((category, index) => (
                 <Button
                   key={category.id}
                   sx={{
-                    fontSize: "1rem",
-                    color: "inherit",
-                    "&:hover": { color: "#ff4500" },
+                    fontSize: "0.9rem",
+                    color: "#222f3e",
+                    "&:hover": { color: "#01a3a4" },
                     ml: index > 0 ? 1 : 0,
                   }}
                 >
@@ -136,11 +145,12 @@ function ResponsiveAppBar() {
 
           <Search>
             <SearchIconWrapper>
-              <SearchIcon />
+              <SearchIcon style={{ color: "#222f3e" }} />
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
+              inputProps={{ "aria-label": "search" }}
+              style={{ color: "#222f3e" }}
             />
           </Search>
 
@@ -169,7 +179,7 @@ function ResponsiveAppBar() {
               {/* Include the handleProfileClick function for the Profile MenuItem */}
               <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
               {settings
-                .filter(setting => setting !== "Profile")
+                .filter((setting) => setting !== "Profile")
                 .map((setting) => (
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
                     {setting}
