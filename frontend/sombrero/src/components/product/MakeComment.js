@@ -12,6 +12,9 @@ export default function MakeComment() {
     const [value, setValue] = React.useState(0);
     const [text, setText] = React.useState(" ")
 
+
+    //const handleComment = () 
+
   return (
     <Card sx={{ maxWidth: 700 }}>
       <CardContent>
