@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
 import CustomizedRating from "./Rating";
-import { getLabelsByProductId, getProductById } from "../../services/ProductService";
+import { getLabelsByProductId, getProductById, updateProductById } from "../../services/ProductService";
 import IconButton from "@mui/material/IconButton";
 import UploadIcon from "@mui/icons-material/Upload";
 import image from "../../assets/rrss-logo.png";
@@ -22,6 +22,9 @@ const ProductCard = ({ id, editable }) => {
   const [fetchedProduct, setFetchedProduct] = useState([]);
   const [labels, setLabels] = useState([]);
   const [productImage, setProductImage] = useState(image);
+  const [productName, setProductName] = useState('');
+  const [productDescription, setProductDescription] = useState('');
+  const [productPrice, setProductPrice] = useState(0.0);
   const [selectedStyles, setSelectedStyles] = useState([]);
   const styleOptions = ["elegant", "luxury", "ergonomic", "antique", "modern"];
 
@@ -35,6 +38,27 @@ const ProductCard = ({ id, editable }) => {
     getProductById(productId)
       .then(setFetchedProduct)
       .catch((error) => console.error("Error fetching products:", error));
+  };
+
+  const saveProductChanges = () => {
+    const updatedProduct = {
+      name: productName,
+      description: productDescription,
+      price: productPrice,
+      image: null,
+    };
+
+    const formData = new FormData();
+      formData.append("product", JSON.stringify(updatedProduct));
+      formData.append("image", null);
+
+    updateProductById(id, formData)
+      .then(response => {
+        console.log('Product updated successfully');
+      })
+      .catch(error => {
+        console.error('Failed to update product', error);
+      });
   };
 
   useEffect(() => {
@@ -55,6 +79,11 @@ const ProductCard = ({ id, editable }) => {
       );
       setLabels(updatedLabels);
       setSelectedStyles(updatedLabels);
+    if (fetchedProduct){
+      setProductName(fetchedProduct.name);
+      setProductDescription(fetchedProduct.description);
+      setProductPrice(parseFloat(fetchedProduct.price));
+    }
     }
   }, [fetchedLabels]);
 
@@ -148,15 +177,23 @@ const ProductCard = ({ id, editable }) => {
         style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
       >
         <div style={{ marginBottom: "auto" }}>
-          <Typography variant="h5" component="div" contentEditable={editable}>
+          <Typography variant="h5" component="div" contentEditable={editable} onInput={(e) => setProductName(e.currentTarget.textContent)}>
             {fetchedProduct.name}
           </Typography>
-          <Typography variant="body2" contentEditable={editable}>
+          <Typography variant="body2" contentEditable={editable} onInput={(e) => setProductDescription(e.currentTarget.textContent)}>
                 {fetchedProduct.description}
           </Typography>
-          <Typography variant="body2" contentEditable={editable}>
-              Price: {fetchedProduct && fetchedProduct.price && `$${fetchedProduct.price}`}
-              </Typography>
+          <Typography variant="body2">
+              Price:
+          </Typography>
+
+          <Typography variant="body2" contentEditable={editable} onInput={(e) => {
+              const updatedPrice = parseFloat(e.target.value);
+              setProductPrice(isNaN(updatedPrice) ? 0 : updatedPrice);
+            }}>
+            {fetchedProduct.price}
+          </Typography>
+
           <CustomizedRating />
         </div>
         {editable ? (
@@ -194,6 +231,13 @@ const ProductCard = ({ id, editable }) => {
               Add to List
             </Button>
           )}
+          {editable && (<Button
+            variant="contained"
+            color="primary"
+            onClick={() => saveProductChanges()}
+          >
+            Save Changes
+          </Button>)}
         </div>
       </CardContent>
     </Card>

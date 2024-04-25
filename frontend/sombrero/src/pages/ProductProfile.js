@@ -11,7 +11,7 @@ export default function ProductProfile() {
   const [isEditable, setIsEditable] = useState(false);
 
   useEffect(() => {
-    setIsEditableFalse();
+    //setIsEditableFalse();
 
     const fetchIsEditable = async () => {
       const editable = await getIsEditable(productId);

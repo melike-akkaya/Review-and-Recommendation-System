@@ -71,5 +71,22 @@ public class ProductController {
         return productOptional.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/update/{productId}")
+    public ResponseEntity<Product> updateProductById(@PathVariable Integer productId, @RequestParam("product") String productJson, @RequestParam("image") MultipartFile imageFile) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Product product = objectMapper.readValue(productJson, Product.class);
+
+            byte[] image = imageFile.getBytes();
+            product.setImage(image);
+
+            productService.updateProduct(productId, product);
+            return new ResponseEntity<>(product, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println("Error processing product: " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
 

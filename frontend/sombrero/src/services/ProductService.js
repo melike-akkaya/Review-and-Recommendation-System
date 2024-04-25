@@ -58,3 +58,7 @@ export const setIsEditableTrue = () => {
 export const setIsEditableFalse = () => {
   return axios.post(`${BASE_URL}/temp/setFalse`);
 };
+
+export const updateProductById =  (id, formData) =>{
+  return axios.post(`${BASE_URL}/products/update/${id}`, formData)
+};

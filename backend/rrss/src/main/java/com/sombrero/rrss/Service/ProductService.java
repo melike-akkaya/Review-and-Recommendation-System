@@ -48,4 +48,19 @@ public class ProductService {
     public Optional<Product> getProductById(Integer productId) {
         return productRepository.findById(productId);
     }
+
+    public void updateProduct(Integer productId, Product product) {
+        //Find the product
+        Optional<Product> productOptional = productRepository.findById(productId);
+        if (productOptional.isPresent()) {
+            Product productToUpdate = productOptional.get();
+            productToUpdate.setName(product.getName());
+            productToUpdate.setPrice(product.getPrice());
+            productToUpdate.setCategory(product.getCategory());
+            productToUpdate.setMerchant(product.getMerchant());
+            productToUpdate.setDescription(product.getDescription());
+            productToUpdate.setImage(product.getImage());
+            productRepository.save(productToUpdate);
+        }
+    }
 }
