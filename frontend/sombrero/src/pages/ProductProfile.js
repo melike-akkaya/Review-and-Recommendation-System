@@ -1,13 +1,18 @@
 import React, { useEffect } from "react";
 import Header from "./Header";
-import { Container, CssBaseline, Typography, Box } from "@mui/material";
+import { Container } from "@mui/material";
 import ProductCard from "../components/product/ProductCard";
 import { useParams } from "react-router-dom";
-import MakeComment from "../components/product/MakeComment";
-import { ProductComments } from "../components/product/ProductComments";
+import CommentCard from "../components/product/CommentCard";
 
 export default function ProductProfile() {
   const { productId } = useParams();
+
+  const productList = [
+    { username: "user1", text: "Comment 1" },
+    { username: "user2", text: "Comment 2" },
+    { username: "user3", text: "Comment 3" }
+  ]; 
 
   return (
     <div>
@@ -17,24 +22,7 @@ export default function ProductProfile() {
       <Container>
         <ProductCard id={productId} />
       </Container>
-    
-      <React.Fragment>
-        <CssBaseline />
-        <Container maxWidth="md">
-          <Box sx={{ bgcolor: '#dedede', height: '100vh' }}>
-            <Typography variant="h4" gutterBottom>
-              Make a Comment
-            </Typography>
-            <MakeComment/>
-            <Typography variant="h4" gutterBottom>
-              Comments
-            </Typography>
-            <ProductComments
-              username={"isAddProductDialogOpen"}
-              text={"setAddProductDialogOpen"} />
-          </Box>
-        </Container>
-      </React.Fragment>
+      <CommentCard/>
     </div>
   );
 }

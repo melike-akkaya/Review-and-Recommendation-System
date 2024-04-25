@@ -14,7 +14,7 @@ import Button from '@mui/material/Button';
 
 
 export function ProductComments(props) {
-    const {username,text} = props;
+    const {username,text, rating} = props;
 
     return (
         <Card sx={{ maxWidth: 700 }}>
@@ -30,16 +30,13 @@ export function ProductComments(props) {
               </IconButton>
             }
             title={username}
-            subheader= {<Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly />}
+            subheader= {<Rating name="read-only" value={rating} readOnly />}
           />
           <CardContent>
             <Typography variant="body2" color="text.secondary">
               {text}
             </Typography>
           </CardContent>
-          <CardActions>
-            <Button size="small">Comment</Button>
-          </CardActions>
         </Card>
       );
 }
