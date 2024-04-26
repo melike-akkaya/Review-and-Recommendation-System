@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
 import { addReview } from "../../services/ReviewService";
 
-export default function MakeComment({ productId }) {
+export default function MakeComment({ productId, fetchReviewsByProductId}) {
   const [text, setText] = React.useState("");
   const [rating, setRating] = React.useState(0);
   const [isSent, setIsSent] = React.useState(false);
@@ -16,6 +16,7 @@ export default function MakeComment({ productId }) {
 
   const handleComment = async () => {
     setIsSent(true);
+    fetchReviewsByProductId(productId);
 
     const commentObject = {
       productId: productId.id,

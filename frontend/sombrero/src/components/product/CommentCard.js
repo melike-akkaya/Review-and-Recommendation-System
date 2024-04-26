@@ -13,9 +13,10 @@ const CommentCard = (productId) => {
       .catch((error) => console.error("Error fetching products:", error));
   };
 
+
   useEffect(() => {
     fetchReviewsByProductId(productId);
-  }, []);
+  }, [fetchedReviews]);
 
   const handleDeleteReview = async (reviewId) => {
     try {
@@ -52,7 +53,7 @@ const CommentCard = (productId) => {
               Make a Comment
             </Typography>
           </div>
-          <MakeComment productId={productId} onAddReview={handleAddReview} />
+          <MakeComment productId={productId} onAddReview={handleAddReview} fetchReviewsByProductId = {fetchReviewsByProductId}/>
           <div
             style={{
               marginTop: "50px",
