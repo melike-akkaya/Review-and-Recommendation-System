@@ -2,7 +2,7 @@ import { Container, CssBaseline, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import MakeComment from "./MakeComment";
 import { ProductComments } from "./ProductComments";
-import { getReviewsByProductId } from "../../services/ReviewService";
+import { getReviewsByProductId, deleteReview, addReview } from "../../services/ReviewService";
 
 const CommentCard = (productId) => {
   const [fetchedReviews, setFetchedReviews] = useState([]);
@@ -16,6 +16,24 @@ const CommentCard = (productId) => {
   useEffect(() => {
     fetchReviewsByProductId(productId);
   }, []);
+
+  const handleDeleteReview = async (reviewId) => {
+    try {
+      await deleteReview(reviewId);
+      fetchReviewsByProductId(productId);
+    } catch (error) {
+      console.error("Error deleting review:", error);
+    }
+  };
+
+  const handleAddReview = async (review) => {
+    try {
+      await addReview(review);
+      fetchReviewsByProductId(productId); 
+    } catch (error) {
+      console.error("Error adding review:", error);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -34,7 +52,7 @@ const CommentCard = (productId) => {
               Make a Comment
             </Typography>
           </div>
-          <MakeComment productId={productId} />
+          <MakeComment productId={productId} onAddReview={handleAddReview} />
           <div
             style={{
               marginTop: "50px",
@@ -50,13 +68,14 @@ const CommentCard = (productId) => {
         </div>
         <div style={{ padding: "0 80px" }}>
           {fetchedReviews.map((product, index) => (
-            <ProductComments
-              key={index}
-              username={product.authorId}
-              text={product.comment}
-              rating={product.rating}
-            />
-          ))}
+          <ProductComments
+            key={index}
+            username={product.authorName}
+            text={product.comment}
+            rating={product.rating}
+            onDelete={() => handleDeleteReview(product.reviewId)} 
+          />
+        ))}
         </div>
       </Container>
     </React.Fragment>

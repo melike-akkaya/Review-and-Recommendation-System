@@ -16,3 +16,6 @@ export const getReviewsByProductId = async (productId) => {
 export const addReview = (review) => {
   return axios.post(`${BASE_URL}/reviews/add`, review);
 };
+
+export const deleteReview = (reviewId) => axios.delete(`${BASE_URL}/reviews/delete/${reviewId}`);
+

@@ -28,6 +28,9 @@ public class Review{
     @Column(name = "comment")
     private String comment;
 
+    @Column(name = "author_name")
+    private String authorName;
+
     @Column(name = "created_at")
     private Date createdAt;
 }

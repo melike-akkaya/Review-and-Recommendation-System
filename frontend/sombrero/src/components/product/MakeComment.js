@@ -13,20 +13,26 @@ export default function MakeComment({ productId }) {
   const [rating, setRating] = React.useState(0);
   const [isSent, setIsSent] = React.useState(false);
 
-  const handleComment = () => {
+
+  const handleComment = async () => {
     setIsSent(true);
-    setText("");
-    setRating(0);
 
     const commentObject = {
       productId: productId.id,
-      authorId: 1,
+      authorId: 1, 
+      authorName: "Taylor Swift",
       rating: rating,
       comment: text,
       createdAt: new Date().toISOString(),
     };
 
-    addReview(commentObject);
+    try {
+      await addReview(commentObject);
+      setText("");
+      setRating(0);
+    } catch (error) {
+      console.error("Error adding review:", error);
+    }
   };
 
   const handleTextChange = (event) => {
@@ -61,7 +67,7 @@ export default function MakeComment({ productId }) {
         >
           <TextField
             id="outlined-basic"
-            label="Outlined"
+            label="Write here..."
             variant="outlined"
             value={text}
             onChange={handleTextChange}
