@@ -9,7 +9,6 @@ import {
   Rating,
 } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
-import CustomizedRating from "./Rating";
 import {
   getLabelsByProductId,
   getProductById,
@@ -234,8 +233,6 @@ const ProductCard = ({ id, editable }) => {
           >
             {fetchedProduct.price}
           </Typography>
-
-          <CustomizedRating />
         </div>
         {editable ? (
           <div style={{ display: "flex", flexWrap: "wrap" }}>
