@@ -6,6 +6,7 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
+  Rating,
 } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
 import CustomizedRating from "./Rating";
