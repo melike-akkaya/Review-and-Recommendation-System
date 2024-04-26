@@ -28,6 +28,7 @@ const ProductCard = ({ id, editable }) => {
   const [productDescription, setProductDescription] = useState("");
   const [productPrice, setProductPrice] = useState(0.0);
   const [selectedStyles, setSelectedStyles] = useState([]);
+  const [displayImage,setDisplayImage] = useState();
   const styleOptions = ["elegant", "luxury", "ergonomic", "antique", "modern"];
 
   const fetchLabelById = (productId) => {
@@ -49,6 +50,10 @@ const ProductCard = ({ id, editable }) => {
       price: productPrice,
       image: fetchedProduct.image,
     };
+
+    if(updatedProduct.name==null) updatedProduct.name=fetchedProduct.name;
+    if(updatedProduct.description==null) updatedProduct.description=fetchedProduct.description;
+    if(updatedProduct.price==null) updatedProduct.price=fetchedProduct.price;
 
     const formData = new FormData();
     const { image, ...productWithoutImage } = updatedProduct;
@@ -74,6 +79,9 @@ const ProductCard = ({ id, editable }) => {
     const cleanedId = parseInt(id.replace(":", ""), 10);
     fetchLabelById(cleanedId);
     fetchProductById(cleanedId);
+    setProductName(fetchedProduct.name);
+    setProductDescription(fetchedProduct.description);
+    setProductPrice(fetchedProduct.price);
   }, [id]);
 
   useEffect(() => {
@@ -83,11 +91,6 @@ const ProductCard = ({ id, editable }) => {
       );
       setLabels(updatedLabels);
       setSelectedStyles(updatedLabels);
-      if (fetchedProduct) {
-        setProductName(fetchedProduct.name);
-        setProductDescription(fetchedProduct.description);
-        setProductPrice(parseFloat(fetchedProduct.price));
-      }
     }
   }, [fetchedLabels]);
 
@@ -121,9 +124,8 @@ const ProductCard = ({ id, editable }) => {
         const file = event.target.files[0];
 
         const blob = await fileToBlob(file);
-
         setProductImage(blob);
-
+        
         // setMerchant((prevMerchant) => ({
         //   ...prevMerchant,
         //   image: blob,
@@ -202,8 +204,7 @@ const ProductCard = ({ id, editable }) => {
             variant="body2"
             contentEditable={editable}
             onInput={(e) => {
-              const updatedPrice = parseFloat(e.target.value);
-              setProductPrice(isNaN(updatedPrice) ? 0 : updatedPrice);
+              setProductPrice(e.currentTarget.textContent);
             }}
           >
             {fetchedProduct.price}
