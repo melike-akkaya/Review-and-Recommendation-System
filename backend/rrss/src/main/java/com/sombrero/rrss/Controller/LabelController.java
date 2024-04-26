@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
@@ -24,7 +25,6 @@ public class LabelController {
         }
         return new ResponseEntity<>(labels, HttpStatus.OK);
     }
-
     @PostMapping("/add")
     public ResponseEntity<Label> addLabel(@RequestBody Label newLabel) {
         try {
@@ -32,6 +32,32 @@ public class LabelController {
             return new ResponseEntity<>(newLabel, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/edit/{productId}")
+    public ResponseEntity<Label> editLabel(@PathVariable Integer productId, @RequestBody Label updatedLabel) {
+        try {
+            Optional<Label> optionalLabel = labelService.getById(productId);
+
+            if (optionalLabel.isPresent()) {
+                Label exisitingLabel = optionalLabel.get();
+
+                exisitingLabel.setElegant(updatedLabel.getElegant());
+                exisitingLabel.setErgonomic(updatedLabel.getErgonomic());
+                exisitingLabel.setModern(updatedLabel.getModern());
+                exisitingLabel.setLuxury(updatedLabel.getLuxury());
+                exisitingLabel.setAntique(updatedLabel.getAntique());
+
+                Label newLabel = labelService.save(exisitingLabel);
+
+                return new ResponseEntity<>(newLabel, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

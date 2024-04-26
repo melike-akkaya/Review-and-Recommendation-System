@@ -2,11 +2,11 @@ package com.sombrero.rrss.Service;
 
 
 import com.sombrero.rrss.Model.Label;
-import com.sombrero.rrss.Model.Product;
 import com.sombrero.rrss.Repository.ILabelRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 
@@ -28,5 +28,11 @@ public class LabelService {
         labelRepository.deleteById(id);
     }
 
+    public Label save(Label label) {
+        return labelRepository.save(label);
+    }
 
+    public Optional<Label> getById(int id) {
+        return labelRepository.findById(id);
+    }
 }

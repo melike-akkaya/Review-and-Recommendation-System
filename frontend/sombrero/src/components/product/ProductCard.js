@@ -12,6 +12,7 @@ import CustomizedRating from "./Rating";
 import {
   getLabelsByProductId,
   getProductById,
+  updateLabelsById,
   updateProductById,
 } from "../../services/ProductService";
 import IconButton from "@mui/material/IconButton";
@@ -28,7 +29,6 @@ const ProductCard = ({ id, editable }) => {
   const [productDescription, setProductDescription] = useState("");
   const [productPrice, setProductPrice] = useState(0.0);
   const [selectedStyles, setSelectedStyles] = useState([]);
-  const [displayImage,setDisplayImage] = useState();
   const styleOptions = ["elegant", "luxury", "ergonomic", "antique", "modern"];
 
   const fetchLabelById = (productId) => {
@@ -51,9 +51,11 @@ const ProductCard = ({ id, editable }) => {
       image: fetchedProduct.image,
     };
 
-    if(updatedProduct.name==null) updatedProduct.name=fetchedProduct.name;
-    if(updatedProduct.description==null) updatedProduct.description=fetchedProduct.description;
-    if(updatedProduct.price==null) updatedProduct.price=fetchedProduct.price;
+    if (updatedProduct.name == null) updatedProduct.name = fetchedProduct.name;
+    if (updatedProduct.description == null)
+      updatedProduct.description = fetchedProduct.description;
+    if (updatedProduct.price == null)
+      updatedProduct.price = fetchedProduct.price;
 
     const formData = new FormData();
     const { image, ...productWithoutImage } = updatedProduct;
@@ -69,11 +71,24 @@ const ProductCard = ({ id, editable }) => {
       .catch((error) => {
         console.error("Failed to update product", error);
       });
-  };
 
-  useEffect(() => {
-    console.log(fetchedProduct);
-  }, [fetchedProduct]);
+    const labelObject = {
+      productId: cleanedId,
+      elegant: +labels.includes("elegant"),
+      luxury: +labels.includes("luxury"),
+      ergonomic: +labels.includes("ergonomic"),
+      antique: +labels.includes("antique"),
+      modern: +labels.includes("modern"),
+    };
+
+    updateLabelsById(cleanedId, labelObject)
+      .then((response) => {
+        console.log("Product updated successfully");
+      })
+      .catch((error) => {
+        console.error("Failed to update product", error);
+      });
+  };
 
   useEffect(() => {
     const cleanedId = parseInt(id.replace(":", ""), 10);
@@ -125,7 +140,7 @@ const ProductCard = ({ id, editable }) => {
 
         const blob = await fileToBlob(file);
         setProductImage(blob);
-        
+
         // setMerchant((prevMerchant) => ({
         //   ...prevMerchant,
         //   image: blob,
@@ -136,6 +151,15 @@ const ProductCard = ({ id, editable }) => {
     };
 
     input.click();
+  };
+
+  const toggleLabel = (option) => {
+    if (labels.includes(option)) {
+      setLabels((prevLabels) => prevLabels.filter((label) => label !== option));
+    } else {
+      setLabels((prevLabels) => [...prevLabels, option]);
+    }
+    console.log(labels);
   };
 
   return (
@@ -221,6 +245,7 @@ const ProductCard = ({ id, editable }) => {
                   <Checkbox
                     checked={selectedStyles.includes(option)}
                     onChange={(event) => {
+                      toggleLabel(option);
                       const checked = event.target.checked;
                       setSelectedStyles((prevSelected) => {
                         if (checked) {
