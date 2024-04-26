@@ -3,17 +3,19 @@ import {
   Card,
   CardContent,
   Typography,
-  Avatar,
   Button,
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
 import CustomizedRating from "./Rating";
-import { getLabelsByProductId, getProductById, updateProductById } from "../../services/ProductService";
+import {
+  getLabelsByProductId,
+  getProductById,
+  updateProductById,
+} from "../../services/ProductService";
 import IconButton from "@mui/material/IconButton";
 import UploadIcon from "@mui/icons-material/Upload";
-import image from "../../assets/rrss-logo.png";
 import { fileToBlob } from "../../commonMethods";
 
 const ProductCard = ({ id, editable }) => {
@@ -21,9 +23,9 @@ const ProductCard = ({ id, editable }) => {
   const [fetchedLabels, setFetchedLabels] = useState([]);
   const [fetchedProduct, setFetchedProduct] = useState([]);
   const [labels, setLabels] = useState([]);
-  const [productImage, setProductImage] = useState(image);
-  const [productName, setProductName] = useState('');
-  const [productDescription, setProductDescription] = useState('');
+  const [productImage, setProductImage] = useState();
+  const [productName, setProductName] = useState("");
+  const [productDescription, setProductDescription] = useState("");
   const [productPrice, setProductPrice] = useState(0.0);
   const [selectedStyles, setSelectedStyles] = useState([]);
   const styleOptions = ["elegant", "luxury", "ergonomic", "antique", "modern"];
@@ -45,25 +47,27 @@ const ProductCard = ({ id, editable }) => {
       name: productName,
       description: productDescription,
       price: productPrice,
-      image: null,
+      image: fetchedProduct.image,
     };
 
     const formData = new FormData();
-      formData.append("product", JSON.stringify(updatedProduct));
-      formData.append("image", null);
+    const { image, ...productWithoutImage } = updatedProduct;
+    formData.append("product", JSON.stringify(productWithoutImage));
+    formData.append("image", productImage);
 
-    updateProductById(id, formData)
-      .then(response => {
-        console.log('Product updated successfully');
+    const cleanedId = parseInt(id.replace(":", ""), 10);
+
+    updateProductById(cleanedId, formData)
+      .then((response) => {
+        console.log("Product updated successfully");
       })
-      .catch(error => {
-        console.error('Failed to update product', error);
+      .catch((error) => {
+        console.error("Failed to update product", error);
       });
   };
 
   useEffect(() => {
-    console.log(fetchedProduct)
-
+    console.log(fetchedProduct);
   }, [fetchedProduct]);
 
   useEffect(() => {
@@ -79,11 +83,11 @@ const ProductCard = ({ id, editable }) => {
       );
       setLabels(updatedLabels);
       setSelectedStyles(updatedLabels);
-    if (fetchedProduct){
-      setProductName(fetchedProduct.name);
-      setProductDescription(fetchedProduct.description);
-      setProductPrice(parseFloat(fetchedProduct.price));
-    }
+      if (fetchedProduct) {
+        setProductName(fetchedProduct.name);
+        setProductDescription(fetchedProduct.description);
+        setProductPrice(parseFloat(fetchedProduct.price));
+      }
     }
   }, [fetchedLabels]);
 
@@ -118,6 +122,8 @@ const ProductCard = ({ id, editable }) => {
 
         const blob = await fileToBlob(file);
 
+        setProductImage(blob);
+
         // setMerchant((prevMerchant) => ({
         //   ...prevMerchant,
         //   image: blob,
@@ -135,16 +141,15 @@ const ProductCard = ({ id, editable }) => {
       {editable ? (
         <div style={{ position: "relative" }}>
           <div style={{ display: "flex", alignItems: "center" }}>
-        {fetchedProduct?.image && (
-          <img
-            src={`data:image/jpeg;base64,${fetchedProduct.image}`}
-            alt={fetchedProduct.name}
-            className="rounded-md object-cover"
-            style={{ height: "500px", width: "500px", marginRight: "20px" }}
-
-          />
-        )}
-      </div>
+            {fetchedProduct?.image && (
+              <img
+                src={`data:image/jpeg;base64,${fetchedProduct.image}`}
+                alt={fetchedProduct.name}
+                className="rounded-md object-cover"
+                style={{ height: "500px", width: "500px", marginRight: "20px" }}
+              />
+            )}
+          </div>
           <IconButton
             sx={{
               position: "absolute",
@@ -162,35 +167,45 @@ const ProductCard = ({ id, editable }) => {
         </div>
       ) : (
         <div style={{ display: "flex", alignItems: "center" }}>
-        {fetchedProduct?.image && (
-          <img
-            src={`data:image/jpeg;base64,${fetchedProduct.image}`}
-            alt={fetchedProduct.name}
-            className="rounded-md object-cover"
-            style={{ height: "500px", width: "500px", marginRight: "20px" }}
-
-          />
-        )}
-      </div>
+          {fetchedProduct?.image && (
+            <img
+              src={`data:image/jpeg;base64,${fetchedProduct.image}`}
+              alt={fetchedProduct.name}
+              className="rounded-md object-cover"
+              style={{ height: "500px", width: "500px", marginRight: "20px" }}
+            />
+          )}
+        </div>
       )}
       <CardContent
         style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
       >
         <div style={{ marginBottom: "auto" }}>
-          <Typography variant="h5" component="div" contentEditable={editable} onInput={(e) => setProductName(e.currentTarget.textContent)}>
+          <Typography
+            variant="h5"
+            component="div"
+            contentEditable={editable}
+            onInput={(e) => setProductName(e.currentTarget.textContent)}
+          >
             {fetchedProduct.name}
           </Typography>
-          <Typography variant="body2" contentEditable={editable} onInput={(e) => setProductDescription(e.currentTarget.textContent)}>
-                {fetchedProduct.description}
+          <Typography
+            variant="body2"
+            contentEditable={editable}
+            onInput={(e) => setProductDescription(e.currentTarget.textContent)}
+          >
+            {fetchedProduct.description}
           </Typography>
-          <Typography variant="body2">
-              Price:
-          </Typography>
+          <Typography variant="body2">Price:</Typography>
 
-          <Typography variant="body2" contentEditable={editable} onInput={(e) => {
+          <Typography
+            variant="body2"
+            contentEditable={editable}
+            onInput={(e) => {
               const updatedPrice = parseFloat(e.target.value);
               setProductPrice(isNaN(updatedPrice) ? 0 : updatedPrice);
-            }}>
+            }}
+          >
             {fetchedProduct.price}
           </Typography>
 
@@ -231,13 +246,15 @@ const ProductCard = ({ id, editable }) => {
               Add to List
             </Button>
           )}
-          {editable && (<Button
-            variant="contained"
-            color="primary"
-            onClick={() => saveProductChanges()}
-          >
-            Save Changes
-          </Button>)}
+          {editable && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => saveProductChanges()}
+            >
+              Save Changes
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>

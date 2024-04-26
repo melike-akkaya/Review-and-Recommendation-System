@@ -63,4 +63,13 @@ public class ProductService {
             productRepository.save(productToUpdate);
         }
     }
+
+    public Product save(Product product) {
+        return productRepository.save(product);
+    }
+
+
+    public Optional<Product> getById(int id) {
+        return productRepository.findById(id);
+    }
 }

@@ -72,21 +72,37 @@ public class ProductController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/update/{productId}")
-    public ResponseEntity<Product> updateProductById(@PathVariable Integer productId, @RequestParam("product") String productJson, @RequestParam("image") MultipartFile imageFile) {
+    @PostMapping("/update/{productId}")
+    public ResponseEntity<Product> updateProductById(@PathVariable Integer productId,
+                                                     @RequestPart String product, @RequestPart byte [] image ) {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            Product product = objectMapper.readValue(productJson, Product.class);
+            Optional<Product> optionalProduct = productService.getById(productId);
 
-            byte[] image = imageFile.getBytes();
-            product.setImage(image);
+            if (optionalProduct.isPresent()) { // if the merchant exists
+                Product existingProduct = optionalProduct.get();
 
-            productService.updateProduct(productId, product);
-            return new ResponseEntity<>(product, HttpStatus.OK);
+                ObjectMapper objectMapper = new ObjectMapper();
+                Product productObject = objectMapper.readValue(product, Product.class);
+
+                existingProduct.setName(productObject.getName());
+                existingProduct.setPrice(productObject.getPrice());
+                existingProduct.setDescription(productObject.getDescription());
+
+                if (image != null) {
+                    existingProduct.setImage(image);
+                }
+
+                Product updatedProduct = productService.save(existingProduct);
+
+                return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+            } else { // if merchant not found
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         } catch (Exception e) {
-            System.out.println("Error processing product: " + e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 }
 
