@@ -34,7 +34,6 @@ public class RecommendationController {
 
         for (Product product : wishListedProducts) {
             List<Integer> labelValues = GetLabelsByProductId(product.getProductId());
-
             //Apply find S algorithm
             //1 for true 0 for false 2 for don't care, -1 for not set
             for (int i = 0; i < labelValues.size(); i++) {
@@ -60,6 +59,8 @@ public class RecommendationController {
                 recommendedProducts.add(product);
             }
         }
+        //Remove the products that are already in the wishlist
+        recommendedProducts.removeAll(wishListedProducts);
         return new ResponseEntity<>(recommendedProducts.get(0), HttpStatus.OK);
     }
 
