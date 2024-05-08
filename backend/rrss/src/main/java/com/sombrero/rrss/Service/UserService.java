@@ -1,5 +1,6 @@
 package com.sombrero.rrss.Service;
 
+import com.sombrero.rrss.Model.Product;
 import com.sombrero.rrss.Model.User;
 import com.sombrero.rrss.Repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,11 @@ public class UserService {
 
     public List<User> getAll() {
         return userRepository.findAll();
+    }
+
+    public List<Product> getWishListedProducts(Integer userId) {
+        //return userRepository.getWishListedProducts(userId);
+        return null;
     }
 
 }

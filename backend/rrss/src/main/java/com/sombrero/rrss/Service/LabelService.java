@@ -5,6 +5,7 @@ import com.sombrero.rrss.Model.Label;
 import com.sombrero.rrss.Repository.ILabelRepository;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,5 +35,11 @@ public class LabelService {
 
     public Optional<Label> getById(int id) {
         return labelRepository.findById(id);
+    }
+
+    public int getLabelCount() {
+        Class<Label> labelClass = Label.class;
+        Field[] fields = labelClass.getDeclaredFields();
+        return fields.length;
     }
 }
