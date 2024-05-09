@@ -104,5 +104,18 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/incrementViewCount/{productId}")
+    public ResponseEntity<Product> incrementViewCount(@PathVariable Integer productId) {
+        Optional<Product> optionalProduct = productService.getById(productId);
+
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            product.setViewCount(product.getViewCount() + 1);
+            productService.save(product);
+            return new ResponseEntity<>(product, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
 

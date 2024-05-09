@@ -36,4 +36,7 @@ public class Product {
     @Column(name = "image")
     @Lob
     private byte[] image;
+
+    @Column(name = "view_count")
+    private Integer viewCount=0;
 }

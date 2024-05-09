@@ -66,3 +66,7 @@ export const updateProductById = (id, formData) => {
 export const updateLabelsById = (id, label) => {
   return axios.post(`${BASE_URL}/labels/edit/${id}`, label);
 };
+
+export const incrementProductView = (id) => {
+  return axios.get(`${BASE_URL}/products/incrementViewCount/${id}`);
+};
