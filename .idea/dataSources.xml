@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:postgresql://ep-cool-sound-a42fptxh.us-east-1.aws.neon.tech/rrss?sslmode=require</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="rrss@ep-cool-sound-a42fptxh.us-east-1.aws.neon.tech [2]" uuid="690dd10a-0505-4d4c-a5f6-70bc6f8f8d32">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://ep-cool-sound-a42fptxh.us-east-1.aws.neon.tech/rrss?sslmode=require</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
