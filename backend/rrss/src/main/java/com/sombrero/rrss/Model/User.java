@@ -31,9 +31,9 @@ public class User implements UserDetails {
     private String country;
     @Column(name = "email")
     private String email;
-    @Column(name = "avatar_path")
+    @Column(name = "image")
     @Lob
-    private byte[] avatar_path;
+    private byte[] image;
     @Enumerated(EnumType.STRING)
     private Role role;
     @Override
@@ -43,7 +43,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return String.valueOf(this.id);
+        return this.email;
     }
 
     @Override
