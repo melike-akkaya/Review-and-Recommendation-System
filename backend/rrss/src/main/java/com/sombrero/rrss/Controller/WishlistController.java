@@ -88,4 +88,15 @@ public class WishlistController {
         }
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Wishlist>> getWishlistsByUserId(@PathVariable Integer userId) {
+        List<Wishlist> userWishlists = wishlistService.getWishlistsByUserId(userId);
+        if (userWishlists != null && !userWishlists.isEmpty()) {
+            return ResponseEntity.ok(userWishlists);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }

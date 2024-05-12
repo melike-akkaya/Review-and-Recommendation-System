@@ -63,4 +63,9 @@ public class WishlistService {
         }
         return null;
     }
+
+    public List<Wishlist> getWishlistsByUserId(int userId) {
+        return wishlistRepository.findByUserId(userId);
+    }
+
 }
