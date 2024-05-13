@@ -68,4 +68,16 @@ public class WishlistService {
         return wishlistRepository.findByUserId(userId);
     }
 
+    public int getWishlistCountByProductId(Integer productId) {
+        List<Wishlist> wishlists=wishlistRepository.findAll();
+        int count=0;
+        for(Wishlist wishlist:wishlists){
+            for(Product product:wishlist.getProducts()){
+                if(product.getProductId()==productId){
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 }

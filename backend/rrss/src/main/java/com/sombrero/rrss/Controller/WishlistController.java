@@ -98,5 +98,11 @@ public class WishlistController {
         }
     }
 
+    @GetMapping("/wishlistCount/{productId}")
+    public ResponseEntity<Integer> getWishlistCount(@PathVariable Integer productId) {
+        int count = wishlistService.getWishlistCountByProductId(productId);
+        return ResponseEntity.ok(count);
+    }
+
 
 }
