@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Stack, Card, CardContent, Typography } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getForYou } from '../services/ForYouService';
-import { getCurrentMerchantID } from '../services/MerchantService';
+import { useParams } from "react-router-dom";
 import Header from "./Header";
 
 const ForYouPage = () => {
+  const { userID } = useParams();
   const [products, setProducts] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
@@ -13,11 +14,8 @@ const ForYouPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        
-        if (query) {
-          const response = await getForYou(getCurrentMerchantID());
+          const response = await getForYou(2);
           setProducts(response.data);
-        }
       } catch (error) {
         console.error('Error fetching product data:', error);
       }

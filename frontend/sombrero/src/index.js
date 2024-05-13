@@ -7,12 +7,14 @@ import MerchantProfile from "./pages/MerchantProfile";
 import SearchResults from "./pages/SearchResults";
 import ProductProfile from "./pages/ProductProfile";
 import WishlistPage from "./pages/WishlistPage";
+import ForYouPage from "./pages/ForYou";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
   { path: "/merchant", element: <MerchantProfile /> },
   { path: "/search", element: <SearchResults /> },
   { path: "/product/:productId", element: <ProductProfile /> },
+  { path: "/recommendations/:userId", element: <ForYouPage /> },
   { path: "/wishlists/:userId", element: <WishlistPage /> }
 ]);
 

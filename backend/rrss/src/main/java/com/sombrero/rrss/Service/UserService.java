@@ -20,9 +20,5 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public List<Product> getWishListedProducts(Integer userId) {
-        //return userRepository.getWishListedProducts(userId);
-        return null;
-    }
 
 }

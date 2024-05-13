@@ -2,9 +2,11 @@ package com.sombrero.rrss.Controller;
 
 import com.sombrero.rrss.Model.Label;
 import com.sombrero.rrss.Model.Product;
+import com.sombrero.rrss.Model.Wishlist;
 import com.sombrero.rrss.Service.LabelService;
 import com.sombrero.rrss.Service.ProductService;
 import com.sombrero.rrss.Service.UserService;
+import com.sombrero.rrss.Service.WishlistService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +22,21 @@ import java.util.List;
 public class RecommendationController {
 
     private final LabelService labelService;
-    private final UserService userService;
+    private final WishlistService wishlistService;
     private final ProductService productService;
 
 
     @GetMapping("/{userId}")
-    public ResponseEntity<Product> getRecommendations(@PathVariable Integer userId) {
+    public ResponseEntity<List<Product>> getRecommendations(@PathVariable Integer userId) {
         ArrayList<Integer> hypothesis = new ArrayList<>();
         for (int i = 0; i < labelService.getLabelCount(); i++) {
             hypothesis.add(-1);
         }
-        List<Product> wishListedProducts = userService.getWishListedProducts(userId);
+        List<Wishlist> wishlists = wishlistService.getWishlistsByUserId(userId);
+        List<Product> wishListedProducts = new ArrayList<>();
+        for (Wishlist wishlist : wishlists) {
+            wishListedProducts.addAll(wishlist.getProducts());
+        }
 
         for (Product product : wishListedProducts) {
             List<Integer> labelValues = GetLabelsByProductId(product.getProductId());
@@ -61,12 +67,21 @@ public class RecommendationController {
         }
         //Remove the products that are already in the wishlist
         recommendedProducts.removeAll(wishListedProducts);
-        return new ResponseEntity<>(recommendedProducts.get(0), HttpStatus.OK);
+        return new ResponseEntity<>(recommendedProducts, HttpStatus.OK);
     }
 
     private List<Integer> GetLabelsByProductId(int productId) {
         List<Label> labels = labelService.getByProductId(productId);
+
         List<Integer> labelValues = new ArrayList<>();
+        if (labels.size() == 0) {
+            labelValues.add(0);
+            labelValues.add(0);
+            labelValues.add(0);
+            labelValues.add(0);
+            labelValues.add(0);
+            return labelValues;
+        }
         Label label = labels.get(0);
         labelValues.add(label.getElegant());
         labelValues.add(label.getErgonomic());

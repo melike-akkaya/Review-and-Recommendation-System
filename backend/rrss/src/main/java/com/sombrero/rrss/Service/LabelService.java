@@ -40,6 +40,6 @@ public class LabelService {
     public int getLabelCount() {
         Class<Label> labelClass = Label.class;
         Field[] fields = labelClass.getDeclaredFields();
-        return fields.length;
+        return fields.length-1;
     }
 }
