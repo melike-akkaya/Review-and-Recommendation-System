@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import Header from "./Header";
 
 const ForYouPage = () => {
-  const { userID } = useParams();
+  const { userId } = useParams();
   const [products, setProducts] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const ForYouPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-          const response = await getForYou(2);
+          const response = await getForYou(userId);
           setProducts(response.data);
       } catch (error) {
         console.error('Error fetching product data:', error);
