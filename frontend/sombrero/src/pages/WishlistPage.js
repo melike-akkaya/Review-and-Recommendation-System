@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { getUserWishlist, removeProductFromWishlist } from "../services/WishlistService";
 import { deleteWishlist } from "../services/WishlistService"; 
 import WishlistCard from "../components/wishlist/WishlistCard";
-import { Container, Typography, Grid, IconButton } from "@mui/material"; // Import IconButton
+import { Container, Typography, Grid, IconButton } from "@mui/material"; 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CreateWishlistForm from '../components/wishlist/CreateWishlistForm';
 import CreateIcon from '@mui/icons-material/Create';
@@ -51,8 +51,8 @@ const WishlistPage = () => {
 
   const handleCreateWishlist = async (wishlistName) => {
     try {
-      const newWishlist = await addWishlist({ name: wishlistName, userId: 1 }); // Assuming userId: 1
-      setWishlists([...wishlists, newWishlist]); // Add the new wishlist to the state
+      const newWishlist = await addWishlist({ name: wishlistName, userId: 1 });
+      setWishlists([...wishlists, newWishlist]); 
     } catch (error) {
       console.error('Error creating wishlist:', error);
     }
@@ -85,8 +85,8 @@ const WishlistPage = () => {
             <Grid item xs={12} key={wishlist.wishlistId}>
               <WishlistCard
                 wishlist={wishlist}
-                removeProduct={(productId) => handleRemoveProduct(wishlist.wishlistId, productId)} // Updated removeProduct prop
-                deleteWishlist={() => handleDeleteWishlist(wishlist.wishlistId)} // Updated deleteWishlist prop
+                removeProduct={(productId) => handleRemoveProduct(wishlist.wishlistId, productId)} 
+                deleteWishlist={() => handleDeleteWishlist(wishlist.wishlistId)} 
               />
             </Grid>
           ))}
