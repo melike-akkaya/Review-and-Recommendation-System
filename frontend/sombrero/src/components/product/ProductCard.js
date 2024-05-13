@@ -7,8 +7,11 @@ import {
   Checkbox,
   FormControlLabel,
   Rating,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
+import { getUserWishlist, addProductToWishlist } from "../../services/WishlistService";
 import {
   getLabelsByProductId,
   getProductById,
@@ -18,8 +21,9 @@ import {
 import IconButton from "@mui/material/IconButton";
 import UploadIcon from "@mui/icons-material/Upload";
 import { fileToBlob } from "../../commonMethods";
+import WishlistNotification from "../wishlist/WishlistNotification";
 
-const ProductCard = ({ id, editable }) => {
+const ProductCard = ({ id, editable, userId }) => {
   const colors = ["#f44336", "#2196f3", "#4caf50", "#ff9800", "#9c27b0"];
   const [fetchedLabels, setFetchedLabels] = useState([]);
   const [fetchedProduct, setFetchedProduct] = useState([]);
@@ -30,6 +34,48 @@ const ProductCard = ({ id, editable }) => {
   const [productPrice, setProductPrice] = useState(0.0);
   const [selectedStyles, setSelectedStyles] = useState([]);
   const styleOptions = ["elegant", "luxury", "ergonomic", "antique", "modern"];
+  const [wishlists, setWishlists] = useState([]);
+  const [wishlistMenuAnchor, setWishlistMenuAnchor] = useState(null);
+  const [notification, setNotification] = useState(null);
+
+  // Fetch user's wishlists
+  useEffect(() => {
+    const fetchUserWishlists = async () => {
+      try {
+        const userWishlists = await getUserWishlist(userId); // Fetch wishlists for the current user
+        setWishlists(userWishlists); // Set the fetched wishlists to state
+      } catch (error) {
+        console.error("Error fetching user wishlists:", error);
+      }
+    };
+    fetchUserWishlists();
+  }, []);
+
+  // Function to handle opening the wishlist menu
+  const handleOpenWishlistMenu = (event) => {
+    setWishlistMenuAnchor(event.currentTarget);
+  };
+
+  // Function to handle closing the wishlist menu
+  const handleCloseWishlistMenu = () => {
+    setWishlistMenuAnchor(null);
+  };
+
+  // Function to handle adding the product to a wishlist
+  const handleAddToWishlist = async (wishlistId) => {
+    try {
+      await addProductToWishlist(wishlistId, id); // Add the product to the selected wishlist
+      console.log("Product added to wishlist:", wishlistId);
+      setNotification(`Successfully added to ${wishlists.find(wishlist => wishlist.wishlistId === wishlistId).name} wishlist!`);
+    } catch (error) {
+      console.error("Error adding product to wishlist:", error);
+    }
+    handleCloseWishlistMenu();
+  };
+
+  const closeNotification = () => {
+    setNotification(null);
+  };
 
   const fetchLabelById = (productId) => {
     getLabelsByProductId(productId)
@@ -223,7 +269,6 @@ const ProductCard = ({ id, editable }) => {
             {fetchedProduct.description}
           </Typography>
           <Typography variant="body2">Price:</Typography>
-
           <Typography
             variant="body2"
             contentEditable={editable}
@@ -266,7 +311,12 @@ const ProductCard = ({ id, editable }) => {
         )}
         <div style={{ marginTop: "auto" }}>
           {!editable && (
-            <Button variant="contained" color="error" startIcon={<ListIcon />}>
+            <Button
+              variant="contained"
+              color="error"
+              startIcon={<ListIcon />}
+              onClick={handleOpenWishlistMenu} // Open the wishlist menu on click
+            >
               Add to List
             </Button>
           )}
@@ -280,7 +330,22 @@ const ProductCard = ({ id, editable }) => {
             </Button>
           )}
         </div>
+        <Menu
+          anchorEl={wishlistMenuAnchor}
+          open={Boolean(wishlistMenuAnchor)}
+          onClose={handleCloseWishlistMenu}
+        >
+          {wishlists.map((wishlist) => (
+            <MenuItem
+              key={wishlist.wishlistId}
+              onClick={() => handleAddToWishlist(wishlist.wishlistId)}
+            >
+              {wishlist.name}
+            </MenuItem>
+          ))}
+        </Menu>
       </CardContent>
+      {notification && <WishlistNotification message={notification} onClose={closeNotification} />}
     </Card>
   );
 };

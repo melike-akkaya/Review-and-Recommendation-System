@@ -27,7 +27,7 @@ export default function ProductProfile() {
     <div>
       <Header />
       <Container>
-        <ProductCard id={productId} editable={isEditable} />
+        <ProductCard id={productId} editable={isEditable} userId={1} />
       </Container>
       {!isEditable && <CommentCard id={productId} />}
     </div>
