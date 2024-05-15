@@ -17,7 +17,7 @@ public class JwtAuthenticationFilterService {
     private static final String SIGNING_KEY = "4a8b74134b679f4c7b8ea91c5d02d685f9e3f1f42814dcd7a6e109f2d56a9b3b";
 
     private Key getSigningKey() {
-        // Decoding the base64 encoded string into a key
+        // decoding the base64 encoded string into a key
         byte[] keyBytes = Decoders.BASE64.decode(SIGNING_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
