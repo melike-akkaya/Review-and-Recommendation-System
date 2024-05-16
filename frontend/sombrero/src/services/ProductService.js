@@ -70,3 +70,7 @@ export const updateLabelsById = (id, label) => {
 export const incrementProductView = (id) => {
   return axios.get(`${BASE_URL}/products/incrementViewCount/${id}`);
 };
+
+export const getVisitCount = (id) => {
+  return axios.get(`${BASE_URL}/products/getViewCount/${id}`);
+}
