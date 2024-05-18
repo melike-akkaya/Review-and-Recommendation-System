@@ -36,19 +36,7 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
-    public List<Review> getAll() {
-        return reviewRepository.findAll();
-    }
-
     public List<Review> getReviewsByProductId(Integer productId) {
-        List<Review> allReviews = getAll();
-        List<Review> productReviews = new ArrayList<>();
-        for (Review review : allReviews) {
-            if (Objects.equals(review.getProductId(), productId)) {
-                productReviews.add(review);
-            }
-        }
-        return productReviews;
+        return reviewRepository.findAllByProductId(productId);
     }
-
 }
