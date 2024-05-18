@@ -35,6 +35,15 @@ export const getLabelsByProductId = async (productId) => {
   }
 };
 
+export const getProductsByCategory = async (category) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/products/byCategory/${category}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const deleteProduct = (id) => {
   return axios.delete(`${BASE_URL}/products/delete/${id}`);
 };
