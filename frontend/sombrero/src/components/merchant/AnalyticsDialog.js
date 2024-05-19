@@ -28,7 +28,7 @@ const AnalyticsDialog = ({ open, setOpen, products }) => {
               const visitCountResponse = await getVisitCount(product.productId);
 
               localWishListCounts.push(wishCountResponse);
-              if (visitCountResponse.data == "") {
+              if (visitCountResponse.data === "") {
                 localVisitCounts.push(0);
               } else {
                 localVisitCounts.push(visitCountResponse.data);
@@ -60,6 +60,49 @@ const AnalyticsDialog = ({ open, setOpen, products }) => {
     setOpen(false);
   };
 
+  const renderBarChart = () => {
+    if (
+      products.length === 0 ||
+      wishlistCounts.length === 0 ||
+      visitCounts.length === 0
+    ) {
+      return null;
+    }
+
+    return (
+      <BarChart
+        series={[
+          {
+            data: wishlistCounts,
+            label: "Wishlist Counts",
+            color: "#ff9ff3",
+          },
+          {
+            data: visitCounts,
+            label: "Visit Counts",
+            color: "#48dbfb",
+          },
+        ]}
+        height={400}
+        width={600}
+        layout="horizontal"
+        xAxis={[
+          {
+            scaleType: "linear",
+          },
+        ]}
+        yAxis={[
+          {
+            data: products.map((product) => product.name),
+            scaleType: "band",
+            tickSize: 10,
+          },
+        ]}
+        margin={{ left: 150 }}
+      />
+    );
+  };
+
   return (
     <div>
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
@@ -69,36 +112,7 @@ const AnalyticsDialog = ({ open, setOpen, products }) => {
           style={{ maxHeight: "70vh", overflowY: "auto" }}
         >
           {chartDataReady ? (
-            <BarChart
-              series={[
-                {
-                  data: wishlistCounts,
-                  label: "Wishlist Counts",
-                  color: "#ff9ff3",
-                },
-                {
-                  data: visitCounts,
-                  label: "Visit Counts",
-                  color: "#48dbfb",
-                },
-              ]}
-              height={400}
-              width={600}
-              layout="horizontal"
-              xAxis={[
-                {
-                  scaleType: "linear",
-                },
-              ]}
-              yAxis={[
-                {
-                  data: products.map((product) => product.name),
-                  scaleType: "band",
-                  tickSize: 10,
-                },
-              ]}
-              margin={{ left: 150 }}
-            />
+            renderBarChart()
           ) : (
             <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
               <LinearProgress color="inherit" />
