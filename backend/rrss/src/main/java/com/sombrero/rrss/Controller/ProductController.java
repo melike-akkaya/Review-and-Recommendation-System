@@ -118,5 +118,12 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/byCategory/{category}")
+    public ResponseEntity<Iterable<Product>> getProductsByCategory(@PathVariable Integer category) {
+        Iterable<Product> productList = productService.getByCategory(category);
+        return new ResponseEntity<>(productList, HttpStatus.OK);
+    }
+
+
 }
 

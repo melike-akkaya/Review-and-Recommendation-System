@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Stack, Card, CardContent, Typography } from '@mui/material';
+import { Stack, ToggleButton, ToggleButtonGroup, Grid } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { searchProducts } from '../services/SearchService';
+import { searchProducts, searchMerchants, searchUsers } from '../services/SearchService';
 import Header from "./Header";
+import UserGridCard from '../components/user/UserGridCard';
+import ProductGridCard from '../components/product/ProductGridCard';
+import MerchantGridCard from '../components/merchant/MerchantGridCard';
 
-const SearchPage = () => {
-  const [products, setProducts] = useState([]);
+const SearchResults = () => {
+  const [searchType, setSearchType] = useState('product');
+  const [results, setResults] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -13,70 +17,93 @@ const SearchPage = () => {
     const fetchData = async () => {
       try {
         const query = new URLSearchParams(location.search).get('q');
-        if (query) {
-          const response = await searchProducts(query);
-          setProducts(response.data);
+        let response;
+        switch (searchType) {
+          case 'product':
+            response = await searchProducts(query);
+            break;
+          case 'merchant':
+            response = await searchMerchants(query);
+            break;
+          case 'user':
+            response = await searchUsers(query);
+            break;
+          default:
+            response = { data: [] };
         }
+        setResults(response.data);
       } catch (error) {
-        console.error('Error fetching product data:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
-  }, [location.search]);
+  }, [location.search, searchType]);
 
-  const handleCardClick = (productId) => {
-    navigate(`/product/${productId}`);
+  const handleCardClick = (resultId) => {
+    switch (searchType) {
+      case 'product':
+        navigate(`/product/${resultId}`);
+        break;
+      case 'merchant':
+        navigate(`/merchant/${resultId}`);
+        break;
+      case 'user':
+        navigate(`/user/${resultId}`);
+        break;
+      default:
+        break;
+    }
   };
+
+  let renderCard;
+  switch (searchType) {
+    case 'product':
+      renderCard = (product) => <ProductGridCard product={product} handleCardClick={handleCardClick} />;
+      break;
+    case 'merchant':
+      renderCard = (merchant) => <MerchantGridCard merchant={merchant} handleCardClick={handleCardClick} />;
+      break;
+    case 'user':
+      renderCard = (user) => <UserGridCard user={user} handleCardClick={handleCardClick} />;
+      break;
+    default:
+      renderCard = () => null;
+  }
 
   return (
     <Header>
-      <Stack spacing={2} alignItems="center" sx={{ marginTop: '20px'}} >
-        {products.map((product) => (
-          <Card elevation={3} key={product.productId} 
-          sx={{
-            width: 480,
-            backgroundColor: '#f0f0f0',
-            transition: 'background-color 0.3s',
-            '&:hover': {
-              backgroundColor: '#e0e0e0',
-              cursor: 'pointer',
-            },
-          }} 
-          onClick={() => handleCardClick(product.productId)}>
-            <CardContent>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                {product.image ? (
-                  <img
-                    src={`data:image/jpeg;base64,${product.image}`}
-                    alt={product.name}
-                    style={{
-                      height: "120px",
-                      width: "120px",
-                      marginRight: "20px",
-                    }}
-                  />
-                ) : (
-                  <div style={{ 
-                    height: "120px", 
-                    width: "120px", 
-                    marginRight: "20px",
-                    backgroundColor: "#333" }}>
-                  </div>
-                )}
-                <Typography variant="h5" component="div">
-                  {product.name}
-                </Typography>
-              </div>
-              <Typography color="text.secondary">
-                Price: ${product.price}
-              </Typography>
-            </CardContent>
-          </Card>
-        ))}
+      <Stack spacing={2} alignItems="center" sx={{ marginTop: '20px', paddingLeft: '50px'}} >
+        <ToggleButtonGroup
+          value={searchType}
+          exclusive
+          onChange={(event, newSearchType) => {
+            if (newSearchType !== null) {
+              setSearchType(newSearchType);
+            }
+          }}
+          aria-label="search type"
+        >
+          <ToggleButton value="product" aria-label="products">
+            Products
+          </ToggleButton>
+          <ToggleButton value="merchant" aria-label="merchants">
+            Merchants
+          </ToggleButton>
+          <ToggleButton value="user" aria-label="users">
+            Users
+          </ToggleButton>
+        </ToggleButtonGroup>
+        <Grid container spacing={2} justifyContent="center"> {}
+          {results.map(result => (
+            <Grid item key={result.id} xs={12} sm={6} md={4} lg={3}> {}
+              {renderCard(result)}
+            </Grid>
+          ))}
+        </Grid>
       </Stack>
     </Header>
   );
 };
 
-export default SearchPage;
+export default SearchResults;
