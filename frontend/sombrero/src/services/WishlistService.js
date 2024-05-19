@@ -82,9 +82,11 @@ export const getUserWishlist = async (userId) => {
 
 export const getWishlistCount = async (productId) => {
   try {
-    const response = await axios.get(`${BASE_URL}/wishlists/wishlistCount/${productId}`);
+    const response = await axios.get(
+      `${BASE_URL}/wishlists/wishlistCount/${productId}`
+    );
     return response.data;
   } catch (error) {
     throw error;
   }
-}
+};

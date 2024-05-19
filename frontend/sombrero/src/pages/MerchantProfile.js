@@ -10,7 +10,7 @@ import { AuthorizedPersonInformation } from "../components/merchant/AuthorizedPe
 import { MerchantInfo } from "../components/merchant/MerchantInfo";
 import Header from "./Header";
 import AddProductDialog from "../components/merchant/AddProductDialog";
-import AnalyticsDialog from  "../components/merchant/AnalyticsDialog";
+import AnalyticsDialog from "../components/merchant/AnalyticsDialog";
 import ProductList from "../components/merchant/ProductList";
 import { Typography } from "@mui/material";
 

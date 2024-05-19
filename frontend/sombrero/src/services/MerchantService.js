@@ -21,7 +21,6 @@ export const editAuthorizedPerson = (id, updatedAuthorizedPerson) => {
 export const getMerchantInfo = (id) =>
   axios.get(`${REST_API_BASE_URL}/merchant/${id}`);
 
-export const getCurrentMerchantID = () =>
-  {
-    return axios.get(`${REST_API_BASE_URL}/merchant/currentID`);
-  }
+export const getCurrentMerchantID = () => {
+  return axios.get(`${REST_API_BASE_URL}/merchant/currentID`);
+};

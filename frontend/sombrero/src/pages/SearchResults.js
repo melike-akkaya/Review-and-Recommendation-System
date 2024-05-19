@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Stack, ToggleButton, ToggleButtonGroup, Grid } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { searchProducts, searchMerchants, searchUsers } from '../services/SearchService';
+import React, { useState, useEffect } from "react";
+import { Stack, ToggleButton, ToggleButtonGroup, Grid } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  searchProducts,
+  searchMerchants,
+  searchUsers,
+} from "../services/SearchService";
 import Header from "./Header";
-import UserGridCard from '../components/user/UserGridCard';
-import ProductGridCard from '../components/product/ProductGridCard';
-import MerchantGridCard from '../components/merchant/MerchantGridCard';
+import UserGridCard from "../components/user/UserGridCard";
+import ProductGridCard from "../components/product/ProductGridCard";
+import MerchantGridCard from "../components/merchant/MerchantGridCard";
 
 const SearchResults = () => {
-  const [searchType, setSearchType] = useState('product');
+  const [searchType, setSearchType] = useState("product");
   const [results, setResults] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
@@ -16,16 +20,16 @@ const SearchResults = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const query = new URLSearchParams(location.search).get('q');
+        const query = new URLSearchParams(location.search).get("q");
         let response;
         switch (searchType) {
-          case 'product':
+          case "product":
             response = await searchProducts(query);
             break;
-          case 'merchant':
+          case "merchant":
             response = await searchMerchants(query);
             break;
-          case 'user':
+          case "user":
             response = await searchUsers(query);
             break;
           default:
@@ -33,7 +37,7 @@ const SearchResults = () => {
         }
         setResults(response.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -42,13 +46,13 @@ const SearchResults = () => {
 
   const handleCardClick = (resultId) => {
     switch (searchType) {
-      case 'product':
+      case "product":
         navigate(`/product/${resultId}`);
         break;
-      case 'merchant':
+      case "merchant":
         navigate(`/merchant/${resultId}`);
         break;
-      case 'user':
+      case "user":
         navigate(`/user/${resultId}`);
         break;
       default:
@@ -58,14 +62,23 @@ const SearchResults = () => {
 
   let renderCard;
   switch (searchType) {
-    case 'product':
-      renderCard = (product) => <ProductGridCard product={product} handleCardClick={handleCardClick} />;
+    case "product":
+      renderCard = (product) => (
+        <ProductGridCard product={product} handleCardClick={handleCardClick} />
+      );
       break;
-    case 'merchant':
-      renderCard = (merchant) => <MerchantGridCard merchant={merchant} handleCardClick={handleCardClick} />;
+    case "merchant":
+      renderCard = (merchant) => (
+        <MerchantGridCard
+          merchant={merchant}
+          handleCardClick={handleCardClick}
+        />
+      );
       break;
-    case 'user':
-      renderCard = (user) => <UserGridCard user={user} handleCardClick={handleCardClick} />;
+    case "user":
+      renderCard = (user) => (
+        <UserGridCard user={user} handleCardClick={handleCardClick} />
+      );
       break;
     default:
       renderCard = () => null;
@@ -73,7 +86,11 @@ const SearchResults = () => {
 
   return (
     <Header>
-      <Stack spacing={2} alignItems="center" sx={{ marginTop: '20px', paddingLeft: '50px'}} >
+      <Stack
+        spacing={2}
+        alignItems="center"
+        sx={{ marginTop: "20px", paddingLeft: "50px" }}
+      >
         <ToggleButtonGroup
           value={searchType}
           exclusive
@@ -94,9 +111,13 @@ const SearchResults = () => {
             Users
           </ToggleButton>
         </ToggleButtonGroup>
-        <Grid container spacing={2} justifyContent="center"> {}
-          {results.map(result => (
-            <Grid item key={result.id} xs={12} sm={6} md={4} lg={3}> {}
+        <Grid container spacing={2} justifyContent="center">
+          {" "}
+          {}
+          {results.map((result) => (
+            <Grid item key={result.id} xs={12} sm={6} md={4} lg={3}>
+              {" "}
+              {}
               {renderCard(result)}
             </Grid>
           ))}

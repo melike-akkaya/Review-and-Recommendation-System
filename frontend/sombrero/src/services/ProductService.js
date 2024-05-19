@@ -37,7 +37,9 @@ export const getLabelsByProductId = async (productId) => {
 
 export const getProductsByCategory = async (category) => {
   try {
-    const response = await axios.get(`${BASE_URL}/products/byCategory/${category}`);
+    const response = await axios.get(
+      `${BASE_URL}/products/byCategory/${category}`
+    );
     return response.data;
   } catch (error) {
     throw error;
@@ -82,4 +84,4 @@ export const incrementProductView = (id) => {
 
 export const getVisitCount = (id) => {
   return axios.get(`${BASE_URL}/products/getViewCount/${id}`);
-}
+};

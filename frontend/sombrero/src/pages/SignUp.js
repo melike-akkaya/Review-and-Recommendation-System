@@ -1,18 +1,13 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import Input from "@mui/material/Input";
-import FilledInput from "@mui/material/FilledInput";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
-import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Visibility from "@mui/icons-material/Visibility";
@@ -25,8 +20,6 @@ import { blue } from "@mui/material/colors";
 import { styled } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
 import CreateIcon from "@mui/icons-material/Create";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import { fetchCountries } from "../commonMethods";
 
 export default function SignUp() {
