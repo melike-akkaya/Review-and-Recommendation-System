@@ -21,4 +21,20 @@ public class Post {
     @Column(name = "content")
     private String content;
 
+    @Column(name = "author_id")
+    private String authorId;
+
+    @Column(name = "date")
+    private String date;
+
+    @Column(name = "type")
+    private String type;
+
+    @Column(name ="reading_time")
+    private int readingTime;
+
+    @Column(name = "pickedByStaff")
+    private boolean pickedByStaff;
+
+
 }
