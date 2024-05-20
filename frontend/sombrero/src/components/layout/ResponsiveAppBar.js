@@ -11,15 +11,17 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import SearchIcon from "@mui/icons-material/Search";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import rrssIcon from "../../assets/rrss-logo-trans.png";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-
 import { getCategories } from "../../services/CategoryService";
+import { useLocalStorageUser } from "../../commonMethods";
+import { sendLogOutRequest } from "../../services/AuthenticationService";
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Account", "Dashboard"];
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -77,6 +79,7 @@ const ResponsiveAppBar = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [selectedCategoryId, setSelectedCategoryId] = React.useState(null);
   const navigate = useNavigate();
+  const user = useLocalStorageUser();
 
   React.useEffect(() => {
     getCategories()
@@ -88,7 +91,6 @@ const ResponsiveAppBar = () => {
       });
   }, []);
 
-  
   React.useEffect(() => {
     if (selectedCategoryId != null) {
       navigate(`/category/${selectedCategoryId}`); // Navigate to the category results page
@@ -117,6 +119,12 @@ const ResponsiveAppBar = () => {
   const handleProfileClick = () => {
     handleCloseUserMenu(); // Close the settings menu
     navigate("/merchant"); // Redirect to the merchant page
+  };
+
+  const handleLogoutClick = async () => {
+    await sendLogOutRequest();
+    localStorage.setItem("user", null);
+    navigate("/login");
   };
 
   const handleCategoryClick = (categoryId) => {
@@ -182,38 +190,49 @@ const ResponsiveAppBar = () => {
             />
           </Search>
 
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+          {user ? (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt={user.name} src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+                {settings
+                  .filter((setting) => setting !== "Profile")
+                  .map((setting) => (
+                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                      {setting}
+                    </MenuItem>
+                  ))}
+                <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+              </Menu>
+            </Box>
+          ) : (
+            <Button
+              color="inherit"
+              startIcon={<AccountCircleIcon />}
+              onClick={() => navigate("/login")}
             >
-              <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
-              {settings
-                .filter((setting) => setting !== "Profile")
-                .map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    {setting}
-                  </MenuItem>
-                ))}
-            </Menu>
-          </Box>
+              Login
+            </Button>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

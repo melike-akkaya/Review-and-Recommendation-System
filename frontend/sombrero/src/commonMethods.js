@@ -1,3 +1,5 @@
+import React from "react";
+
 const restCountriesAPI = "https://restcountries.com/v3.1/all";
 
 export const fetchCountries = async (setCountries) => {
@@ -31,4 +33,26 @@ export const fileToBlob = (file) => {
     reader.onerror = reject;
     reader.readAsArrayBuffer(file);
   });
+};
+
+export const useLocalStorageUser = () => {
+  const [user, setUser] = React.useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  React.useEffect(() => {
+    const handleStorageChange = () => {
+      const savedUser = localStorage.getItem("user");
+      setUser(savedUser ? JSON.parse(savedUser) : null);
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  return user;
 };

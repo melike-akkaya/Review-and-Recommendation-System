@@ -16,11 +16,14 @@ import Link from "@mui/material/Link";
 import Header from "./Header";
 import Divider from "@mui/material/Divider";
 import { sendLogInRequest } from "../services/AuthenticationService";
+import { getUser } from "../services/UserService";
+import { useNavigate } from "react-router-dom";
 
 export default function LogIn() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [name, setName] = useState(" ");
   const [password, setPassword] = useState(" ");
+  const navigate = useNavigate();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -29,7 +32,22 @@ export default function LogIn() {
   };
 
   const handleLogIn = async () => {
-    await sendLogInRequest({ email: name, password: password });
+    try {
+      const response = await sendLogInRequest({
+        email: name,
+        password: password,
+      });
+
+      const userResponse = await getUser(name);
+
+      const userData = userResponse.data;
+
+      localStorage.setItem("user", JSON.stringify(userData));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+
+    navigate("/");
   };
 
   const handleName = (value) => {
@@ -43,6 +61,7 @@ export default function LogIn() {
   const handleSignUpClick = () => {
     window.location.href = "/signup";
   };
+
   const handleSignUpasMerchantClick = () => {
     window.location.href = "/signupasmerchant";
   };

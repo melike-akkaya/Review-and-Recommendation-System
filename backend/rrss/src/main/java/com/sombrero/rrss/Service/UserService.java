@@ -1,6 +1,5 @@
 package com.sombrero.rrss.Service;
 
-import com.sombrero.rrss.Model.Product;
 import com.sombrero.rrss.Model.User;
 import com.sombrero.rrss.Repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> loadUserByEmail(String email) {
+    public Optional<User> getByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
