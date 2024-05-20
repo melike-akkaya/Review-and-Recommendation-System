@@ -33,4 +33,7 @@ public class Review{
 
     @Column(name = "created_at")
     private Date createdAt;
+
+    @Column(name = "total_vote")
+    private Integer totalVote=0;
 }

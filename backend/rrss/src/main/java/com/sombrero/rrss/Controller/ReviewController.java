@@ -55,4 +55,36 @@ public class ReviewController {
         return new ResponseEntity<>(reviewList, HttpStatus.OK);
     }
 
+    @GetMapping("/upVote/{reviewId}")
+    public ResponseEntity<Review> upVoteReview(@PathVariable Integer reviewId) {
+        Optional<Review> optionalReview = reviewService.getById(reviewId);
+        if (optionalReview.isPresent()) {
+            Review review = optionalReview.get();
+            if (review.getTotalVote() == null) {
+                review.setTotalVote(0);
+            }
+            review.setTotalVote(review.getTotalVote() + 1);
+            Review updated = reviewService.update(review);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/downVote/{reviewId}")
+    public ResponseEntity<Review> downVoteReview(@PathVariable Integer reviewId) {
+        Optional<Review> optionalReview = reviewService.getById(reviewId);
+        if (optionalReview.isPresent()) {
+            Review review = optionalReview.get();
+            if (review.getTotalVote() == null) {
+                review.setTotalVote(0);
+            }
+            review.setTotalVote(review.getTotalVote() - 1);
+            Review updated = reviewService.update(review);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
