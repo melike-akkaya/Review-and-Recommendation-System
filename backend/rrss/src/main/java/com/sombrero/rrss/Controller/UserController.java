@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin("*")
@@ -18,6 +19,14 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAll();
+
+        // return the list of users
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
 
     @GetMapping("/{email}")
     public ResponseEntity<User> getUser(@PathVariable String email) {
