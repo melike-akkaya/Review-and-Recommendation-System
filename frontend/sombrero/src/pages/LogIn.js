@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -13,14 +13,18 @@ import TextField from "@mui/material/TextField";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Link from "@mui/material/Link";
-import Header from "./Header";
 import Divider from "@mui/material/Divider";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import Header from "./Header";
 import { sendLogInRequest } from "../services/AuthenticationService";
 
 export default function LogIn() {
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [name, setName] = useState(" ");
-  const [password, setPassword] = useState(" ");
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [alert, setAlert] = useState({ open: false, severity: "error", message: "" });
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -29,22 +33,46 @@ export default function LogIn() {
   };
 
   const handleLogIn = async () => {
-    await sendLogInRequest({ email: name, password: password });
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError("Invalid e-mail address");
+      return;
+    }
+
+    try {
+      await sendLogInRequest({ email, password });
+      window.location.href = "http://localhost:3000/";
+    } catch (error) {
+      setAlert({ open: true, severity: "error", message: "Invalid email or password" });
+    }
   };
 
-  const handleName = (value) => {
-    setName(value);
+  const handleEmailChange = (event) => {
+    const inputEmail = event.target.value;
+    setEmail(inputEmail);
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(inputEmail)) {
+      setEmailError("Invalid e-mail address");
+    } else {
+      setEmailError("");
+    }
   };
 
-  const handlePassword = (value) => {
-    setPassword(value);
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
   };
 
   const handleSignUpClick = () => {
     window.location.href = "/signup";
   };
+
   const handleSignUpasMerchantClick = () => {
     window.location.href = "/signupasmerchant";
+  };
+
+  const handleAlertClose = () => {
+    setAlert({ ...alert, open: false });
   };
 
   return (
@@ -99,8 +127,10 @@ export default function LogIn() {
                 sx={{ m: 1, width: "40ch", marginTop: "15px" }}
                 required
                 id="outlined-required"
-                label="Name"
-                onChange={(i) => handleName(i.target.value)}
+                label="Email"
+                onChange={handleEmailChange}
+                error={emailError !== ""}
+                helperText={emailError}
               />
             </div>
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -114,7 +144,7 @@ export default function LogIn() {
                 <OutlinedInput
                   id="outlined-adornment-password"
                   type={showPassword ? "text" : "password"}
-                  onChange={(i) => handlePassword(i.target.value)}
+                  onChange={handlePasswordChange}
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
@@ -188,6 +218,21 @@ export default function LogIn() {
           </Box>
         </CardContent>
       </Card>
+      <Snackbar
+        open={alert.open}
+        autoHideDuration={5000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleAlertClose}
+          severity={alert.severity}
+        >
+          {alert.message}
+        </MuiAlert>
+      </Snackbar>
     </Box>
   );
 }

@@ -24,7 +24,8 @@ import { fetchCountries } from "../commonMethods";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = React.useState(false);
-
+  const [email, setEmail] = React.useState("");
+  const [emailError, setEmailError] = React.useState(false);
   const [countries, setCountries] = React.useState([]);
 
   React.useEffect(() => {
@@ -39,6 +40,17 @@ export default function SignUp() {
 
   const handleLogInClick = () => {
     window.location.href = "/login";
+  };
+
+  const handleEmailChange = (event) => {
+    const emailValue = event.target.value;
+    setEmail(emailValue);
+    setEmailError(!validateEmail(emailValue));
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
   const SmallAvatar = styled(Avatar)(({ theme }) => ({
@@ -109,6 +121,11 @@ export default function SignUp() {
                   required
                   id="outlined-required"
                   label="Email"
+                  type="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                  error={emailError}
+                  helperText={emailError ? "Please enter a valid email address" : ""}
                 />
               </div>
             </Box>
