@@ -31,6 +31,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    // if merchant:
+    private String merchantName;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

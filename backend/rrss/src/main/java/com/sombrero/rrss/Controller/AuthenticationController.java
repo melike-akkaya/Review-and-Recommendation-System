@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.time.Duration;
 
 @CrossOrigin("*")
 @RestController
@@ -21,11 +22,11 @@ public class AuthenticationController {
     public ResponseEntity<?> login(@RequestBody LogInRequest request, HttpServletResponse response) {
         AuthenticationResponse authResponse = authenticationService.logIn(request);
         ResponseCookie cookie = ResponseCookie.from("jwt", authResponse.getToken())
-                .httpOnly(true)
+                .httpOnly(false)
                 .secure(true) // application is HTTPS
                 .path("/")
-                .maxAge(24 * 60 * 60) // 1 day expiration
-                .sameSite("Strict")
+                .maxAge(Duration.ofDays(365 * 10)) // 10 years expiration
+                .sameSite("Lax")
                 .build();
 
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
@@ -35,12 +36,19 @@ public class AuthenticationController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
-        ResponseCookie temp = ResponseCookie
-                .from("jwt")
+        ResponseCookie temp = ResponseCookie.from("jwt")
+                .httpOnly(false)
+                .secure(true)
+                .path("/")
                 .maxAge(0)
+                .sameSite("Lax")
                 .build();
+
         response.setHeader(HttpHeaders.SET_COOKIE, temp.toString());
-        return ResponseEntity.ok("Logout successful");
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, temp.toString())
+                .body("logged out");
     }
 
     @PostMapping("/signup")
