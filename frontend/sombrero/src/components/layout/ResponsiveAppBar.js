@@ -51,7 +51,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -71,11 +70,12 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
   },
 }));
 
-function ResponsiveAppBar() {
+const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [categories, setCategories] = React.useState([]);
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [selectedCategoryId, setSelectedCategoryId] = React.useState(null);
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -87,6 +87,13 @@ function ResponsiveAppBar() {
         console.error(error);
       });
   }, []);
+
+  
+  React.useEffect(() => {
+    if (selectedCategoryId != null) {
+      navigate(`/category/${selectedCategoryId}`); // Navigate to the category results page
+    }
+  }, [selectedCategoryId]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -104,12 +111,16 @@ function ResponsiveAppBar() {
   };
 
   const handleRRSSClick = () => {
-    window.location.href = "/"; // Redirect to the home page
+    navigate("/"); // Redirect to the home page
   };
 
   const handleProfileClick = () => {
     handleCloseUserMenu(); // Close the settings menu
-    window.location.href = "/merchant"; // Redirect to the merchant page
+    navigate("/merchant"); // Redirect to the merchant page
+  };
+
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategoryId(categoryId);
   };
 
   const handleSearchInputChange = (event) => {
@@ -143,6 +154,7 @@ function ResponsiveAppBar() {
               {categories.map((category, index) => (
                 <Button
                   key={category.id}
+                  onClick={() => handleCategoryClick(category.id)}
                   sx={{
                     fontSize: "0.9rem",
                     color: "#222f3e",
@@ -192,7 +204,6 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {/* Include the handleProfileClick function for the Profile MenuItem */}
               <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
               {settings
                 .filter((setting) => setting !== "Profile")
@@ -207,6 +218,6 @@ function ResponsiveAppBar() {
       </Container>
     </AppBar>
   );
-}
+};
 
 export default ResponsiveAppBar;

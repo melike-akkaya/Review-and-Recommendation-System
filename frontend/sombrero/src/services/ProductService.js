@@ -35,6 +35,17 @@ export const getLabelsByProductId = async (productId) => {
   }
 };
 
+export const getProductsByCategory = async (category) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/products/byCategory/${category}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const deleteProduct = (id) => {
   return axios.delete(`${BASE_URL}/products/delete/${id}`);
 };
@@ -69,4 +80,8 @@ export const updateLabelsById = (id, label) => {
 
 export const incrementProductView = (id) => {
   return axios.get(`${BASE_URL}/products/incrementViewCount/${id}`);
+};
+
+export const getVisitCount = (id) => {
+  return axios.get(`${BASE_URL}/products/getViewCount/${id}`);
 };

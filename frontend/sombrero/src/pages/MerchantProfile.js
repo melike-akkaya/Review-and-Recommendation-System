@@ -10,6 +10,7 @@ import { AuthorizedPersonInformation } from "../components/merchant/AuthorizedPe
 import { MerchantInfo } from "../components/merchant/MerchantInfo";
 import Header from "./Header";
 import AddProductDialog from "../components/merchant/AddProductDialog";
+import AnalyticsDialog from "../components/merchant/AnalyticsDialog";
 import ProductList from "../components/merchant/ProductList";
 import { Typography } from "@mui/material";
 
@@ -18,6 +19,7 @@ export default function MerchantProfile() {
   const [initialAuthorizedPerson, setInitialAuthorizedPerson] = useState(null);
   const [products, setProducts] = useState([]);
   const [isAddProductDialogOpen, setAddProductDialogOpen] = useState(false);
+  const [isAnalyticsDialogOpen, setAnalyticsDialogOpen] = useState(false);
 
   const fetchProducts = (merchantId) => {
     getProductsByMerchantId(merchantId)
@@ -58,6 +60,11 @@ export default function MerchantProfile() {
           setOpen={setAddProductDialogOpen}
           refreshProducts={() => fetchProducts(1)}
         />
+        <AnalyticsDialog
+          open={isAnalyticsDialogOpen}
+          setOpen={setAnalyticsDialogOpen}
+          products={products}
+        />
         <Stack spacing={3}>
           <Grid container spacing={3}>
             <Grid item lg={4} md={6} xs={12}>
@@ -68,6 +75,7 @@ export default function MerchantProfile() {
                     color="primary"
                     onClick={() => {
                       // Placeholder for analytics button click action
+                      setAnalyticsDialogOpen(true);
                     }}
                   >
                     <AnalyticsIcon />

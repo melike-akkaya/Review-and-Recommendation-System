@@ -13,9 +13,9 @@ import Select from "@mui/material/Select";
 import Grid from "@mui/material/Grid";
 import { editAuthorizedPerson } from "../../services/MerchantService";
 import { Alert } from "../alert/Alert";
+import { fetchCountries } from "../../commonMethods";
 
 export function AuthorizedPersonInformation(authorizedPerson) {
-  const restCountriesAPI = "https://restcountries.com/v3.1/all";
   const [countries, setCountries] = useState([]);
   const [initialAuthorizedPerson, setInitialAuthorizedPerson] = useState(
     authorizedPerson.initialAuthorizedPerson
@@ -24,40 +24,23 @@ export function AuthorizedPersonInformation(authorizedPerson) {
   const [openError, setOpenError] = useState(false);
 
   useEffect(() => {
-    fetchCountries();
+    fetchCountries(setCountries);
   }, []);
 
-  const fetchCountries = async () => {
-    try {
-      const response = await fetch(restCountriesAPI);
-      if (response.ok) {
-        const data = await response.json();
-        const countryList = data.map((country) => ({
-          value: country.name.common.toLowerCase(),
-          label: country.name.common,
-        }));
-        const sortedCountries = countryList.sort((a, b) =>
-          a.label.localeCompare(b.label)
-        );
-        setCountries(sortedCountries);
-        // find the index of initial country and set it as the default selected country
-        const defaultCountryIndex = sortedCountries.findIndex(
-          (country) => country.label === initialAuthorizedPerson.country
-        );
-        setInitialAuthorizedPerson((prevState) => ({
-          ...prevState,
-          country:
-            defaultCountryIndex !== -1
-              ? sortedCountries[defaultCountryIndex].value
-              : sortedCountries[0].value,
-        }));
-      } else {
-        console.error("Failed to fetch countries");
-      }
-    } catch (error) {
-      console.error("Error fetching countries:", error);
+  useEffect(() => {
+    if (countries.length != 0) {
+      const defaultCountryIndex = countries.findIndex(
+        (country) => country.label === initialAuthorizedPerson.country
+      );
+      setInitialAuthorizedPerson((prevState) => ({
+        ...prevState,
+        country:
+          defaultCountryIndex !== -1
+            ? countries[defaultCountryIndex].value
+            : countries[0].value,
+      }));
     }
-  };
+  }, [countries]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;

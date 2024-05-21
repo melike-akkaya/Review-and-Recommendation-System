@@ -4,7 +4,11 @@ import { Container } from "@mui/material";
 import ProductCard from "../components/product/ProductCard";
 import { useParams } from "react-router-dom";
 import CommentCard from "../components/product/CommentCard";
-import { getIsEditable, setIsEditableFalse,incrementProductView } from "../services/ProductService";
+import {
+  getIsEditable,
+  setIsEditableFalse,
+  incrementProductView,
+} from "../services/ProductService";
 
 export default function ProductProfile() {
   const { productId } = useParams();
@@ -16,7 +20,7 @@ export default function ProductProfile() {
     const fetchIsEditable = async () => {
       const editable = await getIsEditable(productId);
       setIsEditable(editable.data.isEditable === 1);
-      if(editable.data.isEditable === 0) {
+      if (editable.data.isEditable === 0) {
         incrementProductView(productId);
       }
     };
