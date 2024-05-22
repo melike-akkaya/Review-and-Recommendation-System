@@ -191,9 +191,7 @@ export default function SignUpasMerchant() {
               component="button"
               variant="body2"
               sx={{ textAlign: "right" }}
-              onClick={() => {
-                console.info("I'm a button.");
-              }}
+              onClick={handleLogInClick}
             >
               Already have an account? Log in
             </Link>

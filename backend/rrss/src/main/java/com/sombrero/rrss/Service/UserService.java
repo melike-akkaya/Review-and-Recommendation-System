@@ -25,4 +25,7 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public Optional<User> loadUserById(Integer userId) {
+        return userRepository.findById(userId);
+    }
 }
