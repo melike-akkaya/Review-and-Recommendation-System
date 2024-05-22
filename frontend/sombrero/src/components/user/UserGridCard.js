@@ -2,16 +2,17 @@ import React from 'react';
 import { Card, CardContent, Typography, Button, CardActions } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { deleteUser } from "../../services/UserService";
 
 const UserGridCard = ({ user, handleCardClick, isAdmin }) => {
   // Determine the background color based on the user's role
   let roleColor = '#00e676'; // Green for user by default
   switch (user.role) {
-    case 'MERCHANT':
-      roleColor = '#2962ff'; // Blue for merchant
+    case 'INFLUENCER':
+      roleColor = '#2962ff'; // Blue for influencer
       break;
     case 'ADMIN':
-    case 'MODERATOR':
+    case 'COMMUNITY_MODERATOR':
       roleColor = '#ff1744'; // Red for admin and moderator
       break;
     default:
@@ -23,9 +24,15 @@ const UserGridCard = ({ user, handleCardClick, isAdmin }) => {
     console.log("Edit user with ID:", userId);
   };
 
-  const handleDelete = (userId) => {
-    // Define the logic to handle the delete action
-    console.log("Delete user with ID:", userId);
+  const handleDelete = async (userId) => {
+    try {
+      // Call the deleteUser function from the UserService
+      await deleteUser(userId);
+      console.log("User deleted successfully with ID:", userId);
+      // Implement logic to refresh the users list
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
   };
 
   return (
@@ -44,6 +51,14 @@ const UserGridCard = ({ user, handleCardClick, isAdmin }) => {
       //onClick={() => handleCardClick(user.id)}
     >
       <CardContent>
+          <img
+          src={`data:image/jpeg;base64,${user.image}`}
+          style={{
+            height: "240px",
+            width: "100%",
+            objectFit: "cover",
+          }}
+        />
         <Typography variant="h5" component="div">
           {user.name} {user.surname}
         </Typography>
@@ -62,7 +77,7 @@ const UserGridCard = ({ user, handleCardClick, isAdmin }) => {
         >
           {user.role.toUpperCase()}
         </Typography>
-        {/* Render other user-specific information here */}
+        {}
       </CardContent>
 
       {isAdmin && (
