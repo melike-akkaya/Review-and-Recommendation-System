@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { Card, CardHeader, Box, CardContent, CardActions, Avatar, Typography, IconButton, Collapse, TextField, Button, InputAdornment } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Card, CardHeader, Box, CardContent, CardActions, Avatar, Typography, IconButton, Collapse, TextField, Button, InputAdornment,CircularProgress } from '@mui/material';
 import { Share as ShareIcon, Bookmark as BookmarkIcon, MoreVert as MoreVertIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import { styled } from '@mui/material/styles'; 
 import { Link } from 'react-router-dom';
 import Divider from "@mui/material/Divider";
+import { getUser } from '../../services/UserService';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -17,7 +18,8 @@ const ExpandMore = styled((props) => {
 }));
 
 const PostCard = ({ post, replies }) => {
-  const {name, type, date, title, content, imageUrl, id} = post;
+  const {authorId, type, date, title, content, image, id} = post;
+  const [userName, setUserName] = useState('');
   const [expanded, setExpanded] = useState(false);
   const [comment, setComment] = useState('');
 
@@ -39,13 +41,23 @@ const PostCard = ({ post, replies }) => {
     return text.substring(0, length) + '...';
   };
 
+  useEffect(() => {
+    try {
+      getUser(6).then(user => {
+        setUserName(user.name);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  , [userName, authorId]);
 
 
   return (
     <Card sx={{ mb: 2, borderRadius: '20px', border: '1px solid #ff7e5f' }}>
       <CardHeader style={{ marginTop: '10px', marginLeft: '10px' }}
-        avatar={<Link to={`/user/${name}`} style={{ textDecoration: 'none', color: 'inherit' }}>{<Avatar/>}</Link>}
-        title={<Link to={`/user/${name}`} style={{ textDecoration: 'none', color: 'inherit' }}>{name}</Link>}
+        avatar={<Link to={`/user/${userName}`} style={{ textDecoration: 'none', color: 'inherit' }}>{<Avatar/>}</Link>}
+        title={<Link to={`/user/${userName}`} style={{ textDecoration: 'none', color: 'inherit' }}>{userName}</Link>}
         subheader={new Date(date).toLocaleDateString()}
       />
       <CardContent>
@@ -59,9 +71,9 @@ const PostCard = ({ post, replies }) => {
                 {truncateContent(content, 300)}
               </Typography>
             </Box>
-            {imageUrl && (
+            {image && (
               <Box sx={{ marginLeft: '10px' }}>
-                <img src={imageUrl} alt="Post thumbnail" style={{ width: '100px', marginRight: '10px' }} />
+                <img src={image} alt="Post thumbnail" style={{ width: '100px', marginRight: '10px' }} />
               </Box>
             )}
           </Box>

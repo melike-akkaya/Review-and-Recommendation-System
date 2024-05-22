@@ -36,5 +36,8 @@ public class Post {
     @Column(name = "pickedByStaff")
     private boolean pickedByStaff;
 
+    @Column(name="image")
+    private byte[] image;
+
 
 }

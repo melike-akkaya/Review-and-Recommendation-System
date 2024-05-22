@@ -5,29 +5,8 @@ import Header from "./Header";
 import MakePost from '../components/community/MakePost';
 import { CssVarsProvider, extendTheme } from '@mui/joy/styles';
 import Divider from "@mui/material/Divider";
+import {getPosts} from '../services/CommunityService';
 
-const posts = [
-  {
-    id: 1,
-    name: 'John Doe',
-    type:"Q&A",
-    date: '2023-05-20',
-    title: 'First Post Title',
-    content: 'This is the content of the first post. It will be truncated if it is too long.',
-    imageUrl: 'https://www.example.com/image1.jpg',
-    replies: ['First reply', 'Second reply']
-  },
-  {
-    id: 2,
-    name: 'Jane Smith',
-    type:"Discussion",
-    date: '2023-05-18',
-    title: 'Second Post Title',
-    content: 'This is the content of the content of the second post. It is also quite lengthy and will be truncated.',
-    replies: ['First reply', 'Second reply']
-  },
-
-];
 
 const replies = [
   {
@@ -77,9 +56,22 @@ const customTheme = extendTheme({
 
 const CommunityPage = () => {
   const [selectedType, setSelectedType] = useState('All');
+  const [posts, setPosts] = useState([]);
   const handleButtonClick = (type) => {
     setSelectedType(type);
   };
+
+  useState(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await getPosts();
+        setPosts(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchPosts();
+  }, []);
 
   const filteredPosts = selectedType === 'All' ? posts : posts.filter(post => post.type === selectedType);
 

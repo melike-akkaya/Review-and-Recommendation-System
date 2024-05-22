@@ -1,10 +1,12 @@
 package com.sombrero.rrss.Controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sombrero.rrss.Model.Post;
 import com.sombrero.rrss.Service.PostService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @CrossOrigin("*")
 @RestController
@@ -15,8 +17,12 @@ public class PostController {
     private static final int  AVERAGE_READING_SPEED_PER_MINUTE=238 ;
 
     @PostMapping("/add")
-    public ResponseEntity<Post> addPost(Post post) {
+    public ResponseEntity<Post> addPost(@RequestParam("post") String postJson) {
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Post post = objectMapper.readValue(postJson, Post.class);
+
+
             post.setDate(getCurrentDate());
             post.setReadingTime(calculateReadingTime(post.getContent()));
 
@@ -54,4 +60,6 @@ public class PostController {
     {
         return java.time.LocalDate.now().toString();
     }
+
+
 }

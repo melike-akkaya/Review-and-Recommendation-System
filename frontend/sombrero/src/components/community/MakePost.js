@@ -1,25 +1,44 @@
 import React, { useState } from 'react';
 import { CardHeader, CardContent, TextField, Button, ButtonGroup, Typography} from '@mui/material';
+import { addPost } from '../../services/CommunityService';
 
 const MakePost = () => {
-  const [postType, setPostType] = useState('');
+  const initialPostState = {
+    type: '',
+    content: '',
+  };
+
+  const [type, setPostType] = useState('');
   const [content, setContent] = useState('');
+  const [post, setPost] = useState(initialPostState);
   const [showMessage, setShowMessage] = useState(false);
+
+  
 
   const handlePostTypeSelect = (type) => {
     setPostType(type);
   };
 
   const handleContentChange = (event) => {
-    setContent(event.target.value);
+    setContent(post.content = event.target.value);
   };
 
   const handleAddMediaClick = () => {
     setShowMessage(true);
   };
 
-  const handlePublishClick = () => {
-    
+  const handlePublishClick = async() => {
+    try {
+      setPost({ type, content });
+      const formData = new FormData();
+      formData.append("post", JSON.stringify(post));
+      formData.append("image", null);
+      await addPost(formData);
+      setPost(initialPostState);
+      setShowMessage(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -34,30 +53,30 @@ const MakePost = () => {
           sx={{ backgroundColor: '#d4ecf4' }} 
         >
           <Button
-            variant={postType === 'Q&A' ? 'contained' : 'outlined'}
+            variant={type === 'Q&A' ? 'contained' : 'outlined'}
             onClick={() => handlePostTypeSelect('Q&A')}
-            sx={{ textTransform: 'none', backgroundColor: postType === 'Q&A' ? '#3074d8' : '#e4f7ff', '&:hover': { backgroundColor: '#e4f7ff' } }}
+            sx={{ textTransform: 'none', backgroundColor: type === 'Q&A' ? '#3074d8' : '#e4f7ff', '&:hover': { backgroundColor: '#e4f7ff' } }}
           >
             Q&A
           </Button>
           <Button
-            variant={postType === 'Blog' ? 'contained' : 'outlined'}
+            variant={type === 'Blog' ? 'contained' : 'outlined'}
             onClick={() => handlePostTypeSelect('Blog')}
-            sx={{ textTransform: 'none', backgroundColor: postType === 'Blog' ? '#3074d8' : '#e4f7ff', '&:hover': { backgroundColor: '#e4f7ff' } }}
+            sx={{ textTransform: 'none', backgroundColor: type === 'Blog' ? '#3074d8' : '#e4f7ff', '&:hover': { backgroundColor: '#e4f7ff' } }}
           >
             Blog
           </Button>
           <Button
-            variant={postType === 'Discussion' ? 'contained' : 'outlined'}
+            variant={type === 'Discussion' ? 'contained' : 'outlined'}
             onClick={() => handlePostTypeSelect('Discussion')}
-            sx={{ textTransform: 'none', backgroundColor: postType === 'Discussion' ? '#3074d8' : '#e4f7ff', '&:hover': { backgroundColor: '#e4f7ff' } }}
+            sx={{ textTransform: 'none', backgroundColor: type === 'Discussion' ? '#3074d8' : '#e4f7ff', '&:hover': { backgroundColor: '#e4f7ff' } }}
           >
             Discussion
           </Button>
           <Button
-            variant={postType === 'Local Event' ? 'contained' : 'outlined'}
+            variant={type === 'Local Event' ? 'contained' : 'outlined'}
             onClick={() => handlePostTypeSelect('Local Event')}
-            sx={{ textTransform: 'none', backgroundColor: postType === 'Local Event' ? '#3074d8' : '#e4f7ff', '&:hover': { backgroundColor: '#e4f7ff' } }}
+            sx={{ textTransform: 'none', backgroundColor: type === 'Local Event' ? '#3074d8' : '#e4f7ff', '&:hover': { backgroundColor: '#e4f7ff' } }}
           >
             Local Event
           </Button>
@@ -65,6 +84,7 @@ const MakePost = () => {
         }
       />
       <CardContent>
+
         <TextField
             fullWidth
             multiline
