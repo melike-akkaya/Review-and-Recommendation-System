@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import Divider from "@mui/material/Divider";
 import { getUser } from '../../services/UserService';
+import { addReply } from '../../services/CommunityService';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -18,7 +19,7 @@ const ExpandMore = styled((props) => {
 }));
 
 const PostCard = ({ post, replies }) => {
-  const {authorId, type, date, title, content, image, id} = post;
+  const {authorId, type, date, title, content, image, postId} = post;
   const [userName, setUserName] = useState('');
   const [expanded, setExpanded] = useState(false);
   const [comment, setComment] = useState('');
@@ -32,8 +33,15 @@ const PostCard = ({ post, replies }) => {
   };
 
   const handleCommentSubmit = () => {
-    console.log(`Yorum: ${comment}`);
-    setComment('');
+    console.log(`Yorum: ${comment}`+` Post ID: ${postId}`);
+    const newComment = {
+      authorId: 1,
+      postId: postId,
+      comment: comment,
+    }
+    const formData = new FormData();
+    formData.append("comment", JSON.stringify(newComment));
+    addReply(formData);
   };
 
   const truncateContent = (text, length) => {
@@ -61,7 +69,7 @@ const PostCard = ({ post, replies }) => {
         subheader={new Date(date).toLocaleDateString()}
       />
       <CardContent>
-        <Link to={`/post/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link to={`/post/${postId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
           <Typography variant="h5" component="div" style={{ marginLeft: '10px', marginBottom: '10px' }}>
             {title}
           </Typography>

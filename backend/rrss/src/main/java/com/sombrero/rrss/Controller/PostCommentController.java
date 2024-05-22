@@ -1,5 +1,6 @@
 package com.sombrero.rrss.Controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sombrero.rrss.Model.PostComment;
 import com.sombrero.rrss.Service.PostCommentService;
 import lombok.AllArgsConstructor;
@@ -19,9 +20,18 @@ public class PostCommentController {
         return ResponseEntity.ok(postCommentList);
     }
 
+    @GetMapping("/{postId}")
+    public ResponseEntity<Iterable<PostComment>> getPostCommentsByPostId(@PathVariable Integer postId) {
+        Iterable<PostComment> postCommentList = postCommentService.getByPostId(postId);
+        return ResponseEntity.ok(postCommentList);
+    }
+
     @PostMapping("/add")
-    public ResponseEntity<PostComment> addPostComment(PostComment postComment) {
+    public ResponseEntity<PostComment> addPostComment(@RequestParam("comment") String postCommentJson) {
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            PostComment postComment = objectMapper.readValue(postCommentJson, PostComment.class);
+
             postComment.setDate(getCurrentDate());
             postCommentService.addPostComment(postComment);
             return ResponseEntity.ok(postComment);

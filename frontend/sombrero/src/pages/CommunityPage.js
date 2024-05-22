@@ -5,40 +5,9 @@ import Header from "./Header";
 import MakePost from '../components/community/MakePost';
 import { CssVarsProvider, extendTheme } from '@mui/joy/styles';
 import Divider from "@mui/material/Divider";
-import {getPosts} from '../services/CommunityService';
+import {getPosts,getReplies} from '../services/CommunityService';
 
 
-const replies = [
-  {
-    id: 1,
-    name: 'John Doe',
-    post_id:1,
-    date: '2023-05-20',
-    content: 'This is the content of the first post. It will be truncated if it is too long.',
-  },
-  {
-    id: 2,
-    name: 'Jane Smith',
-    post_id:1,
-    date: '2023-05-18',
-    content: 'This is the content of the first post. It will be truncated if it is too long.',
-  },
-  {
-    id: 1,
-    name: 'John Doe',
-    post_id:2,
-    date: '2023-05-20',
-    content: 'This is the content of the first post. It will be truncated if it is too long.',
-  },
-  {
-    id: 2,
-    name: 'Jane Smith',
-    post_id:2,
-    date: '2023-05-18',
-    content: 'This is the content of the first post. It will be truncated if it is too long.',
-  },
-
-]
 
 
 
@@ -57,6 +26,7 @@ const customTheme = extendTheme({
 const CommunityPage = () => {
   const [selectedType, setSelectedType] = useState('All');
   const [posts, setPosts] = useState([]);
+  const [replies, setReplies] = useState([]);
   const handleButtonClick = (type) => {
     setSelectedType(type);
   };
@@ -70,6 +40,7 @@ const CommunityPage = () => {
         console.error(error);
       }
     };
+
     fetchPosts();
   }, []);
 

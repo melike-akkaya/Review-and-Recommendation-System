@@ -24,6 +24,10 @@ public class PostCommentService {
         postCommentRepository.deleteById(id);
     }
 
+    public List<PostComment> getByPostId(Integer postId) {
+        return postCommentRepository.findByPostId(postId);
+    }
+
     public List<PostComment> getAll() {
         return postCommentRepository.findAll();
     }
