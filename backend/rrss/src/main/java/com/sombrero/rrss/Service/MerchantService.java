@@ -1,7 +1,9 @@
 package com.sombrero.rrss.Service;
 
 import com.sombrero.rrss.Model.Merchant;
+import com.sombrero.rrss.Model.User;
 import com.sombrero.rrss.Repository.IMerchantRepository;
+import com.sombrero.rrss.Repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
@@ -9,14 +11,16 @@ import java.util.Optional;
 @Service
 public class MerchantService {
 
-    private final IMerchantRepository merchantRepository;
+    //private final IMerchantRepository merchantRepository;
+    private final IUserRepository userRepository;
     @Autowired
-    public MerchantService(IMerchantRepository merchantRepository) {
-        this.merchantRepository = merchantRepository;
+    public MerchantService(IMerchantRepository merchantRepository, IUserRepository userRepository) {
+        //this.merchantRepository = merchantRepository;
+        this.userRepository = userRepository;
     }
 
-    public Merchant save(Merchant merchant) {
-        String[] words = merchant.getCountry().split("[-\\s]"); // split the country name by "-" or " "
+    public User save(User user) {
+        String[] words = user.getCountry().split("[-\\s]"); // split the country name by "-" or " "
 
         StringBuilder capitalizedCountry = new StringBuilder();
 
@@ -33,13 +37,11 @@ public class MerchantService {
             }
         }
 
-        merchant.setCountry(capitalizedCountry.toString());
+        user.setCountry(capitalizedCountry.toString());
 
-        return merchantRepository.save(merchant);
+        return userRepository.save(user);
     }
 
 
-    public Optional<Merchant> getById(int id) {
-        return merchantRepository.findById(id);
-    }
+    public Optional<User> getById(int id) {return userRepository.findById(id); }
 }

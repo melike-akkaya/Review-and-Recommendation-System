@@ -68,8 +68,8 @@ export function AuthorizedPersonInformation(authorizedPerson) {
 
   const handleSave = () => {
     if (
-      !initialAuthorizedPerson.authorizedPersonName ||
-      !initialAuthorizedPerson.authorizedPersonSurname ||
+      !initialAuthorizedPerson.name ||
+      !initialAuthorizedPerson.surname ||
       !initialAuthorizedPerson.email
     ) {
       setOpenError(true);
@@ -111,8 +111,8 @@ export function AuthorizedPersonInformation(authorizedPerson) {
               <FormControl fullWidth required>
                 <InputLabel>First name</InputLabel>
                 <OutlinedInput
-                  name="authorizedPersonName"
-                  value={initialAuthorizedPerson.authorizedPersonName}
+                  name="name"
+                  value={initialAuthorizedPerson.name}
                   onChange={handleInputChange}
                   label="First name"
                 />
@@ -122,8 +122,8 @@ export function AuthorizedPersonInformation(authorizedPerson) {
               <FormControl fullWidth required>
                 <InputLabel>Last name</InputLabel>
                 <OutlinedInput
-                  name="authorizedPersonSurname"
-                  value={initialAuthorizedPerson.authorizedPersonSurname}
+                  name="surname"
+                  value={initialAuthorizedPerson.surname}
                   onChange={handleInputChange}
                   label="Last name"
                 />

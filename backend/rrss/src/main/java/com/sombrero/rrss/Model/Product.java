@@ -28,7 +28,7 @@ public class Product {
     private Integer category;
 
     @Column(name = "merchant_id")
-    private Integer merchant;
+    private Integer user;
 
     @Column(name = "description")
     private String description;
