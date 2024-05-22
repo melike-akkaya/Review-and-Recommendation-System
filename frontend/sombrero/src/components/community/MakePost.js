@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { CardHeader, CardContent, TextField, Button, ButtonGroup, Typography} from '@mui/material';
 import { addPost } from '../../services/CommunityService';
+import { fileToBlob } from "../../commonMethods";
 
 const MakePost = () => {
   const initialPostState = {
     type: '',
+    title: '', 
     content: '',
+    media: null,
   };
 
   const [type, setPostType] = useState('');
   const [content, setContent] = useState('');
+  const [title, setTitle] = useState('');
+  const [media, setMedia] = useState(" ");
   const [post, setPost] = useState(initialPostState);
   const [showMessage, setShowMessage] = useState(false);
 
@@ -23,9 +28,15 @@ const MakePost = () => {
     setContent(post.content = event.target.value);
   };
 
-  const handleAddMediaClick = () => {
-    setShowMessage(true);
+  const handleTitleChange = (event) => {
+    setTitle(post.title = event.target.value);
   };
+
+
+  const handleAddMediaClick =  () => {
+    
+  }  
+
 
   const handlePublishClick = async() => {
     try {
@@ -84,6 +95,15 @@ const MakePost = () => {
         }
       />
       <CardContent>
+        <TextField
+              fullWidth
+              multiline
+              rows={1} 
+              value={title}
+              onChange={handleTitleChange}
+              placeholder="Write your post Title here..."
+              sx ={{width: "400px", marginBottom: '10px'}}
+        />
 
         <TextField
             fullWidth
