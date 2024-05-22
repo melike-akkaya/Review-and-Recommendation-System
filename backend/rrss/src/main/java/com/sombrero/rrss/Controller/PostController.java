@@ -34,6 +34,28 @@ public class PostController {
         }
     }
 
+    @PutMapping("/update/{postId}")
+    public ResponseEntity<Post> updatePost(@PathVariable Integer postId, @RequestParam("post") String postJson) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Post updatedPost = objectMapper.readValue(postJson, Post.class);
+
+            Post post=postService.getPostById(postId);
+
+            post.setTitle(updatedPost.getTitle());
+            post.setContent(updatedPost.getContent());
+            post.setReadingTime(calculateReadingTime(updatedPost.getContent()));
+            post.setDate(getCurrentDate());
+
+            postService.save(post);
+            return ResponseEntity.ok(post);
+        } catch (Exception e) {
+            System.out.println("Error updating post: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
     @DeleteMapping("/delete/{postId}")
     public ResponseEntity<Post> deletePost(@PathVariable Integer postId) {
         try {

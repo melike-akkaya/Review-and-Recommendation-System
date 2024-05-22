@@ -33,12 +33,7 @@ public class PostService {
         return postRepository.findById(postId).orElse(null);
     }
 
-    public void updatePost(Integer postId, Post post) {
-        Post postToUpdate = postRepository.findById(postId).orElse(null);
-        if (postToUpdate != null) {
-            postToUpdate.setTitle(post.getTitle());
-            postToUpdate.setContent(post.getContent());
-            postRepository.save(postToUpdate);
-        }
+    public void save(Post post) {
+        postRepository.save(post);
     }
 }

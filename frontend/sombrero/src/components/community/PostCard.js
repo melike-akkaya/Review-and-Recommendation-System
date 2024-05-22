@@ -9,6 +9,7 @@ import { addReply } from '../../services/CommunityService';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ReplyCard from './ReplyCard'; 
+import { deletePost,updatePost } from '../../services/CommunityService';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -21,7 +22,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const PostCard = ({ post, replies }) => {
+const PostCard = ({ post, replies, refresh }) => {
   const { authorId, type, date, title, content, image, postId } = post;
   const [userName, setUserName] = useState('');
   const [expanded, setExpanded] = useState(false);
@@ -51,9 +52,11 @@ const PostCard = ({ post, replies }) => {
     addReply(formData);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async() => {
     console.log('Delete clicked');
+    await deletePost(postId);
     handleSettingClose();
+    refresh();
   };
 
   const truncateContent = (text, length) => {
@@ -74,10 +77,14 @@ const PostCard = ({ post, replies }) => {
     handleSettingClose();
   };
 
-  const handleSave = () => {
+  const handleSave = async() => {
     setNewTitle(newTitle);
     setNewContent(newContent);
     setIsEditing(false);
+    const updatedPost = new FormData();
+    updatedPost.append("post", JSON.stringify({ title: newTitle, content: newContent }));
+    await updatePost(postId, updatedPost);
+    refresh();
   };
 
   const handleCancel = () => {

@@ -27,3 +27,11 @@ export const getReplies = async (postId) => {
         throw error;
     }
 }
+
+export const deletePost = async(postId) => {
+    return axios.delete(`${BASE_URL}/community/posts/delete/${postId}`);
+}
+
+export const updatePost = async(postId, post) => {
+    return axios.put(`${BASE_URL}/community/posts/update/${postId}`, post);
+}

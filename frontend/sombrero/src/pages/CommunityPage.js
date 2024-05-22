@@ -6,6 +6,7 @@ import MakePost from '../components/community/MakePost';
 import { CssVarsProvider, extendTheme } from '@mui/joy/styles';
 import Divider from "@mui/material/Divider";
 import {getPosts,getReplies} from '../services/CommunityService';
+import { Refresh } from '@mui/icons-material';
 
 
 
@@ -31,16 +32,18 @@ const CommunityPage = () => {
     setSelectedType(type);
   };
 
-  useState(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await getPosts();
-        setPosts(response);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const fetchPosts = async () => {
+    try {
+      const response = await getPosts();
+      setPosts(response);
+      handleButtonClick('All');
+    } catch (error) {
+      console.error(error);
+    }
 
+  };
+
+  useState(() => {
     fetchPosts();
   }, []);
 
@@ -85,7 +88,7 @@ const CommunityPage = () => {
           </Box>
             {filteredPosts.map(post => (
               <Box key={post.id} mb={4} sx={{ maxWidth: '800px' }}>
-                <PostCard post={post} replies={replies.filter(reply => reply.post_id === post.id)}/>
+                <PostCard post={post} replies={replies.filter(reply => reply.post_id === post.id)} refresh={()=>fetchPosts()}/>
               </Box>
             ))}
         </Paper>
