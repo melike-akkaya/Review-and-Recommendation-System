@@ -19,6 +19,11 @@ export const addReply = (comment) => {
     return axios.post(`${BASE_URL}/postComment/add`, comment);
 }
 
+export const deleteReply = async(replyId) => {
+    return axios.delete(`${BASE_URL}/postComment/delete/${replyId}`);
+    
+}
+
 export const getReplies = async (postId) => {
     try {
         const response = await axios.get(`${BASE_URL}/postComment/`);

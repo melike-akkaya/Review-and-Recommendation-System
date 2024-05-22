@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Typography, TextField, Button, InputAdornment, IconButton } from '@mui/material';
 import { Edit as EditIcon, Save as SaveIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { deleteReply, getReplies } from '../../services/CommunityService';
 
 const ReplyCard = ({ replies, comment, handleCommentChange, handleCommentSubmit }) => {
   const [editingReplyId, setEditingReplyId] = useState(null);
@@ -13,6 +14,7 @@ const ReplyCard = ({ replies, comment, handleCommentChange, handleCommentSubmit 
 
   const handleSave = (replyId) => {
     console.log('Updated reply:', updatedReply);
+
     setEditingReplyId(null);
   };
 
@@ -22,8 +24,10 @@ const ReplyCard = ({ replies, comment, handleCommentChange, handleCommentSubmit 
   };
 
   const handleDelete = (repl) => {
+    deleteReply(repl);
     console.log('Delete clicked');
   };
+
 
   return (
     <div>
@@ -68,14 +72,14 @@ const ReplyCard = ({ replies, comment, handleCommentChange, handleCommentSubmit 
                 </Typography>
                 <IconButton
                   aria-label="edit"
-                  onClick={() => handleEdit(reply.id, reply.content)}
+                  onClick={() => handleEdit(reply.commentId, reply.content)}
                   sx={{ position: 'absolute', top: '50%', right: '36px', transform: 'translateY(-50%)' }}
                 >
                   <EditIcon />
                 </IconButton>
                 <IconButton
                   aria-label="delete"
-                  onClick={() => handleDelete(reply.id)}
+                  onClick={() => handleDelete(reply.commentId)}
                   sx={{ position: 'absolute', top: '50%', right: '12px', transform: 'translateY(-50%)' }}
                 >
                   <DeleteIcon />
