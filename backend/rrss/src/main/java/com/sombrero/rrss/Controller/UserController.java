@@ -1,5 +1,6 @@
 package com.sombrero.rrss.Controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sombrero.rrss.Model.Merchant;
 import com.sombrero.rrss.Model.User;
 import com.sombrero.rrss.Service.MerchantService;
@@ -35,5 +36,48 @@ public class UserController {
         // return the user if found and 404 if merchant not found
         return optionalUser.map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<User> addUser(@RequestParam("user") String userJson, @RequestPart byte [] image) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            User user = objectMapper.readValue(userJson, User.class);
+
+            if (image != null) {
+                user.setImage(image);
+            }
+
+            userService.addUser(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println("Error processing user: " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/update/{userId}")
+    public ResponseEntity<User> updateUser(@PathVariable Integer userId, @RequestParam("user") String userJson, @RequestPart byte [] image) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            User user = objectMapper.readValue(userJson, User.class);
+
+            if (image != null) {
+                user.setImage(image);
+            }
+
+            Optional<User> updatedUser = userService.updateUser(userId, user);
+            return updatedUser.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        } catch (Exception e) {
+            System.out.println("Error updating user: " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
+        userService.deleteUser(userId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

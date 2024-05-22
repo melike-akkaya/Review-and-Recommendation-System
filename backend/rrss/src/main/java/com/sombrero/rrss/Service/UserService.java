@@ -24,4 +24,29 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public void addUser(User user) {
+        userRepository.save(user);
+    }
+
+    public Optional<User> updateUser(Integer userId, User user) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User existingUser = optionalUser.get();
+            existingUser.setName(user.getName());
+            existingUser.setSurname(user.getSurname());
+            existingUser.setCountry(user.getCountry());
+            existingUser.setEmail(user.getEmail());
+            existingUser.setImage(user.getImage());
+            existingUser.setRole(user.getRole());
+            userRepository.save(existingUser);
+            return Optional.of(existingUser);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public void deleteUser(Integer userId) {
+        userRepository.deleteById(userId);
+    }
+
 }
