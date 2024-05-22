@@ -64,7 +64,7 @@ const ReplyCard = ({ replies, comment, handleCommentChange, handleCommentSubmit 
             ) : (
               <>
                 <Typography variant="body2" color="text.secondary">
-                  <strong>{reply.name}: </strong> {reply.content}
+                  <strong>{reply.authorName}: </strong> {reply.comment}
                 </Typography>
                 <IconButton
                   aria-label="edit"

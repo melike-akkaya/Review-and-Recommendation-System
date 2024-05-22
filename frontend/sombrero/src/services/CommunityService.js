@@ -21,7 +21,7 @@ export const addReply = (comment) => {
 
 export const getReplies = async (postId) => {
     try {
-        const response = await axios.get(`${BASE_URL}/postComment/${postId}`);
+        const response = await axios.get(`${BASE_URL}/postComment/`);
         return response.data;
     } catch (error) {
         throw error;

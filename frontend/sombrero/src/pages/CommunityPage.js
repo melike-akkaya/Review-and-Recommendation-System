@@ -43,7 +43,17 @@ const CommunityPage = () => {
 
   };
 
+  const fethReplies = async () => {
+    try {
+      const response = await getReplies();
+      setReplies(response);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   useState(() => {
+    fethReplies();
     fetchPosts();
   }, []);
 
@@ -88,7 +98,7 @@ const CommunityPage = () => {
           </Box>
             {filteredPosts.map(post => (
               <Box key={post.id} mb={4} sx={{ maxWidth: '800px' }}>
-                <PostCard post={post} replies={replies.filter(reply => reply.post_id === post.id)} refresh={()=>fetchPosts()}/>
+                <PostCard post={post} replies={replies.filter(reply => reply.postId === post.postId)} refresh={()=>fetchPosts()}/>
               </Box>
             ))}
         </Paper>
