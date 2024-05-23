@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Stack, Card, CardContent, Typography, Box } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getForYou } from "../services/ForYouService";
-import { useParams } from "react-router-dom";
 import Header from "./Header";
+import { useLocalStorageUser } from "../commonMethods";
 
 const ForYouPage = () => {
-  const { userId } = useParams();
+  const user = useLocalStorageUser();
   const [products, setProducts] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const ForYouPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getForYou(userId);
+        const response = await getForYou(user.id);
         setProducts(response.data);
       } catch (error) {
         console.error("Error fetching product data:", error);
@@ -22,7 +22,7 @@ const ForYouPage = () => {
     };
 
     fetchData();
-  }, [location.search, userId]);
+  }, [location.search, user.id]);
 
   const handleCardClick = (productId) => {
     navigate(`/product/${productId}`);

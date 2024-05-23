@@ -21,8 +21,6 @@ import { getCategories } from "../../services/CategoryService";
 import { useLocalStorageUser } from "../../commonMethods";
 import { sendLogOutRequest } from "../../services/AuthenticationService";
 
-const settings = ["Account", "Dashboard"];
-
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -126,6 +124,9 @@ const ResponsiveAppBar = () => {
     localStorage.setItem("user", null);
     navigate("/login");
   };
+  const handleRecommendationClick = async () => {
+    navigate("/recommendations");
+  };
 
   const handleCategoryClick = (categoryId) => {
     setSelectedCategoryId(categoryId);
@@ -214,13 +215,7 @@ const ResponsiveAppBar = () => {
                 onClose={handleCloseUserMenu}
               >
                 <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
-                {settings
-                  .filter((setting) => setting !== "Profile")
-                  .map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      {setting}
-                    </MenuItem>
-                  ))}
+                <MenuItem onClick={handleRecommendationClick}>For You</MenuItem>
                 <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
               </Menu>
             </Box>
