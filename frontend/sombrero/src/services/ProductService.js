@@ -60,12 +60,6 @@ export const addLabel = (label) => {
 
 export const getLastProductId = () => axios.get(`${BASE_URL}/products/lastId`);
 
-export const getIsEditable = () => axios.get(`${BASE_URL}/temp/`);
-
-export const setIsEditableTrue = () => {
-  return axios.post(`${BASE_URL}/temp/setTrue`);
-};
-
 export const setIsEditableFalse = () => {
   return axios.post(`${BASE_URL}/temp/setFalse`);
 };

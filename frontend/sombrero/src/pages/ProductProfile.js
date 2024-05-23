@@ -2,38 +2,47 @@ import React, { useEffect, useState } from "react";
 import Header from "./Header";
 import { Container } from "@mui/material";
 import ProductCard from "../components/product/ProductCard";
-import { useParams } from "react-router-dom";
 import CommentCard from "../components/product/CommentCard";
-import {
-  getIsEditable,
-  setIsEditableFalse,
-  incrementProductView,
-} from "../services/ProductService";
+import { useParams } from "react-router-dom";
+import { getProductById } from "../services/ProductService";
+import { useLocalStorageUser } from "../commonMethods";
 
 export default function ProductProfile() {
   const { productId } = useParams();
-  const [isEditable, setIsEditable] = useState(false);
+  const [fetchedProduct, setFetchedProduct] = useState({});
+  const user = useLocalStorageUser();
+  const [editable, setEditable] = useState(false);
+
+  const fetchProductById = (productId) => {
+    getProductById(productId)
+      .then(setFetchedProduct)
+      .catch((error) => console.error("Error fetching products:", error));
+  };
 
   useEffect(() => {
-    setIsEditableFalse();
+    fetchProductById(productId);
+  }, [productId]);
 
-    const fetchIsEditable = async () => {
-      const editable = await getIsEditable(productId);
-      setIsEditable(editable.data.isEditable === 1);
-      if (editable.data.isEditable === 0) {
-        incrementProductView(productId);
-      }
-    };
-    fetchIsEditable();
-  }, []);
+  useEffect(() => {
+    if (fetchedProduct.merchant === user.id) {
+      setEditable(true);
+    } else {
+      setEditable(false);
+    }
+  }, [fetchedProduct, user]);
 
   return (
     <div>
       <Header />
       <Container>
-        <ProductCard id={productId} editable={isEditable} userId={1} />
+        <ProductCard
+          id={productId}
+          fetchedProduct={fetchedProduct}
+          setFetchedProduct={setFetchedProduct}
+          editable={editable}
+        />
       </Container>
-      {!isEditable && <CommentCard id={productId} />}
+      <CommentCard id={productId} />
     </div>
   );
 }

@@ -1,16 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
-import {
-  deleteLabel,
-  deleteProduct,
-  getIsEditable,
-  setIsEditableTrue,
-} from "../../services/ProductService";
+import { deleteLabel, deleteProduct } from "../../services/ProductService";
 import { useState } from "react";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import ConfirmationDialog from "./ConformationDialog";
@@ -40,7 +35,7 @@ const ProductList = ({ products, refreshProducts }) => {
   };
 
   const handleEdit = async (productId) => {
-    setIsEditableTrue();
+    //setIsEditableTrue();
     window.location.href = "/product/" + productId;
   };
 

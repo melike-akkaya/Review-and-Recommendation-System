@@ -6,27 +6,27 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
-  Rating,
   Menu,
   MenuItem,
 } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
-import { getUserWishlist, addProductToWishlist } from "../../services/WishlistService";
+import {
+  getUserWishlist,
+  addProductToWishlist,
+} from "../../services/WishlistService";
 import {
   getLabelsByProductId,
-  getProductById,
   updateLabelsById,
   updateProductById,
 } from "../../services/ProductService";
 import IconButton from "@mui/material/IconButton";
 import UploadIcon from "@mui/icons-material/Upload";
-import { fileToBlob } from "../../commonMethods";
+import { fileToBlob, useLocalStorageUser } from "../../commonMethods";
 import WishlistNotification from "../wishlist/WishlistNotification";
 
-const ProductCard = ({ id, editable, userId }) => {
+const ProductCard = ({ id, fetchedProduct, setFetchedProduct, editable }) => {
   const colors = ["#f44336", "#2196f3", "#4caf50", "#ff9800", "#9c27b0"];
   const [fetchedLabels, setFetchedLabels] = useState([]);
-  const [fetchedProduct, setFetchedProduct] = useState([]);
   const [labels, setLabels] = useState([]);
   const [productImage, setProductImage] = useState();
   const [productName, setProductName] = useState("");
@@ -37,19 +37,21 @@ const ProductCard = ({ id, editable, userId }) => {
   const [wishlists, setWishlists] = useState([]);
   const [wishlistMenuAnchor, setWishlistMenuAnchor] = useState(null);
   const [notification, setNotification] = useState(null);
+  const user = useLocalStorageUser();
 
   // Fetch user's wishlists
   useEffect(() => {
+    console.log(id);
     const fetchUserWishlists = async () => {
       try {
-        const userWishlists = await getUserWishlist(userId); // Fetch wishlists for the current user
+        const userWishlists = await getUserWishlist(user.id); // Fetch wishlists for the current user
         setWishlists(userWishlists); // Set the fetched wishlists to state
       } catch (error) {
         console.error("Error fetching user wishlists:", error);
       }
     };
     fetchUserWishlists();
-  }, []);
+  }, [id, user.id]);
 
   // Function to handle opening the wishlist menu
   const handleOpenWishlistMenu = (event) => {
@@ -66,7 +68,11 @@ const ProductCard = ({ id, editable, userId }) => {
     try {
       await addProductToWishlist(wishlistId, id); // Add the product to the selected wishlist
       console.log("Product added to wishlist:", wishlistId);
-      setNotification(`Successfully added to ${wishlists.find(wishlist => wishlist.wishlistId === wishlistId).name} wishlist!`);
+      setNotification(
+        `Successfully added to ${
+          wishlists.find((wishlist) => wishlist.wishlistId === wishlistId).name
+        } wishlist!`
+      );
     } catch (error) {
       console.error("Error adding product to wishlist:", error);
     }
@@ -80,12 +86,6 @@ const ProductCard = ({ id, editable, userId }) => {
   const fetchLabelById = (productId) => {
     getLabelsByProductId(productId)
       .then(setFetchedLabels)
-      .catch((error) => console.error("Error fetching products:", error));
-  };
-
-  const fetchProductById = (productId) => {
-    getProductById(productId)
-      .then(setFetchedProduct)
       .catch((error) => console.error("Error fetching products:", error));
   };
 
@@ -139,7 +139,6 @@ const ProductCard = ({ id, editable, userId }) => {
   useEffect(() => {
     const cleanedId = parseInt(id.replace(":", ""), 10);
     fetchLabelById(cleanedId);
-    fetchProductById(cleanedId);
     setProductName(fetchedProduct.name);
     setProductDescription(fetchedProduct.description);
     setProductPrice(fetchedProduct.price);
@@ -186,11 +185,6 @@ const ProductCard = ({ id, editable, userId }) => {
 
         const blob = await fileToBlob(file);
         setProductImage(blob);
-
-        // setMerchant((prevMerchant) => ({
-        //   ...prevMerchant,
-        //   image: blob,
-        // }));
       } catch (error) {
         console.error("Error uploading image:", error);
       }
@@ -345,7 +339,12 @@ const ProductCard = ({ id, editable, userId }) => {
           ))}
         </Menu>
       </CardContent>
-      {notification && <WishlistNotification message={notification} onClose={closeNotification} />}
+      {notification && (
+        <WishlistNotification
+          message={notification}
+          onClose={closeNotification}
+        />
+      )}
     </Card>
   );
 };

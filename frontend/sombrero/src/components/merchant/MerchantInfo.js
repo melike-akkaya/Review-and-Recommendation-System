@@ -13,13 +13,15 @@ import SaveIcon from "@mui/icons-material/Save";
 import IconButton from "@mui/material/IconButton";
 import { editMerchantInfo } from "../../services/MerchantService";
 import { Alert } from "../alert/Alert";
-import { fileToBlob } from "../../commonMethods";
+import { fileToBlob, useLocalStorageUser } from "../../commonMethods";
 
 export function MerchantInfo(initialMerchant) {
+  const user = useLocalStorageUser();
   const [merchant, setMerchant] = useState(initialMerchant.merchant);
   const [editMode, setEditMode] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
+  const [editable, setEditable] = useState(initialMerchant.id === user.id);
 
   const handleEdit = () => {
     setEditMode(!editMode);
@@ -89,7 +91,7 @@ export function MerchantInfo(initialMerchant) {
                 style={{
                   height: "80px",
                   width: "80px",
-                  cursor: editMode ? "pointer" : "default",
+                  cursor: editable && editMode ? "pointer" : "default",
                 }}
               />
             ) : (
@@ -97,11 +99,11 @@ export function MerchantInfo(initialMerchant) {
                 sx={{
                   height: "80px",
                   width: "80px",
-                  cursor: editMode ? "pointer" : "default",
+                  cursor: editable && editMode ? "pointer" : "default",
                 }}
               />
             )}
-            {editMode && (
+            {editable && editMode && (
               <input
                 type="file"
                 accept="image/*"
@@ -117,7 +119,7 @@ export function MerchantInfo(initialMerchant) {
                 }}
               />
             )}
-            {editMode && (
+            {editable && editMode && (
               <IconButton
                 sx={{
                   position: "absolute",
@@ -137,7 +139,7 @@ export function MerchantInfo(initialMerchant) {
 
           <Stack spacing={1} sx={{ textAlign: "center" }}>
             <Typography variant="h5">
-              {editMode ? (
+              {editable && editMode ? (
                 <input
                   type="text"
                   value={merchant.name}
@@ -160,7 +162,7 @@ export function MerchantInfo(initialMerchant) {
       </CardContent>
       <Divider />
       <CardActions>
-        {!editMode ? (
+        {!editMode && editable ? (
           <Button
             fullWidth
             variant="text"
@@ -170,16 +172,18 @@ export function MerchantInfo(initialMerchant) {
             Edit
           </Button>
         ) : (
-          <>
-            <Button
-              fullWidth
-              variant="text"
-              startIcon={<SaveIcon />}
-              onClick={handleSave}
-            >
-              Save
-            </Button>
-          </>
+          editable && (
+            <>
+              <Button
+                fullWidth
+                variant="text"
+                startIcon={<SaveIcon />}
+                onClick={handleSave}
+              >
+                Save
+              </Button>
+            </>
+          )
         )}
       </CardActions>
       <Alert

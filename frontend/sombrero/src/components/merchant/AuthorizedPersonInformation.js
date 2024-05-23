@@ -13,7 +13,7 @@ import Select from "@mui/material/Select";
 import Grid from "@mui/material/Grid";
 import { editAuthorizedPerson } from "../../services/MerchantService";
 import { Alert } from "../alert/Alert";
-import { fetchCountries } from "../../commonMethods";
+import { fetchCountries, useLocalStorageUser } from "../../commonMethods";
 
 export function AuthorizedPersonInformation(authorizedPerson) {
   const [countries, setCountries] = useState([]);
@@ -22,6 +22,8 @@ export function AuthorizedPersonInformation(authorizedPerson) {
   );
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
+  const user = useLocalStorageUser();
+  const isEditable = initialAuthorizedPerson.id === user.id;
 
   useEffect(() => {
     fetchCountries(setCountries);
@@ -115,6 +117,7 @@ export function AuthorizedPersonInformation(authorizedPerson) {
                   value={initialAuthorizedPerson.authorizedPersonName}
                   onChange={handleInputChange}
                   label="First name"
+                  readOnly={!isEditable}
                 />
               </FormControl>
             </Grid>
@@ -126,6 +129,7 @@ export function AuthorizedPersonInformation(authorizedPerson) {
                   value={initialAuthorizedPerson.authorizedPersonSurname}
                   onChange={handleInputChange}
                   label="Last name"
+                  readOnly={!isEditable}
                 />
               </FormControl>
             </Grid>
@@ -137,6 +141,7 @@ export function AuthorizedPersonInformation(authorizedPerson) {
                   value={initialAuthorizedPerson.email}
                   onChange={handleInputChange}
                   label="Email address"
+                  readOnly={!isEditable}
                 />
               </FormControl>
             </Grid>
@@ -148,6 +153,7 @@ export function AuthorizedPersonInformation(authorizedPerson) {
                   onChange={handleCountryChange}
                   label="Country"
                   variant="outlined"
+                  readOnly={!isEditable}
                 >
                   {countries.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -160,11 +166,13 @@ export function AuthorizedPersonInformation(authorizedPerson) {
           </Grid>
         </CardContent>
         <Divider />
-        <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button variant="contained" onClick={handleSave}>
-            Save details
-          </Button>
-        </CardActions>
+        {isEditable && (
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Button variant="contained" onClick={handleSave}>
+              Save details
+            </Button>
+          </CardActions>
+        )}
       </Card>
 
       <Alert

@@ -13,8 +13,13 @@ import AddProductDialog from "../components/merchant/AddProductDialog";
 import AnalyticsDialog from "../components/merchant/AnalyticsDialog";
 import ProductList from "../components/merchant/ProductList";
 import { Typography } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { useLocalStorageUser } from "../commonMethods";
 
 export default function MerchantProfile() {
+  const { merchantId } = useParams();
+  const user = useLocalStorageUser();
+
   const [initialMerchant, setInitialMerchant] = useState(null);
   const [initialAuthorizedPerson, setInitialAuthorizedPerson] = useState(null);
   const [products, setProducts] = useState([]);
@@ -28,7 +33,6 @@ export default function MerchantProfile() {
   };
 
   useEffect(() => {
-    const merchantId = 1;
     getMerchantInfo(merchantId)
       .then((response) => {
         setInitialMerchant({
@@ -51,45 +55,56 @@ export default function MerchantProfile() {
       });
   }, []);
 
+  const isEditable = initialMerchant && initialMerchant.id === user.id;
+
   return (
     <div>
       <Header />
       <div style={{ padding: "0 200px" }}>
-        <AddProductDialog
-          open={isAddProductDialogOpen}
-          setOpen={setAddProductDialogOpen}
-          refreshProducts={() => fetchProducts(1)}
-        />
-        <AnalyticsDialog
-          open={isAnalyticsDialogOpen}
-          setOpen={setAnalyticsDialogOpen}
-          products={products}
-        />
+        {isEditable && (
+          <>
+            <AddProductDialog
+              open={isAddProductDialogOpen}
+              setOpen={setAddProductDialogOpen}
+              refreshProducts={() => fetchProducts(merchantId)}
+            />
+            <AnalyticsDialog
+              open={isAnalyticsDialogOpen}
+              setOpen={setAnalyticsDialogOpen}
+              products={products}
+            />
+          </>
+        )}
         <Stack spacing={3}>
           <Grid container spacing={3}>
             <Grid item lg={4} md={6} xs={12}>
               <Stack direction="column" spacing={2}>
-                <Stack direction="row" justifyContent="flex-start" spacing={2}>
-                  <IconButton
-                    size="small"
-                    color="primary"
-                    onClick={() => {
-                      // Placeholder for analytics button click action
-                      setAnalyticsDialogOpen(true);
-                    }}
+                {isEditable && (
+                  <Stack
+                    direction="row"
+                    justifyContent="flex-start"
+                    spacing={2}
                   >
-                    <AnalyticsIcon />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    color="primary"
-                    onClick={() => {
-                      setAddProductDialogOpen(true);
-                    }}
-                  >
-                    <AddCircleIcon />
-                  </IconButton>
-                </Stack>
+                    <IconButton
+                      size="small"
+                      color="primary"
+                      onClick={() => {
+                        setAnalyticsDialogOpen(true);
+                      }}
+                    >
+                      <AnalyticsIcon />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      color="primary"
+                      onClick={() => {
+                        setAddProductDialogOpen(true);
+                      }}
+                    >
+                      <AddCircleIcon />
+                    </IconButton>
+                  </Stack>
+                )}
                 {initialMerchant && <MerchantInfo merchant={initialMerchant} />}
               </Stack>
             </Grid>
@@ -112,7 +127,7 @@ export default function MerchantProfile() {
           {products.length > 0 && (
             <ProductList
               products={products}
-              refreshProducts={() => fetchProducts(1)}
+              refreshProducts={() => fetchProducts(merchantId)}
             />
           )}
         </Stack>
