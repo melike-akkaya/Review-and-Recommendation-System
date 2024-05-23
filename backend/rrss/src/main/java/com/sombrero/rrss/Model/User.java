@@ -30,9 +30,7 @@ public class User implements UserDetails {
     private byte[] image;
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    // if merchant:
-    private String merchantName;
+    private String merchantName; //if merchant
 
 
     @Override

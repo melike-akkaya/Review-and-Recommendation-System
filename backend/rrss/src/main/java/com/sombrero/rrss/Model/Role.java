@@ -5,4 +5,6 @@ public enum Role {
     COMMUNITY_MODERATOR,
     ADMIN,
     INFLUENCER,
+
+    MERCHANT
 }

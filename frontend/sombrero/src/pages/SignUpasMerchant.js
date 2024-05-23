@@ -23,6 +23,9 @@ import CreateIcon from "@mui/icons-material/Create";
 import { fetchCountries } from "../commonMethods";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import { sendSignUpRequest } from "../services/AuthenticationService";
+import { fileToBlob } from "../commonMethods";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -31,10 +34,12 @@ export default function SignUp() {
   const [companyname, setCompanyname] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [image, setImage] = React.useState('/broken-image.jpg');
+  const [image, setImage] = React.useState("/broken-image.jpg");
+  const [imageFile, setImageFile] = React.useState(null);
   const [emailError, setEmailError] = React.useState(false);
   const [countries, setCountries] = React.useState([]);
-  const [country, setCountry] = React.useState(""); 
+  const [country, setCountry] = React.useState("");
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     fetchCountries(setCountries);
@@ -61,7 +66,7 @@ export default function SignUp() {
   const handleCompanyNameChange = (event) => {
     setCompanyname(event.target.value);
   };
- 
+
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
@@ -72,6 +77,7 @@ export default function SignUp() {
       const reader = new FileReader();
       reader.onload = (e) => {
         setImage(e.target.result);
+        setImageFile(file);
       };
       reader.readAsDataURL(file);
     }
@@ -92,8 +98,26 @@ export default function SignUp() {
     return emailRegex.test(email);
   };
 
-  const handleSignUp = () => {
-    console.log(name, surname, email, password, country); 
+  const handleSignUp = async () => {
+    try {
+      const blob = await fileToBlob(imageFile);
+      const formData = new FormData();
+      formData.append("image", blob);
+      const request = {
+        name: name,
+        surname: surname,
+        email: email,
+        password: password,
+        country: country,
+        role: "MERCHANT",
+        merchantName: companyname,
+      };
+      formData.append("signUpRequest", JSON.stringify(request));
+      await sendSignUpRequest(formData);
+      navigate("/login");
+    } catch (error) {
+      console.error("Sign up failed", error);
+    }
   };
 
   const SmallAvatar = styled(Avatar)(({ theme }) => ({
@@ -105,7 +129,7 @@ export default function SignUp() {
   return (
     <Box
       sx={{
-        background: 'linear-gradient(45deg, #ffcc97, #4d7fff, #55e7fc)',
+        background: "linear-gradient(45deg, #ffcc97, #4d7fff, #55e7fc)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -122,7 +146,7 @@ export default function SignUp() {
           display: "flex",
           justifyContent: "center",
           padding: "10px",
-          border: '1px solid #4d7fff'
+          border: "1px solid #4d7fff",
         }}
       >
         <CardHeader
@@ -132,7 +156,7 @@ export default function SignUp() {
             textAlign: "center",
             marginTop: "10px",
             color: "#4d7fff",
-            fontWeight: 'bold',
+            fontWeight: "bold",
           }}
         />
         <CardContent
@@ -178,7 +202,9 @@ export default function SignUp() {
                   value={email}
                   onChange={handleEmailChange}
                   error={emailError}
-                  helperText={emailError ? "Please enter a valid email address" : ""}
+                  helperText={
+                    emailError ? "Please enter a valid email address" : ""
+                  }
                 />
               </div>
               <div style={{ display: "flex", justifyContent: "center" }}>
@@ -198,7 +224,7 @@ export default function SignUp() {
               <div>
                 <input
                   accept="image/*"
-                  style={{ display: 'none' }}
+                  style={{ display: "none" }}
                   id="contained-button-file"
                   type="file"
                   onChange={handleImageUpload}
@@ -223,7 +249,12 @@ export default function SignUp() {
                 </label>
               </div>
               <FormControl
-                sx={{ m: 1, width: "30ch", marginLeft: "25px", marginTop: "33px" }}
+                sx={{
+                  m: 1,
+                  width: "30ch",
+                  marginLeft: "25px",
+                  marginTop: "33px",
+                }}
                 variant="outlined"
                 size="small"
               >
@@ -250,10 +281,19 @@ export default function SignUp() {
                   label="Password"
                 />
               </FormControl>
-              <FormControl fullWidth required sx={{ m: 1, width: "30ch", marginLeft: "25px", marginTop: "10px" }}>
+              <FormControl
+                fullWidth
+                required
+                sx={{
+                  m: 1,
+                  width: "30ch",
+                  marginLeft: "25px",
+                  marginTop: "10px",
+                }}
+              >
                 <InputLabel>Country</InputLabel>
                 <Select
-                  value={country} 
+                  value={country}
                   onChange={handleCountryChange}
                   label="Country"
                   variant="outlined"
@@ -274,10 +314,10 @@ export default function SignUp() {
               sx={{
                 margin: "20px",
                 borderRadius: "8px",
-                backgroundColor: "#4d7fff", 
-                color: "#fff", 
-                '&:hover': {
-                  backgroundColor: "#3a63cc", 
+                backgroundColor: "#4d7fff",
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#3a63cc",
                 },
               }}
               size="medium"
