@@ -39,4 +39,7 @@ public class Product {
 
     @Column(name = "view_count")
     private Integer viewCount=0;
+
+    @Column(name = "averager_rating")
+    private Integer averageRate=0;
 }
