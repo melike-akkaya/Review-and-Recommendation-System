@@ -39,7 +39,7 @@ const MakePost = () => {
 
   const handlePublishClick = async () => {
     try {
-      setPost({ type, content, title });
+      setPost({ type, content, title, authorId: user.id});
       const formData = new FormData();
       formData.append("post", JSON.stringify(post));
       await addPost(formData);

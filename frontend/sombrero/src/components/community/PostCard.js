@@ -122,7 +122,7 @@ const PostCard = ({ post, replies, refresh }) => {
 
   useEffect(() => {
     try {
-      getUserById(user.id).then((temp) => {
+      getUserById(post.authorId).then((temp) => {
         setUserName(temp.name);
       });
     } catch (error) {
