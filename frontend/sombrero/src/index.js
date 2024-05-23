@@ -12,6 +12,7 @@ import SignUpasMerchant from "./pages/SignUpasMerchant";
 import WishlistPage from "./pages/WishlistPage";
 import ForYouPage from "./pages/ForYou";
 import CategoryResults from "./pages/CategoryResults";
+import AdminPanel from "./pages/AdminPanel";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
   { path: "/signupasmerchant", element: <SignUpasMerchant /> },
   { path: "/recommendations/:userId", element: <ForYouPage /> },
   { path: "/wishlists/:userId", element: <WishlistPage /> },
+  { path: "/adminpanel", element: <AdminPanel /> },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

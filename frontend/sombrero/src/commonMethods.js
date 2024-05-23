@@ -56,3 +56,10 @@ export const useLocalStorageUser = () => {
 
   return user;
 };
+
+export const roles = [
+  "USER",
+  "COMMUNITY_MODERATOR",
+  "ADMIN",
+  "INFLUENCER",
+];
