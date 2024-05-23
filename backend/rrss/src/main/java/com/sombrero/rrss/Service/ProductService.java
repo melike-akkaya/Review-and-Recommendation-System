@@ -22,6 +22,10 @@ public class ProductService {
         return productRepository.findMaxProductId();
     }
 
+    public List<Product> getLastFourProducts() {
+        return productRepository.findTop4ByOrderByIdDesc();
+    }
+
     public void addProduct(Product product) {
         productRepository.save(product);
     }
