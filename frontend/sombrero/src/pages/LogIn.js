@@ -27,7 +27,11 @@ export default function LogIn() {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState(" ");
-  const [alert, setAlert] = useState({ open: false, severity: "error", message: "" });
+  const [alert, setAlert] = useState({
+    open: false,
+    severity: "error",
+    message: "",
+  });
   const navigate = useNavigate();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -48,7 +52,7 @@ export default function LogIn() {
         password: password,
       });
 
-      const userResponse = await getUser(name);
+      const userResponse = await getUser(email);
 
       const userData = userResponse.data;
 
@@ -91,7 +95,7 @@ export default function LogIn() {
   return (
     <Box
       sx={{
-        background: 'linear-gradient(45deg, #ffcc97, #4d7fff)',
+        background: "linear-gradient(45deg, #ffcc97, #4d7fff)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -108,7 +112,7 @@ export default function LogIn() {
           display: "flex",
           justifyContent: "center",
           padding: "10px",
-          border: '1px solid #4d7fff'
+          border: "1px solid #4d7fff",
         }}
       >
         <CardHeader
@@ -118,7 +122,7 @@ export default function LogIn() {
             textAlign: "center",
             marginTop: "10px",
             color: "#4d7fff",
-            fontWeight: 'bold',
+            fontWeight: "bold",
           }}
         />
         <CardContent
@@ -183,10 +187,10 @@ export default function LogIn() {
               sx={{
                 margin: "20px",
                 borderRadius: "8px",
-                backgroundColor: "#4d7fff", 
-                color: "#fff", 
-                '&:hover': {
-                  backgroundColor: "#3a63cc", 
+                backgroundColor: "#4d7fff",
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#3a63cc",
                 },
               }}
               size="medium"

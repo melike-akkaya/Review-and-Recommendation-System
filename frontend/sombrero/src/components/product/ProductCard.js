@@ -72,14 +72,14 @@ const ProductCard = ({ id, fetchedProduct, setFetchedProduct, editable }) => {
     console.log(id);
     const fetchUserWishlists = async () => {
       try {
-        const userWishlists = await getUserWishlist(user.id); // Fetch wishlists for the current user
+        const userWishlists = await getUserWishlist(user?.id); // Fetch wishlists for the current user
         setWishlists(userWishlists); // Set the fetched wishlists to state
       } catch (error) {
         console.error("Error fetching user wishlists:", error);
       }
     };
     fetchUserWishlists();
-  }, [id, user.id]);
+  }, [id, user?.id]);
 
   const handleOpenWishlistMenu = (event) => {
     setWishlistMenuAnchor(event.currentTarget);

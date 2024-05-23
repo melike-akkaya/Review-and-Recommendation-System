@@ -24,10 +24,14 @@ export default function ProductProfile() {
   }, [productId]);
 
   useEffect(() => {
-    if (fetchedProduct.merchant === user.id) {
-      setEditable(true);
-    } else {
+    if (user == null) {
       setEditable(false);
+    } else {
+      if (fetchedProduct.merchant === user.id) {
+        setEditable(true);
+      } else {
+        setEditable(false);
+      }
     }
   }, [fetchedProduct, user]);
 
