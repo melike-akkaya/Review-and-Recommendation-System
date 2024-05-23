@@ -20,9 +20,25 @@ import { blue } from "@mui/material/colors";
 import { styled } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
 import CreateIcon from "@mui/icons-material/Create";
+import { fetchCountries } from "../commonMethods";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 
-export default function SignUpasMerchant() {
+export default function SignUp() {
   const [showPassword, setShowPassword] = React.useState(false);
+  const [name, setName] = React.useState("");
+  const [surname, setSurname] = React.useState("");
+  const [companyname, setCompanyname] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [image, setImage] = React.useState('/broken-image.jpg');
+  const [emailError, setEmailError] = React.useState(false);
+  const [countries, setCountries] = React.useState([]);
+  const [country, setCountry] = React.useState(""); 
+
+  React.useEffect(() => {
+    fetchCountries(setCountries);
+  }, []);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -34,6 +50,52 @@ export default function SignUpasMerchant() {
     window.location.href = "/login";
   };
 
+  const handleNameChange = (event) => {
+    setName(event.target.value);
+  };
+
+  const handleSurnameChange = (event) => {
+    setSurname(event.target.value);
+  };
+
+  const handleCompanyNameChange = (event) => {
+    setCompanyname(event.target.value);
+  };
+ 
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImage(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCountryChange = (event) => {
+    setCountry(event.target.value);
+  };
+
+  const handleEmailChange = (event) => {
+    const emailValue = event.target.value;
+    setEmail(emailValue);
+    setEmailError(!validateEmail(emailValue));
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleSignUp = () => {
+    console.log(name, surname, email, password, country); 
+  };
+
   const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 30,
     height: 30,
@@ -43,7 +105,7 @@ export default function SignUpasMerchant() {
   return (
     <Box
       sx={{
-        backgroundColor: "#ebf1f6",
+        background: 'linear-gradient(45deg, #ffcc97, #4d7fff, #55e7fc)',
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -60,6 +122,7 @@ export default function SignUpasMerchant() {
           display: "flex",
           justifyContent: "center",
           padding: "10px",
+          border: '1px solid #4d7fff'
         }}
       >
         <CardHeader
@@ -68,6 +131,8 @@ export default function SignUpasMerchant() {
             fontSize: "64px",
             textAlign: "center",
             marginTop: "10px",
+            color: "#4d7fff",
+            fontWeight: 'bold',
           }}
         />
         <CardContent
@@ -82,97 +147,142 @@ export default function SignUpasMerchant() {
               <Divider />
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <TextField
-                  sx={{ m: 1, width: "30ch", margin: "15px" }}
+                  sx={{ m: 1, width: "30ch", margin: "10px" }}
                   required
                   id="outlined-required"
                   label="Name"
+                  size="small"
+                  value={name}
+                  onChange={handleNameChange}
                 />
               </div>
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <TextField
-                  sx={{ m: 1, width: "30ch", margin: "15px" }}
+                  sx={{ m: 1, width: "30ch", margin: "10px" }}
                   required
                   id="outlined-required"
                   label="Surname"
+                  size="small"
+                  value={surname}
+                  onChange={handleSurnameChange}
                 />
               </div>
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <TextField
-                  sx={{ m: 1, width: "30ch", margin: "15px" }}
+                  sx={{ m: 1, width: "30ch", margin: "10px" }}
                   required
                   id="outlined-required"
                   label="Email"
+                  type="email"
+                  size="small"
+                  value={email}
+                  onChange={handleEmailChange}
+                  error={emailError}
+                  helperText={emailError ? "Please enter a valid email address" : ""}
+                />
+              </div>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <TextField
+                  sx={{ m: 1, width: "30ch", margin: "10px" }}
+                  required
+                  id="outlined-required"
+                  label="Company Name"
+                  size="small"
+                  value={companyname}
+                  onChange={handleCompanyNameChange}
                 />
               </div>
             </Box>
             <Divider orientation="vertical" flexItem />
             <Box sx={{ width: "50%", padding: "10px" }}>
               <div>
-                <Badge
-                  overlap="circular"
-                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                  badgeContent={
-                    <SmallAvatar>
-                      <CreateIcon />
-                    </SmallAvatar>
-                  }
-                >
-                  <Button>
-                    <Avatar
-                      src="/broken-image.jpg"
-                      sx={{ bgcolor: blue[200], width: 86, height: 86 }}
-                    />
-                  </Button>
-                </Badge>
-              </div>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <TextField
-                  sx={{ m: 1, width: "30ch", margin: "15px" }}
-                  required
-                  id="outlined-required"
-                  label="Merchant Name"
+                <input
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  id="contained-button-file"
+                  type="file"
+                  onChange={handleImageUpload}
                 />
-                <FormControl
-                  sx={{ m: 1, width: "30ch", margin: "15px" }}
-                  variant="outlined"
-                >
-                  <InputLabel htmlFor="outlined-adornment-password">
-                    Password
-                  </InputLabel>
-                  <OutlinedInput
-                    id="outlined-adornment-password"
-                    type={showPassword ? "text" : "password"}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
+                <label htmlFor="contained-button-file">
+                  <Badge
+                    overlap="circular"
+                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                    badgeContent={
+                      <SmallAvatar>
+                        <CreateIcon />
+                      </SmallAvatar>
                     }
-                    label="Password"
-                  />
-                </FormControl>
-              </Box>
+                  >
+                    <Button component="span">
+                      <Avatar
+                        src={image}
+                        sx={{ bgcolor: blue[200], width: 86, height: 86 }}
+                      />
+                    </Button>
+                  </Badge>
+                </label>
+              </div>
+              <FormControl
+                sx={{ m: 1, width: "30ch", marginLeft: "25px", marginTop: "33px" }}
+                variant="outlined"
+                size="small"
+              >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Password
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={handlePasswordChange}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                />
+              </FormControl>
+              <FormControl fullWidth required sx={{ m: 1, width: "30ch", marginLeft: "25px", marginTop: "10px" }}>
+                <InputLabel>Country</InputLabel>
+                <Select
+                  value={country} 
+                  onChange={handleCountryChange}
+                  label="Country"
+                  variant="outlined"
+                  size="small"
+                >
+                  {countries.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Box>
           </Box>
           <Divider />
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Button
-              sx={{ margin: "20px", borderRadius: "8px" }}
+              sx={{
+                margin: "20px",
+                borderRadius: "8px",
+                backgroundColor: "#4d7fff", 
+                color: "#fff", 
+                '&:hover': {
+                  backgroundColor: "#3a63cc", 
+                },
+              }}
               size="medium"
               variant="contained"
+              onClick={handleSignUp}
             >
               Sign Up
             </Button>

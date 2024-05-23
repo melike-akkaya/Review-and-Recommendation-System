@@ -78,7 +78,7 @@ export default function LogIn() {
   return (
     <Box
       sx={{
-        backgroundColor: "#ebf1f6",
+        background: 'linear-gradient(45deg, #ffcc97, #4d7fff)',
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -95,6 +95,7 @@ export default function LogIn() {
           display: "flex",
           justifyContent: "center",
           padding: "10px",
+          border: '1px solid #4d7fff'
         }}
       >
         <CardHeader
@@ -103,6 +104,8 @@ export default function LogIn() {
             fontSize: "64px",
             textAlign: "center",
             marginTop: "10px",
+            color: "#4d7fff",
+            fontWeight: 'bold',
           }}
         />
         <CardContent
@@ -164,7 +167,15 @@ export default function LogIn() {
           </Box>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Button
-              sx={{ margin: "10px", borderRadius: "8px" }}
+              sx={{
+                margin: "20px",
+                borderRadius: "8px",
+                backgroundColor: "#4d7fff", 
+                color: "#fff", 
+                '&:hover': {
+                  backgroundColor: "#3a63cc", 
+                },
+              }}
               size="medium"
               variant="contained"
               onClick={handleLogIn}
