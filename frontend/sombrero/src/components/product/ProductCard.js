@@ -24,6 +24,7 @@ import UploadIcon from "@mui/icons-material/Upload";
 import { fileToBlob, useLocalStorageUser } from "../../commonMethods";
 import WishlistNotification from "../wishlist/WishlistNotification";
 import { getReviewsByProductId } from "../../services/ReviewService";
+import Rating from "@mui/material/Rating";
 
 const ProductCard = ({ id, fetchedProduct, setFetchedProduct, editable }) => {
   const colors = ["#f44336", "#2196f3", "#4caf50", "#ff9800", "#9c27b0"];
@@ -45,11 +46,11 @@ const ProductCard = ({ id, fetchedProduct, setFetchedProduct, editable }) => {
   const fetchReviewsByProductId = (id) => {
     getReviewsByProductId(id)
       .then((reviews) => {
-      setFetchedReviews(reviews);
-      calculateAverageRating(reviews);
-    })
-    .catch((error) => console.error("Error fetching products:", error));
-};
+        setFetchedReviews(reviews);
+        calculateAverageRating(reviews);
+      })
+      .catch((error) => console.error("Error fetching products:", error));
+  };
 
   useEffect(() => {
     if (id) {
@@ -58,9 +59,12 @@ const ProductCard = ({ id, fetchedProduct, setFetchedProduct, editable }) => {
   }, [id]);
 
   const calculateAverageRating = (reviews) => {
-    const totalRatings = reviews.reduce((sum, review) => sum + review.rating, 0);
+    const totalRatings = reviews.reduce(
+      (sum, review) => sum + review.rating,
+      0
+    );
     const average = totalRatings / reviews.length;
-    console.log(average)
+    console.log(average);
     setAverageRating(average);
   };
 
@@ -77,11 +81,9 @@ const ProductCard = ({ id, fetchedProduct, setFetchedProduct, editable }) => {
     fetchUserWishlists();
   }, [id, user.id]);
 
-
   const handleOpenWishlistMenu = (event) => {
     setWishlistMenuAnchor(event.currentTarget);
   };
-
 
   const handleCloseWishlistMenu = () => {
     setWishlistMenuAnchor(null);
@@ -89,7 +91,7 @@ const ProductCard = ({ id, fetchedProduct, setFetchedProduct, editable }) => {
 
   const handleAddToWishlist = async (wishlistId) => {
     try {
-      await addProductToWishlist(wishlistId, id); 
+      await addProductToWishlist(wishlistId, id);
       console.log("Product added to wishlist:", wishlistId);
       setNotification(
         `Successfully added to ${
@@ -295,15 +297,18 @@ const ProductCard = ({ id, fetchedProduct, setFetchedProduct, editable }) => {
           >
             {fetchedProduct.price}
           </Typography>
-          <Typography variant="body1" style={{ fontFamily: "Arial, sans-serif" }}>
-              <Rating 
-                name="average-rating" 
-                value={averageRating}
-                precision={0.1}
-                readOnly 
-              /> 
-              {averageRating.toFixed(1)}/5.0
-            </Typography>
+          <Typography
+            variant="body1"
+            style={{ fontFamily: "Arial, sans-serif" }}
+          >
+            <Rating
+              name="average-rating"
+              value={averageRating}
+              precision={0.1}
+              readOnly
+            />
+            {averageRating.toFixed(1)}/5.0
+          </Typography>
         </div>
         {editable ? (
           <div style={{ display: "flex", flexWrap: "wrap" }}>
