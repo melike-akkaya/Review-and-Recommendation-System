@@ -39,7 +39,7 @@ public class ProductService {
         List<Product> products = getAll();
         List<Product> merchantProducts = new java.util.ArrayList<>();
         for (int i = 0; i < products.size(); i++) {
-            if (products.get(i).getMerchant() == merchantId) {
+            if (products.get(i).getUser() == merchantId) {
                 merchantProducts.add(products.get(i));
             }
         }
@@ -57,7 +57,7 @@ public class ProductService {
             productToUpdate.setName(product.getName());
             productToUpdate.setPrice(product.getPrice());
             productToUpdate.setCategory(product.getCategory());
-            productToUpdate.setMerchant(product.getMerchant());
+            productToUpdate.setUser(product.getUser());
             productToUpdate.setDescription(product.getDescription());
             productToUpdate.setImage(product.getImage());
             productRepository.save(productToUpdate);

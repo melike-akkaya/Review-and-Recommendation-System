@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Stack, ToggleButton, ToggleButtonGroup, Grid } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  searchProducts,
-  searchMerchants,
-  searchUsers,
-} from "../services/SearchService";
+import { searchProducts, searchUsers } from "../services/SearchService";
 import Header from "./Header";
 import UserGridCard from "../components/user/UserGridCard";
 import ProductGridCard from "../components/product/ProductGridCard";
-import MerchantGridCard from "../components/merchant/MerchantGridCard";
 
 const SearchResults = () => {
   const [searchType, setSearchType] = useState("product");
@@ -25,9 +20,6 @@ const SearchResults = () => {
         switch (searchType) {
           case "product":
             response = await searchProducts(query);
-            break;
-          case "merchant":
-            response = await searchMerchants(query);
             break;
           case "user":
             response = await searchUsers(query);
@@ -49,9 +41,6 @@ const SearchResults = () => {
       case "product":
         navigate(`/product/${resultId}`);
         break;
-      case "merchant":
-        navigate(`/merchant/${resultId}`);
-        break;
       case "user":
         navigate(`/user/${resultId}`);
         break;
@@ -65,14 +54,6 @@ const SearchResults = () => {
     case "product":
       renderCard = (product) => (
         <ProductGridCard product={product} handleCardClick={handleCardClick} />
-      );
-      break;
-    case "merchant":
-      renderCard = (merchant) => (
-        <MerchantGridCard
-          merchant={merchant}
-          handleCardClick={handleCardClick}
-        />
       );
       break;
     case "user":
@@ -104,20 +85,13 @@ const SearchResults = () => {
           <ToggleButton value="product" aria-label="products">
             Products
           </ToggleButton>
-          <ToggleButton value="merchant" aria-label="merchants">
-            Merchants
-          </ToggleButton>
           <ToggleButton value="user" aria-label="users">
             Users
           </ToggleButton>
         </ToggleButtonGroup>
         <Grid container spacing={2} justifyContent="center">
-          {" "}
-          {}
           {results.map((result) => (
             <Grid item key={result.id} xs={12} sm={6} md={4} lg={3}>
-              {" "}
-              {}
               {renderCard(result)}
             </Grid>
           ))}

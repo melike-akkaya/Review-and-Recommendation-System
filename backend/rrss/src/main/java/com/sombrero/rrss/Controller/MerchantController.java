@@ -1,6 +1,6 @@
 package com.sombrero.rrss.Controller;
 
-import com.sombrero.rrss.Model.Merchant;
+import com.sombrero.rrss.Model.User;
 import com.sombrero.rrss.Service.MerchantService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,34 +16,36 @@ import java.util.Optional;
 public class MerchantController {
 
     private final MerchantService merchantService;
+    //private final UserService userService;
 
-    @GetMapping("/{merchantId}")
-    public ResponseEntity<Merchant> getMerchantInfo(@PathVariable Integer merchantId) {
-        Optional<Merchant> optionalMerchant = merchantService.getById(merchantId);
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getMerchantInfo(@PathVariable Integer userId) {
+        Optional<User> optionalUser = merchantService.getById(userId);
+        System.out.println(optionalUser.isPresent());
 
         // return the merchant if found and 404 if merchant not found
-        return optionalMerchant.map(merchant -> new ResponseEntity<>(merchant, HttpStatus.OK))
+        return optionalUser.map(merchant -> new ResponseEntity<>(merchant, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping("/edit/{merchantId}")
-    public ResponseEntity<Merchant> editMerchantInfo(@PathVariable Integer merchantId,
+    @PostMapping("/edit/{userId}")
+    public ResponseEntity<User> editMerchantInfo(@PathVariable Integer userId,
                                                      @RequestPart String name, @RequestPart byte [] image ) {
         try {
-            Optional<Merchant> optionalMerchant = merchantService.getById(merchantId);
+            Optional<User> optionalUser = merchantService.getById(userId);
 
-            if (optionalMerchant.isPresent()) { // if the merchant exists
-                Merchant existingMerchant = optionalMerchant.get();
+            if (optionalUser.isPresent()) { // if the merchant exists
+                User existingUser = optionalUser.get();
 
-                existingMerchant.setName(name);
+                existingUser.setMerchantName(name);
 
                 if (image != null) {
-                    existingMerchant.setImage(image);
+                    existingUser.setImage(image);
                 }
 
-                Merchant updatedMerchant = merchantService.save(existingMerchant);
+                User updatedUser = merchantService.save(existingUser);
 
-                return new ResponseEntity<>(updatedMerchant, HttpStatus.OK);
+                return new ResponseEntity<>(updatedUser, HttpStatus.OK);
             } else { // if merchant not found
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -53,22 +55,22 @@ public class MerchantController {
         }
     }
 
-    @PostMapping("/editAuthorizedPerson/{merchantId}")
-    public ResponseEntity<Merchant> editAuthorizedPerson(@PathVariable Integer merchantId,
-                                                         @RequestBody Merchant updatedMerchantInfo) {
-        Optional<Merchant> optionalMerchant = merchantService.getById(merchantId);
+    @PostMapping("/editAuthorizedPerson/{userId}")
+    public ResponseEntity<User> editAuthorizedPerson(@PathVariable Integer userId,
+                                                         @RequestBody User updatedUserInfo) {
+        Optional<User> optionalUser = merchantService.getById(userId);
 
-        if (optionalMerchant.isPresent()) { // if the merchant exists
-            Merchant existingMerchant = optionalMerchant.get();
+        if (optionalUser.isPresent()) { // if the merchant exists
+            User existingUser = optionalUser.get();
 
-            existingMerchant.setAuthorizedPersonName(updatedMerchantInfo.getAuthorizedPersonName());
-            existingMerchant.setAuthorizedPersonSurname(updatedMerchantInfo.getAuthorizedPersonSurname());
-            existingMerchant.setCountry(updatedMerchantInfo.getCountry());
-            existingMerchant.setEmail(updatedMerchantInfo.getEmail());
+            existingUser.setName(updatedUserInfo.getName());
+            existingUser.setSurname(updatedUserInfo.getSurname());
+            existingUser.setCountry(updatedUserInfo.getCountry());
+            existingUser.setEmail(updatedUserInfo.getEmail());
 
-            Merchant updatedMerchant = merchantService.save(existingMerchant);
+            User updatedUser = merchantService.save(existingUser);
 
-            return new ResponseEntity<>(updatedMerchant, HttpStatus.OK);
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         } else { // if merchant not found
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

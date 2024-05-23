@@ -36,15 +36,15 @@ export default function MerchantProfile() {
     getMerchantInfo(merchantId)
       .then((response) => {
         setInitialMerchant({
-          name: response.data.name,
+          name: response.data.merchantName,
           id: response.data.id,
           country: response.data.country,
           image: response.data.image,
         });
         setInitialAuthorizedPerson({
           id: response.data.id,
-          authorizedPersonName: response.data.authorizedPersonName,
-          authorizedPersonSurname: response.data.authorizedPersonSurname,
+          name: response.data.name,
+          surname: response.data.surname,
           email: response.data.email,
           country: response.data.country,
         });
