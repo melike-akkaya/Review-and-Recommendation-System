@@ -19,3 +19,7 @@ export const addReview = (review) => {
 
 export const deleteReview = (reviewId) =>
   axios.delete(`${BASE_URL}/reviews/delete/${reviewId}`);
+
+export const updateReview = (reviewId, updatedReview) => {
+  return axios.put(`${BASE_URL}/reviews/edit/${reviewId}`, updatedReview);
+};

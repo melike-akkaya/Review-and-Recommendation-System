@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin("*")
@@ -37,9 +38,17 @@ public class ReviewController {
 
     @PutMapping("/edit/{reviewId}")
     public ResponseEntity<Review> editReview(@PathVariable Integer reviewId,
-                                             @RequestBody Review updatedReview) {
-        updatedReview.setReviewId(reviewId);
-        Review updated = reviewService.update(updatedReview);
+                                             @RequestBody Map<String, Object> updates) {
+        Optional<Review> existingReview = reviewService.getById(reviewId);
+        if (existingReview.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (updates.containsKey("comment")) {
+            existingReview.get().setComment((String) updates.get("comment"));
+        }
+
+        Review updated = reviewService.update(existingReview.orElse(null));
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 

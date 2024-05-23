@@ -22,6 +22,7 @@ import IconButton from "@mui/material/IconButton";
 import UploadIcon from "@mui/icons-material/Upload";
 import { fileToBlob } from "../../commonMethods";
 import WishlistNotification from "../wishlist/WishlistNotification";
+import { getReviewsByProductId } from "../../services/ReviewService";
 
 const ProductCard = ({ id, editable, userId }) => {
   const colors = ["#f44336", "#2196f3", "#4caf50", "#ff9800", "#9c27b0"];
@@ -37,13 +38,36 @@ const ProductCard = ({ id, editable, userId }) => {
   const [wishlists, setWishlists] = useState([]);
   const [wishlistMenuAnchor, setWishlistMenuAnchor] = useState(null);
   const [notification, setNotification] = useState(null);
+  const [fetchedReviews, setFetchedReviews] = useState([]);
+  const [averageRating, setAverageRating] = useState(0);
 
-  // Fetch user's wishlists
+  const fetchReviewsByProductId = (id) => {
+    getReviewsByProductId(id)
+      .then((reviews) => {
+      setFetchedReviews(reviews);
+      calculateAverageRating(reviews);
+    })
+    .catch((error) => console.error("Error fetching products:", error));
+};
+
+  useEffect(() => {
+    if (id) {
+      fetchReviewsByProductId(id);
+    }
+  }, [id]);
+
+  const calculateAverageRating = (reviews) => {
+    const totalRatings = reviews.reduce((sum, review) => sum + review.rating, 0);
+    const average = totalRatings / reviews.length;
+    console.log(average)
+    setAverageRating(average);
+  };
+
   useEffect(() => {
     const fetchUserWishlists = async () => {
       try {
-        const userWishlists = await getUserWishlist(userId); // Fetch wishlists for the current user
-        setWishlists(userWishlists); // Set the fetched wishlists to state
+        const userWishlists = await getUserWishlist(userId); 
+        setWishlists(userWishlists); 
       } catch (error) {
         console.error("Error fetching user wishlists:", error);
       }
@@ -51,20 +75,19 @@ const ProductCard = ({ id, editable, userId }) => {
     fetchUserWishlists();
   }, []);
 
-  // Function to handle opening the wishlist menu
+
   const handleOpenWishlistMenu = (event) => {
     setWishlistMenuAnchor(event.currentTarget);
   };
 
-  // Function to handle closing the wishlist menu
+
   const handleCloseWishlistMenu = () => {
     setWishlistMenuAnchor(null);
   };
 
-  // Function to handle adding the product to a wishlist
   const handleAddToWishlist = async (wishlistId) => {
     try {
-      await addProductToWishlist(wishlistId, id); // Add the product to the selected wishlist
+      await addProductToWishlist(wishlistId, id); 
       console.log("Product added to wishlist:", wishlistId);
       setNotification(`Successfully added to ${wishlists.find(wishlist => wishlist.wishlistId === wishlistId).name} wishlist!`);
     } catch (error) {
@@ -278,6 +301,15 @@ const ProductCard = ({ id, editable, userId }) => {
           >
             {fetchedProduct.price}
           </Typography>
+          <Typography variant="body1" style={{ fontFamily: "Arial, sans-serif" }}>
+              <Rating 
+                name="average-rating" 
+                value={averageRating}
+                precision={0.1}
+                readOnly 
+              /> 
+              {averageRating.toFixed(1)}/5.0
+            </Typography>
         </div>
         {editable ? (
           <div style={{ display: "flex", flexWrap: "wrap" }}>
