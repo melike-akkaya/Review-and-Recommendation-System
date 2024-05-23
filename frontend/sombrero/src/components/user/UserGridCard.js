@@ -12,6 +12,8 @@ const UserGridCard = ({ user, isAdmin }) => {
   const [updatedUser, setUpdatedUser] = useState({ ...user });
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
+  const [openDeleteSuccess, setOpenDeleteSuccess] = useState(false);
+  const [openDeleteError, setOpenDeleteError] = useState(false);
 
   const handleEdit = () => {
     setEditMode(!editMode);
@@ -71,8 +73,10 @@ const UserGridCard = ({ user, isAdmin }) => {
   const handleDelete = async (userId) => {
     try {
       await deleteUser(userId);
+      setOpenDeleteSuccess(true);
       console.log("User deleted successfully with ID:", userId);
     } catch (error) {
+      setOpenDeleteError(true);
       console.error("Error deleting user:", error);
     }
   };
@@ -257,6 +261,18 @@ const UserGridCard = ({ user, isAdmin }) => {
         onClose={() => setOpenError(false)}
         severity="error"
         message="Saving failed! Please make sure fields are not empty."
+      />
+      <Alert
+        open={openDeleteSuccess}
+        onClose={() => setOpenDeleteSuccess(false)}
+        severity="success"
+        message="Deleted successfully!"
+      />
+      <Alert
+        open={openDeleteError}
+        onClose={() => setOpenDeleteError(false)}
+        severity="error"
+        message="Deletion failed! Please try again."
       />
     </Card>
   );
