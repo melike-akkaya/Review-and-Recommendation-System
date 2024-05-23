@@ -7,32 +7,39 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
 import { addReview } from "../../services/ReviewService";
+import { useLocalStorageUser } from "../../commonMethods";
+import { useNavigate } from "react-router-dom";
 
-export default function MakeComment({ productId, fetchReviewsByProductId}) {
+export default function MakeComment({ productId, fetchReviewsByProductId }) {
+  const user = useLocalStorageUser();
   const [text, setText] = React.useState("");
   const [rating, setRating] = React.useState(0);
   const [isSent, setIsSent] = React.useState(false);
-
+  const navigate = useNavigate();
 
   const handleComment = async () => {
-    setIsSent(true);
-    fetchReviewsByProductId(productId);
+    if (user == null) {
+      navigate("/login");
+    } else {
+      setIsSent(true);
+      fetchReviewsByProductId(productId);
 
-    const commentObject = {
-      productId: productId.id,
-      authorId: 1, 
-      authorName: "Taylor Swift",
-      rating: rating,
-      comment: text,
-      createdAt: new Date().toISOString(),
-    };
+      const commentObject = {
+        productId: productId.id,
+        authorId: user.id,
+        authorName: user.name,
+        rating: rating,
+        comment: text,
+        createdAt: new Date().toISOString(),
+      };
 
-    try {
-      await addReview(commentObject);
-      setText("");
-      setRating(0);
-    } catch (error) {
-      console.error("Error adding review:", error);
+      try {
+        await addReview(commentObject);
+        setText("");
+        setRating(0);
+      } catch (error) {
+        console.error("Error adding review:", error);
+      }
     }
   };
 

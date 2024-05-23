@@ -11,17 +11,24 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { getReviewVoteTotal,updateReviewVote } from "../../services/ReviewService";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import {
+  getReviewVoteTotal,
+  updateReviewVote,
+} from "../../services/ReviewService";
+import { useLocalStorageUser } from "../../commonMethods";
 
 export function ProductComments(props) {
-  const { username, text, rating, onDelete, onUpdate, reviewId } = props;
+  const { username, authorId, text, rating, onDelete, onUpdate, reviewId } =
+    props;
   const [isEditing, setIsEditing] = useState(false);
   const [updatedComment, setUpdatedComment] = useState(text);
   const [updatedRating, setUpdatedRating] = useState(rating);
   const [originalComment, setOriginalComment] = useState(text);
   const [originalRating, setOriginalRating] = useState(rating);
+  const [isEditable, setIsEditable] = useState(false);
+  const user = useLocalStorageUser();
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -39,40 +46,39 @@ export function ProductComments(props) {
   };
 
   const [votes, setVotes] = React.useState(0);
-  const [voteClicked, setVoteClicked] = React.useState(null); 
+  const [voteClicked, setVoteClicked] = React.useState(null);
   const [firstRun, setFirstRun] = React.useState(true);
 
-  const handleUpvote = async() => {
-    if (voteClicked === 'up') {
+  const handleUpvote = async () => {
+    if (voteClicked === "up") {
       setVotes(votes - 1);
       setVoteClicked(null);
-    } else if (voteClicked === 'down') {
+    } else if (voteClicked === "down") {
       setVotes(votes + 2);
-      setVoteClicked('up');
+      setVoteClicked("up");
     } else {
-      setVotes(votes + 1)
-      setVoteClicked('up');
+      setVotes(votes + 1);
+      setVoteClicked("up");
     }
-
   };
 
-  const handleDownvote = async() => {
-    if (voteClicked === 'down') {
+  const handleDownvote = async () => {
+    if (voteClicked === "down") {
       setVotes(votes + 1);
       setVoteClicked(null);
-    } else if (voteClicked === 'up') {
+    } else if (voteClicked === "up") {
       setVotes(votes - 2);
-      setVoteClicked('down');
+      setVoteClicked("down");
     } else {
       setVotes(votes - 1);
-      setVoteClicked('down');
+      setVoteClicked("down");
     }
   };
 
   const updateVotes = async () => {
     console.log(votes);
     const formData = new FormData();
-    formData.append('votes', votes);
+    formData.append("votes", votes);
     updateReviewVote(reviewId, formData);
   };
 
@@ -82,17 +88,29 @@ export function ProductComments(props) {
       setVotes(vote);
       setFirstRun(false);
     };
-  
+
     if (firstRun) {
       fetchInitialVote();
     }
   }, [firstRun]);
-  
+
   React.useEffect(() => {
-    if (!firstRun) { 
+    if (user == null) {
+      setIsEditable(false);
+    } else {
+      if (user.id == authorId) {
+        setIsEditable(true);
+      } else {
+        setIsEditable(false);
+      }
+    }
+  }, [user?.id, authorId]);
+
+  React.useEffect(() => {
+    if (!firstRun) {
       updateVotes();
     }
-  }, [votes]); 
+  }, [votes]);
 
   return (
     <Card sx={{ maxWidth: 700, marginTop: "40px", marginBottom: "40px" }}>
@@ -103,14 +121,16 @@ export function ProductComments(props) {
           </Avatar>
         }
         action={
-          <>
-            <IconButton aria-label="edit" onClick={handleEditClick}>
-              <EditIcon />
-            </IconButton>
-            <IconButton aria-label="delete" onClick={onDelete}>
-              <DeleteIcon />
-            </IconButton>
-          </>
+          isEditable ? (
+            <>
+              <IconButton aria-label="edit" onClick={handleEditClick}>
+                <EditIcon />
+              </IconButton>
+              <IconButton aria-label="delete" onClick={onDelete}>
+                <DeleteIcon />
+              </IconButton>
+            </>
+          ) : null
         }
         title={username}
         subheader={
@@ -144,15 +164,29 @@ export function ProductComments(props) {
             <Typography variant="body2" color="text.secondary">
               {text}
             </Typography>
-            <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginTop: "10px",
+              }}
+            >
               <IconButton onClick={handleUpvote} aria-label="upvote">
-                <ArrowDropUpIcon color={voteClicked === 'up' ? 'primary' : 'default'} />
+                <ArrowDropUpIcon
+                  color={voteClicked === "up" ? "primary" : "default"}
+                />
               </IconButton>
-              <Typography variant="body2" color="text.primary" sx={{ margin: '0 10px' }}>
+              <Typography
+                variant="body2"
+                color="text.primary"
+                sx={{ margin: "0 10px" }}
+              >
                 {votes}
               </Typography>
               <IconButton onClick={handleDownvote} aria-label="downvote">
-                <ArrowDropDownIcon color={voteClicked === 'down' ? 'primary' : 'default'} />
+                <ArrowDropDownIcon
+                  color={voteClicked === "down" ? "primary" : "default"}
+                />
               </IconButton>
             </div>
           </div>

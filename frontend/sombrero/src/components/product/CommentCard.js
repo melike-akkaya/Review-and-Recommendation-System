@@ -2,18 +2,22 @@ import { Container, CssBaseline, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import MakeComment from "./MakeComment";
 import { ProductComments } from "./ProductComments";
-import { getReviewsByProductId, deleteReview, addReview, updateReview } from "../../services/ReviewService";
-import { getProductById } from "../../services/ProductService";
+import {
+  getReviewsByProductId,
+  deleteReview,
+  addReview,
+  updateReview,
+} from "../../services/ReviewService";
 const CommentCard = (productId) => {
   const [fetchedReviews, setFetchedReviews] = useState([]);
 
   const fetchReviewsByProductId = (productId) => {
     getReviewsByProductId(productId.id)
       .then((reviews) => {
-      setFetchedReviews(reviews);
-    })
-    .catch((error) => console.error("Error fetching products:", error));
-};
+        setFetchedReviews(reviews);
+      })
+      .catch((error) => console.error("Error fetching products:", error));
+  };
 
   useEffect(() => {
     if (productId) {
@@ -33,16 +37,23 @@ const CommentCard = (productId) => {
   const handleAddReview = async (review) => {
     try {
       await addReview(review);
-      fetchReviewsByProductId(productId); 
+      fetchReviewsByProductId(productId);
       window.location.reload();
     } catch (error) {
       console.error("Error adding review:", error);
     }
   };
 
-  const handleUpdateReview = async (reviewId, updatedComment, updatedRating) => {
+  const handleUpdateReview = async (
+    reviewId,
+    updatedComment,
+    updatedRating
+  ) => {
     try {
-      await updateReview(reviewId, { comment: updatedComment, rating: updatedRating});
+      await updateReview(reviewId, {
+        comment: updatedComment,
+        rating: updatedRating,
+      });
       fetchReviewsByProductId(productId);
     } catch (error) {
       console.error("Error updating review:", error);
@@ -66,7 +77,11 @@ const CommentCard = (productId) => {
               Make a Comment
             </Typography>
           </div>
-          <MakeComment productId={productId} onAddReview={handleAddReview} fetchReviewsByProductId={fetchReviewsByProductId} />
+          <MakeComment
+            productId={productId}
+            onAddReview={handleAddReview}
+            fetchReviewsByProductId={fetchReviewsByProductId}
+          />
           <div
             style={{
               marginTop: "50px",
@@ -78,21 +93,23 @@ const CommentCard = (productId) => {
             <Typography variant="h4" gutterBottom>
               Comments
             </Typography>
-           
           </div>
         </div>
         <div style={{ padding: "0 80px" }}>
-          {fetchedReviews.map((product, index) => (
-            <ProductComments
-              key={index}
-              username={product.authorName}
-              text={product.comment}
-              rating={product.rating}
-              onDelete={() => handleDeleteReview(product.reviewId)}
-              onUpdate={handleUpdateReview}
-              reviewId={product.reviewId}
-            />
-          ))}
+          {fetchedReviews.map((product, index) => {
+            return (
+              <ProductComments
+                key={index}
+                authorId={product.authorId}
+                username={product.authorName}
+                text={product.comment}
+                rating={product.rating}
+                onDelete={() => handleDeleteReview(product.reviewId)}
+                onUpdate={handleUpdateReview}
+                reviewId={product.reviewId}
+              />
+            );
+          })}
         </div>
       </Container>
     </React.Fragment>
