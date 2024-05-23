@@ -23,3 +23,24 @@ export const deleteReview = (reviewId) =>
 export const updateReview = (reviewId, updatedReview) => {
   return axios.put(`${BASE_URL}/reviews/edit/${reviewId}`, updatedReview);
 };
+export const getReviewVoteTotal = async (reviewId) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/reviews/votes/${reviewId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const updateReviewVote = async (reviewId, votes) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/reviews/votes/update/${reviewId}`,votes
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}

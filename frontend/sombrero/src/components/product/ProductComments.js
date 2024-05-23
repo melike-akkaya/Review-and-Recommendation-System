@@ -13,6 +13,8 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { useState } from "react";
+import { getReviewVoteTotal,updateReviewVote } from "../../services/ReviewService";
 
 export function ProductComments(props) {
   const { username, text, rating, onDelete, onUpdate, reviewId } = props;
@@ -39,8 +41,9 @@ export function ProductComments(props) {
 
   const [votes, setVotes] = React.useState(0);
   const [voteClicked, setVoteClicked] = React.useState(null); 
+  const [firstRun, setFirstRun] = React.useState(true);
 
-  const handleUpvote = () => {
+  const handleUpvote = async() => {
     if (voteClicked === 'up') {
       setVotes(votes - 1);
       setVoteClicked(null);
@@ -48,12 +51,13 @@ export function ProductComments(props) {
       setVotes(votes + 2);
       setVoteClicked('up');
     } else {
-      setVotes(votes + 1);
+      setVotes(votes + 1)
       setVoteClicked('up');
     }
+
   };
 
-  const handleDownvote = () => {
+  const handleDownvote = async() => {
     if (voteClicked === 'down') {
       setVotes(votes + 1);
       setVoteClicked(null);
@@ -65,6 +69,31 @@ export function ProductComments(props) {
       setVoteClicked('down');
     }
   };
+
+  const updateVotes = async () => {
+    console.log(votes);
+    const formData = new FormData();
+    formData.append('votes', votes);
+    updateReviewVote(reviewId, formData);
+  };
+
+  React.useEffect(() => {
+    const fetchInitialVote = async () => {
+      const vote = await getReviewVoteTotal(reviewId);
+      setVotes(vote);
+      setFirstRun(false);
+    };
+  
+    if (firstRun) {
+      fetchInitialVote();
+    }
+  }, [firstRun]);
+  
+  React.useEffect(() => {
+    if (!firstRun) { 
+      updateVotes();
+    }
+  }, [votes]); 
 
   return (
     <Card sx={{ maxWidth: 700, marginTop: "40px", marginBottom: "40px" }}>
