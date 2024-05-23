@@ -11,6 +11,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 export function ProductComments(props) {
   const { username, text, rating, onDelete, onUpdate, reviewId } = props;
@@ -33,6 +35,35 @@ export function ProductComments(props) {
     setUpdatedComment(originalComment);
     setUpdatedRating(originalRating);
     setIsEditing(false);
+  };
+
+  const [votes, setVotes] = React.useState(0);
+  const [voteClicked, setVoteClicked] = React.useState(null); 
+
+  const handleUpvote = () => {
+    if (voteClicked === 'up') {
+      setVotes(votes - 1);
+      setVoteClicked(null);
+    } else if (voteClicked === 'down') {
+      setVotes(votes + 2);
+      setVoteClicked('up');
+    } else {
+      setVotes(votes + 1);
+      setVoteClicked('up');
+    }
+  };
+
+  const handleDownvote = () => {
+    if (voteClicked === 'down') {
+      setVotes(votes + 1);
+      setVoteClicked(null);
+    } else if (voteClicked === 'up') {
+      setVotes(votes - 2);
+      setVoteClicked('down');
+    } else {
+      setVotes(votes - 1);
+      setVoteClicked('down');
+    }
   };
 
   return (
@@ -81,9 +112,22 @@ export function ProductComments(props) {
             <Button onClick={handleCancelClick}>Cancel</Button>
           </div>
         ) : (
-          <Typography variant="body2" color="text.secondary">
-            {text}
-          </Typography>
+          <div>
+            <Typography variant="body2" color="text.secondary">
+              {text}
+            </Typography>
+            <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
+              <IconButton onClick={handleUpvote} aria-label="upvote">
+                <ArrowDropUpIcon color={voteClicked === 'up' ? 'primary' : 'default'} />
+              </IconButton>
+              <Typography variant="body2" color="text.primary" sx={{ margin: '0 10px' }}>
+                {votes}
+              </Typography>
+              <IconButton onClick={handleDownvote} aria-label="downvote">
+                <ArrowDropDownIcon color={voteClicked === 'down' ? 'primary' : 'default'} />
+              </IconButton>
+            </div>
+          </div>
         )}
       </CardContent>
     </Card>

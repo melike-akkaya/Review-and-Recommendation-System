@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -13,8 +13,10 @@ import TextField from "@mui/material/TextField";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Link from "@mui/material/Link";
-import Header from "./Header";
 import Divider from "@mui/material/Divider";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import Header from "./Header";
 import { sendLogInRequest } from "../services/AuthenticationService";
 import { getUser } from "../services/UserService";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +24,10 @@ import { useNavigate } from "react-router-dom";
 export default function LogIn() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [name, setName] = useState(" ");
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState(" ");
+  const [alert, setAlert] = useState({ open: false, severity: "error", message: "" });
   const navigate = useNavigate();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -32,9 +37,14 @@ export default function LogIn() {
   };
 
   const handleLogIn = async () => {
+    //const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //  if (!emailRegex.test(email)) {
+    //    setEmailError("Invalid e-mail address");
+    //    return;
+    //  }
     try {
       const response = await sendLogInRequest({
-        email: name,
+        email: email,
         password: password,
       });
 
@@ -50,12 +60,20 @@ export default function LogIn() {
     navigate("/");
   };
 
-  const handleName = (value) => {
-    setName(value);
+  const handleEmailChange = (event) => {
+    const inputEmail = event.target.value;
+    setEmail(inputEmail);
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(inputEmail)) {
+      setEmailError("Invalid e-mail address");
+    } else {
+      setEmailError("");
+    }
   };
 
-  const handlePassword = (value) => {
-    setPassword(value);
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
   };
 
   const handleSignUpClick = () => {
@@ -66,10 +84,14 @@ export default function LogIn() {
     window.location.href = "/signupasmerchant";
   };
 
+  const handleAlertClose = () => {
+    setAlert({ ...alert, open: false });
+  };
+
   return (
     <Box
       sx={{
-        backgroundColor: "#ebf1f6",
+        background: 'linear-gradient(45deg, #ffcc97, #4d7fff)',
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -86,6 +108,7 @@ export default function LogIn() {
           display: "flex",
           justifyContent: "center",
           padding: "10px",
+          border: '1px solid #4d7fff'
         }}
       >
         <CardHeader
@@ -94,6 +117,8 @@ export default function LogIn() {
             fontSize: "64px",
             textAlign: "center",
             marginTop: "10px",
+            color: "#4d7fff",
+            fontWeight: 'bold',
           }}
         />
         <CardContent
@@ -118,8 +143,10 @@ export default function LogIn() {
                 sx={{ m: 1, width: "40ch", marginTop: "15px" }}
                 required
                 id="outlined-required"
-                label="Name"
-                onChange={(i) => handleName(i.target.value)}
+                label="Email"
+                onChange={handleEmailChange}
+                error={emailError !== ""}
+                helperText={emailError}
               />
             </div>
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -133,7 +160,7 @@ export default function LogIn() {
                 <OutlinedInput
                   id="outlined-adornment-password"
                   type={showPassword ? "text" : "password"}
-                  onChange={(i) => handlePassword(i.target.value)}
+                  onChange={handlePasswordChange}
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
@@ -153,7 +180,15 @@ export default function LogIn() {
           </Box>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Button
-              sx={{ margin: "10px", borderRadius: "8px" }}
+              sx={{
+                margin: "20px",
+                borderRadius: "8px",
+                backgroundColor: "#4d7fff", 
+                color: "#fff", 
+                '&:hover': {
+                  backgroundColor: "#3a63cc", 
+                },
+              }}
               size="medium"
               variant="contained"
               onClick={handleLogIn}
@@ -207,6 +242,21 @@ export default function LogIn() {
           </Box>
         </CardContent>
       </Card>
+      <Snackbar
+        open={alert.open}
+        autoHideDuration={5000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleAlertClose}
+          severity={alert.severity}
+        >
+          {alert.message}
+        </MuiAlert>
+      </Snackbar>
     </Box>
   );
 }

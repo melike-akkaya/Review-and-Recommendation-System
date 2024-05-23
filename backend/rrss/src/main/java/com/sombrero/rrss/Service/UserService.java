@@ -26,6 +26,9 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public Optional<User> loadUserById(Integer userId) {
+        return userRepository.findById(userId);
+    }
     public void addUser(User user) {
         userRepository.save(user);
     }

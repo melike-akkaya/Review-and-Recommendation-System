@@ -46,11 +46,20 @@ public class UserController {
             if (image != null) {
                 user.setImage(image);
             }
-
             userService.addUser(user);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println("Error processing user: " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/{user_id}")
+    public ResponseEntity<User> getUserById(@PathVariable Integer user_id) {
+        try {
+            Optional<User> user = userService.loadUserById(user_id);
+            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println("Error retrieving user: " + e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -78,5 +87,15 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
         userService.deleteUser(userId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/name/{user_id}")
+    public ResponseEntity<String> getUserNameById(@PathVariable Integer user_id) {
+        try {
+            Optional<User> user = userService.loadUserById(user_id);
+            return new ResponseEntity<>(user.get().getName()+" "+user.get().getSurname(), HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println("Error retrieving user: " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

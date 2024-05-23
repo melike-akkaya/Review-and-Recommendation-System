@@ -13,6 +13,7 @@ import WishlistPage from "./pages/WishlistPage";
 import ForYouPage from "./pages/ForYou";
 import CategoryResults from "./pages/CategoryResults";
 import AdminPanel from "./pages/AdminPanel";
+import CommunityPage from "./pages/CommunityPage";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
   { path: "/signupasmerchant", element: <SignUpasMerchant /> },
   { path: "/recommendations/:userId", element: <ForYouPage /> },
   { path: "/wishlists/:userId", element: <WishlistPage /> },
+  { path: "/communitypage", element: <CommunityPage /> },
   { path: "/adminpanel", element: <AdminPanel /> },
 ]);
 
