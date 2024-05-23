@@ -32,19 +32,19 @@ export const updateUser = (id, formData) => {
 
 export const getUserNameSurname = async (id) => {
   try {
-    const response = await axios.get(`${REST_API_BASE_URL}/users/name/${id}`);
+    const response = await axios.get(`${REST_API_BASE_URL}/user/name/${id}`);
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-//export const getUser= async (id) => {
-//    try {
-//        console.log("id",id);
-//        const response = await axios.get(`${BASE_URL}/users/${id}`);
-//        return response.data;
-//    } catch (error) {
-//        throw error;
-//    }
-//}
+export const getUserById= async (id) => {
+    try {
+        console.log("id",id);
+        const response = await axios.get(`${REST_API_BASE_URL}/user/${id}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
