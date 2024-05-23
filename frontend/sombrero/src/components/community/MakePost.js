@@ -8,13 +8,13 @@ const MakePost = () => {
     type: '',
     title: '', 
     content: '',
-    media: null,
+    image: null,
   };
 
   const [type, setPostType] = useState('');
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
-  const [media, setMedia] = useState(" ");
+  const [image, setImage] = useState(" ");
   const [post, setPost] = useState(initialPostState);
   const [showMessage, setShowMessage] = useState(false);
 
@@ -29,7 +29,8 @@ const MakePost = () => {
   };
 
   const handleTitleChange = (event) => {
-    setTitle(post.title = event.target.value);
+    setTitle(event.target.value);
+    post.title = event.target.value;
   };
 
 
@@ -40,13 +41,17 @@ const MakePost = () => {
 
   const handlePublishClick = async() => {
     try {
-      setPost({ type, content });
+      setPost({ type, content, title });
       const formData = new FormData();
       formData.append("post", JSON.stringify(post));
       formData.append("image", null);
       await addPost(formData);
       setPost(initialPostState);
       setShowMessage(false);
+      //Reset textfields
+      setTitle("");
+      setContent("");
+      setPostType("");
     } catch (error) {
       console.error(error);
     }

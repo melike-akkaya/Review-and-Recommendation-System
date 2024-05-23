@@ -21,6 +21,9 @@ public class PostComment {
     @Column(name = "author_id")
     private Integer authorId;
 
+    @Column(name = "author_name")
+    private String authorName;
+
     @Column(name = "comment")
     private String comment;
 

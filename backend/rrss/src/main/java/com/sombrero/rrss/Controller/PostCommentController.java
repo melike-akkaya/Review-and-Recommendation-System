@@ -3,6 +3,7 @@ package com.sombrero.rrss.Controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sombrero.rrss.Model.PostComment;
 import com.sombrero.rrss.Service.PostCommentService;
+import com.sombrero.rrss.Service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/postComment")
 public class PostCommentController {
     private final PostCommentService postCommentService;
-
+    private final UserService userService;
     @GetMapping("/")
     public ResponseEntity<Iterable<PostComment>> getAllPostComments() {
         Iterable<PostComment> postCommentList = postCommentService.getAll();
@@ -33,6 +34,7 @@ public class PostCommentController {
             PostComment postComment = objectMapper.readValue(postCommentJson, PostComment.class);
 
             postComment.setDate(getCurrentDate());
+            postComment.setAuthorName(userService.loadUserById(postComment.getAuthorId()).get().getName());
             postCommentService.addPostComment(postComment);
             return ResponseEntity.ok(postComment);
         } catch (Exception e) {
