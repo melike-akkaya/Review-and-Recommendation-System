@@ -16,19 +16,22 @@ export function ProductComments(props) {
   const { username, text, rating, onDelete, onUpdate, reviewId } = props;
   const [isEditing, setIsEditing] = useState(false);
   const [updatedComment, setUpdatedComment] = useState(text);
+  const [updatedRating, setUpdatedRating] = useState(rating);
   const [originalComment, setOriginalComment] = useState(text);
+  const [originalRating, setOriginalRating] = useState(rating);
 
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
   const handleSaveClick = () => {
-    onUpdate(reviewId, updatedComment);
+    onUpdate(reviewId, updatedComment, updatedRating);
     setIsEditing(false);
   };
 
   const handleCancelClick = () => {
     setUpdatedComment(originalComment);
+    setUpdatedRating(originalRating);
     setIsEditing(false);
   };
 
@@ -51,7 +54,19 @@ export function ProductComments(props) {
           </>
         }
         title={username}
-        subheader={<Rating name="read-only" value={rating} readOnly />}
+        subheader={
+          isEditing ? (
+            <Rating
+              name="editable-rating"
+              value={updatedRating}
+              onChange={(event, newValue) => {
+                setUpdatedRating(newValue);
+              }}
+            />
+          ) : (
+            <Rating name="read-only" value={rating} readOnly />
+          )
+        }
       />
       <CardContent>
         {isEditing ? (

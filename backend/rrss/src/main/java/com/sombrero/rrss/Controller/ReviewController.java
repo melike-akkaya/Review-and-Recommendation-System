@@ -44,13 +44,20 @@ public class ReviewController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+        Review reviewToUpdate = existingReview.get();
+
         if (updates.containsKey("comment")) {
-            existingReview.get().setComment((String) updates.get("comment"));
+            reviewToUpdate.setComment((String) updates.get("comment"));
         }
 
-        Review updated = reviewService.update(existingReview.orElse(null));
+        if (updates.containsKey("rating")) {
+            reviewToUpdate.setRating((Integer) updates.get("rating"));
+        }
+
+        Review updated = reviewService.update(reviewToUpdate);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
+
 
     @DeleteMapping("/delete/{reviewId}")
     public ResponseEntity<Void> deleteReview(@PathVariable Integer reviewId) {

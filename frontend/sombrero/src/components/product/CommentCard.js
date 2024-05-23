@@ -40,9 +40,9 @@ const CommentCard = (productId) => {
     }
   };
 
-  const handleUpdateReview = async (reviewId, updatedComment) => {
+  const handleUpdateReview = async (reviewId, updatedComment, updatedRating) => {
     try {
-      await updateReview(reviewId, { comment: updatedComment });
+      await updateReview(reviewId, { comment: updatedComment, rating: updatedRating});
       fetchReviewsByProductId(productId);
     } catch (error) {
       console.error("Error updating review:", error);
