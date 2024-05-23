@@ -13,7 +13,6 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { useState } from "react";
 import { getReviewVoteTotal,updateReviewVote } from "../../services/ReviewService";
 
 export function ProductComments(props) {
