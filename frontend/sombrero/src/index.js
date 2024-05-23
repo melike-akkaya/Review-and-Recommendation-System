@@ -12,6 +12,8 @@ import SignUpasMerchant from "./pages/SignUpasMerchant";
 import WishlistPage from "./pages/WishlistPage";
 import ForYouPage from "./pages/ForYou";
 import CategoryResults from "./pages/CategoryResults";
+import Homepage from "./pages/Homepage";
+import UserProfile from "./pages/UserProfile";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -24,6 +26,8 @@ const router = createBrowserRouter([
   { path: "/signupasmerchant", element: <SignUpasMerchant /> },
   { path: "/recommendations/:userId", element: <ForYouPage /> },
   { path: "/wishlists/:userId", element: <WishlistPage /> },
+  { path: "/homepage", element: <Homepage /> },
+  { path: "/userprofile", element: <UserProfile /> },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
