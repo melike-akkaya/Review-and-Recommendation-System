@@ -20,3 +20,12 @@ export const addUser = (formData) => {
 export const deleteUser = (id) => {
   return axios.delete(`${REST_API_BASE_URL}/user/delete/${id}`);
 };
+
+export const updateUser = (id, formData) => {
+  return axios.post(`${REST_API_BASE_URL}/user/update/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
