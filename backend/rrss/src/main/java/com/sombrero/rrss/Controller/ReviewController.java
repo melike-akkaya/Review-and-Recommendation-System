@@ -87,4 +87,31 @@ public class ReviewController {
         }
     }
 
+    @GetMapping("/votes/{reviewId}")
+    public ResponseEntity<Integer> getVotes(@PathVariable Integer reviewId) {
+        Optional<Review> optionalReview = reviewService.getById(reviewId);
+        if (optionalReview.isPresent()) {
+            Review review = optionalReview.get();
+            if (review.getTotalVote() == null) {
+                review.setTotalVote(0);
+            }
+            return new ResponseEntity<>(review.getTotalVote(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/votes/update/{reviewId}")
+    public ResponseEntity<Review> updateVotes(@PathVariable Integer reviewId, @RequestParam("votes") Integer votes) {
+        Optional<Review> optionalReview = reviewService.getById(reviewId);
+        if (optionalReview.isPresent()) {
+            Review review = optionalReview.get();
+            review.setTotalVote(votes);
+            Review updated = reviewService.update(review);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

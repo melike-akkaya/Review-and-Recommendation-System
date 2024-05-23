@@ -74,6 +74,7 @@ const CommentCard = (productId) => {
             username={product.authorName}
             text={product.comment}
             rating={product.rating}
+            reviewId={product.reviewId}
             onDelete={() => handleDeleteReview(product.reviewId)} 
           />
         ))}

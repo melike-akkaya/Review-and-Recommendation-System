@@ -19,3 +19,25 @@ export const addReview = (review) => {
 
 export const deleteReview = (reviewId) =>
   axios.delete(`${BASE_URL}/reviews/delete/${reviewId}`);
+
+export const getReviewVoteTotal = async (reviewId) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/reviews/votes/${reviewId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const updateReviewVote = async (reviewId, votes) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/reviews/votes/update/${reviewId}`,votes
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
