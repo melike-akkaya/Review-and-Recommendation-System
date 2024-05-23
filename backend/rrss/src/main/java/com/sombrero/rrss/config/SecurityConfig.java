@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .addFilterBefore(corsFilter(), SecurityContextPersistenceFilter.class)
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/recommendations/**").authenticated()
                         .requestMatchers("/v1/**").authenticated()
                         .anyRequest().permitAll()
                 )
