@@ -93,7 +93,8 @@ const UserGridCard = ({ user, isAdmin }) => {
   let roleColor = '#00e676'; // Green for user by default
   switch (user.role) {
     case 'INFLUENCER':
-      roleColor = '#2962ff'; // Blue for influencer
+      case 'MERCHANT':
+      roleColor = '#2962ff'; // Blue for influencer and merchant
       break;
     case 'ADMIN':
     case 'COMMUNITY_MODERATOR':
@@ -175,7 +176,7 @@ const UserGridCard = ({ user, isAdmin }) => {
               onChange={handleInputChange}
             />
           ) : (
-            `${user.name} ${user.surname}`
+            `${user.name}`
           )}
         </Typography>
         <Typography variant="h5" component="div">

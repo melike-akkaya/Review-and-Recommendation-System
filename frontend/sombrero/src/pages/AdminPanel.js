@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import UserGridCard from "../components/user/UserGridCard";
 import { getAllUsers } from "../services/UserService";
-import AddUserDialog from "../components/user/AddUserDialog";  // Make sure to import AddUserDialog
+import AddUserDialog from "../components/user/AddUserDialog";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
