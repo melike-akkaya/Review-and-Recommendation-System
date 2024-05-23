@@ -4,7 +4,7 @@ import { Share as ShareIcon, Bookmark as BookmarkIcon, MoreVert as MoreVertIcon,
 import { styled } from '@mui/material/styles'; 
 import { Link } from 'react-router-dom';
 import Divider from "@mui/material/Divider";
-import { getUser } from '../../services/UserService';
+import { getUser, getUserById } from '../../services/UserService';
 import { addReply } from '../../services/CommunityService';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -96,7 +96,7 @@ const PostCard = ({ post, replies, refresh }) => {
 
   useEffect(() => {
     try {
-      getUser(6).then(user => {
+      getUserById(6).then(user => {
         setUserName(user.name);
       });
     } catch (error) {
