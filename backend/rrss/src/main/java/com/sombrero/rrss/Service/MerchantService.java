@@ -1,6 +1,5 @@
 package com.sombrero.rrss.Service;
 
-import com.sombrero.rrss.Model.Merchant;
 import com.sombrero.rrss.Model.User;
 import com.sombrero.rrss.Repository.IMerchantRepository;
 import com.sombrero.rrss.Repository.IUserRepository;

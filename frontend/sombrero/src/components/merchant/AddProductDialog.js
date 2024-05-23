@@ -101,7 +101,7 @@ export default function AddProductDialog({ open, setOpen, refreshProducts }) {
 
       productWithoutLabel.image = null;
       productWithoutLabel.category = categoryId;
-      productWithoutLabel.merchant = 1;
+      productWithoutLabel.user = 1;
 
       const formData = new FormData();
       formData.append("image", product.image);
@@ -166,7 +166,8 @@ export default function AddProductDialog({ open, setOpen, refreshProducts }) {
               options: categories.map((category) => category.name),
             },
             {
-              name:"Description", type:"text"
+              name: "Description",
+              type: "text",
             },
             {
               name: "Label",

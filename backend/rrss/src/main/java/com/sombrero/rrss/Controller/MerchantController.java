@@ -1,6 +1,5 @@
 package com.sombrero.rrss.Controller;
 
-import com.sombrero.rrss.Model.Merchant;
 import com.sombrero.rrss.Model.User;
 import com.sombrero.rrss.Service.MerchantService;
 import lombok.AllArgsConstructor;
