@@ -124,8 +124,13 @@ const ResponsiveAppBar = () => {
     localStorage.setItem("user", null);
     navigate("/login");
   };
+
   const handleRecommendationClick = async () => {
     navigate("/recommendations");
+  };
+
+  const handleWishlistClick = async () => {
+    navigate("/wishlists");
   };
 
   const handleCategoryClick = (categoryId) => {
@@ -215,6 +220,9 @@ const ResponsiveAppBar = () => {
                 onClose={handleCloseUserMenu}
               >
                 <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+                <MenuItem onClick={handleWishlistClick}>
+                  My Personalized Lists
+                </MenuItem>
                 <MenuItem onClick={handleRecommendationClick}>For You</MenuItem>
                 <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
               </Menu>

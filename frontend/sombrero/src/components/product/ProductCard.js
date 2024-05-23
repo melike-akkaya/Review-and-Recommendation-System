@@ -64,12 +64,10 @@ const ProductCard = ({ id, fetchedProduct, setFetchedProduct, editable }) => {
       0
     );
     const average = totalRatings / reviews.length;
-    console.log(average);
     setAverageRating(average);
   };
 
   useEffect(() => {
-    console.log(id);
     const fetchUserWishlists = async () => {
       try {
         const userWishlists = await getUserWishlist(user?.id); // Fetch wishlists for the current user

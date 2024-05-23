@@ -12,22 +12,23 @@ import CreateWishlistForm from "../components/wishlist/CreateWishlistForm";
 import CreateIcon from "@mui/icons-material/Create";
 import { addWishlist } from "../services/WishlistService";
 import Header from "./Header";
+import { useLocalStorageUser } from "../commonMethods";
 const WishlistPage = () => {
-  const { userId } = useParams();
   const [wishlists, setWishlists] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const user = useLocalStorageUser();
 
   useEffect(() => {
     const fetchUserWishlists = async () => {
       try {
-        const userWishlists = await getUserWishlist(userId);
+        const userWishlists = await getUserWishlist(user.id);
         setWishlists(userWishlists);
       } catch (error) {
         console.error("Error fetching user wishlists:", error);
       }
     };
     fetchUserWishlists();
-  }, [userId]);
+  }, [user.id]);
 
   const handleRemoveProduct = async (wishlistId, productId) => {
     try {
@@ -58,7 +59,10 @@ const WishlistPage = () => {
 
   const handleCreateWishlist = async (wishlistName) => {
     try {
-      const newWishlist = await addWishlist({ name: wishlistName, userId: 1 });
+      const newWishlist = await addWishlist({
+        name: wishlistName,
+        userId: user.id,
+      });
       setWishlists([...wishlists, newWishlist]);
     } catch (error) {
       console.error("Error creating wishlist:", error);
