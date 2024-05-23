@@ -23,6 +23,8 @@ import CreateIcon from "@mui/icons-material/Create";
 import { fetchCountries } from "../commonMethods";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import { sendSignUpRequest } from "../services/AuthenticationService";
+import { fileToBlob } from "../commonMethods";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -32,6 +34,7 @@ export default function SignUp() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [image, setImage] = React.useState('/broken-image.jpg');
+  const [imageFile, setImageFile] = React.useState(null); 
   const [emailError, setEmailError] = React.useState(false);
   const [countries, setCountries] = React.useState([]);
   const [country, setCountry] = React.useState(""); 
@@ -72,6 +75,7 @@ export default function SignUp() {
       const reader = new FileReader();
       reader.onload = (e) => {
         setImage(e.target.result);
+        setImageFile(file);
       };
       reader.readAsDataURL(file);
     }
@@ -92,8 +96,26 @@ export default function SignUp() {
     return emailRegex.test(email);
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async() => {
     console.log(name, surname, email, password, country); 
+    try {
+      const blob = await fileToBlob(imageFile);
+      const formData = new FormData();
+      formData.append("image", blob);
+      const request = {
+        name: name,
+        surname: surname,
+        email: email,
+        password: password,
+        country: country,
+        role: "MERCHANT",
+      };
+      formData.append("signUpRequest", JSON.stringify(request));
+      await sendSignUpRequest(formData);
+    } catch (error) {
+      console.error("Sign up failed", error);
+    }
+  
   };
 
   const SmallAvatar = styled(Avatar)(({ theme }) => ({

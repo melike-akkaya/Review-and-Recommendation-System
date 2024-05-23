@@ -16,4 +16,5 @@ public class SignUpRequest {
     private String country;
     private String email;
     private Role role;
+    private byte[] image;
 }

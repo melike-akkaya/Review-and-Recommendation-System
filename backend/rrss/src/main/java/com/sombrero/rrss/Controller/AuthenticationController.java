@@ -1,5 +1,7 @@
 package com.sombrero.rrss.Controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sombrero.rrss.Model.AuthenticationResponse;
 import com.sombrero.rrss.Model.LogInRequest;
 import com.sombrero.rrss.Model.SignUpRequest;
@@ -10,6 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.Duration;
 
 @CrossOrigin("*")
@@ -52,7 +56,17 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthenticationResponse> signUp(@RequestBody SignUpRequest request) {
-        return ResponseEntity.ok(authenticationService.signUp(request));
+    public ResponseEntity<AuthenticationResponse> signUp(@RequestParam("signUpRequest") String requestJson, @RequestParam("image") MultipartFile imageFile){
+        ObjectMapper objectMapper = new ObjectMapper();
+        SignUpRequest request = null;
+        try {
+            request = objectMapper.readValue(requestJson, SignUpRequest.class);
+            byte[] image = imageFile.getBytes();
+            request.setImage(image);
+            return ResponseEntity.ok(authenticationService.signUp(request));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
