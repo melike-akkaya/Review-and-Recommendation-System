@@ -17,4 +17,5 @@ public class SignUpRequest {
     private String email;
     private Role role;
     private byte[] image;
+    private String merchantName;
 }

@@ -25,7 +25,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { sendSignUpRequest } from "../services/AuthenticationService";
 import { fileToBlob } from "../commonMethods";
-import { set } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -33,11 +33,12 @@ export default function SignUp() {
   const [surname, setSurname] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [imageFile, setImageFile] = React.useState(null); 
+  const [imageFile, setImageFile] = React.useState(null);
   const [image, setImage] = React.useState("/broken-image.jpg");
   const [emailError, setEmailError] = React.useState(false);
   const [countries, setCountries] = React.useState([]);
   const [country, setCountry] = React.useState("");
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     fetchCountries(setCountries);
@@ -107,6 +108,7 @@ export default function SignUp() {
       };
       formData.append("signUpRequest", JSON.stringify(request));
       await sendSignUpRequest(formData);
+      navigate("/login");
     } catch (error) {
       console.error("Sign up failed", error);
     }

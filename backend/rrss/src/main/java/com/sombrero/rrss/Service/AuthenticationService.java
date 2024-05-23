@@ -30,6 +30,7 @@ public class AuthenticationService {
         user.setRole(request.getRole());
         user.setCountry(request.getCountry());
         user.setImage(request.getImage());
+        user.setMerchantName(request.getMerchantName());
         repository.save(user);
 
         var jwtToken = jwtAuthenticationFilterService.generateToken(new HashMap<>(), user);

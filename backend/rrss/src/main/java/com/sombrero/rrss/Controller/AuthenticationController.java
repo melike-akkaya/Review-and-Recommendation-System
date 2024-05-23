@@ -56,7 +56,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthenticationResponse> signUp(@RequestParam("signUpRequest") String requestJson, @RequestParam("image") MultipartFile imageFile){
+    public ResponseEntity<AuthenticationResponse> signUp(@RequestParam("signUpRequest") String requestJson,
+                                                         @RequestParam("image") MultipartFile imageFile){
         ObjectMapper objectMapper = new ObjectMapper();
         SignUpRequest request = null;
         try {
