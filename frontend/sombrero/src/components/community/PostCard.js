@@ -66,7 +66,7 @@ const PostCard = ({ post, replies, refresh }) => {
       navigate("/login");
     } else {
       const newComment = {
-        authorId: user.id,
+        authorId: user?.id,
         postId: postId,
         comment: comment,
       };
