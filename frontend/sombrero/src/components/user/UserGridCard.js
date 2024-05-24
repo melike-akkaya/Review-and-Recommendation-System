@@ -12,6 +12,8 @@ const UserGridCard = ({ user, isAdmin }) => {
   const [updatedUser, setUpdatedUser] = useState({ ...user });
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
+  const [openDeleteSuccess, setOpenDeleteSuccess] = useState(false);
+  const [openDeleteError, setOpenDeleteError] = useState(false);
 
   const handleEdit = () => {
     setEditMode(!editMode);
@@ -71,8 +73,10 @@ const UserGridCard = ({ user, isAdmin }) => {
   const handleDelete = async (userId) => {
     try {
       await deleteUser(userId);
+      setOpenDeleteSuccess(true);
       console.log("User deleted successfully with ID:", userId);
     } catch (error) {
+      setOpenDeleteError(true);
       console.error("Error deleting user:", error);
     }
   };
@@ -89,7 +93,8 @@ const UserGridCard = ({ user, isAdmin }) => {
   let roleColor = '#00e676'; // Green for user by default
   switch (user.role) {
     case 'INFLUENCER':
-      roleColor = '#2962ff'; // Blue for influencer
+      case 'MERCHANT':
+      roleColor = '#2962ff'; // Blue for influencer and merchant
       break;
     case 'ADMIN':
     case 'COMMUNITY_MODERATOR':
@@ -171,7 +176,7 @@ const UserGridCard = ({ user, isAdmin }) => {
               onChange={handleInputChange}
             />
           ) : (
-            `${user.name} ${user.surname}`
+            `${user.name}`
           )}
         </Typography>
         <Typography variant="h5" component="div">
@@ -257,6 +262,18 @@ const UserGridCard = ({ user, isAdmin }) => {
         onClose={() => setOpenError(false)}
         severity="error"
         message="Saving failed! Please make sure fields are not empty."
+      />
+      <Alert
+        open={openDeleteSuccess}
+        onClose={() => setOpenDeleteSuccess(false)}
+        severity="success"
+        message="Deleted successfully!"
+      />
+      <Alert
+        open={openDeleteError}
+        onClose={() => setOpenDeleteError(false)}
+        severity="error"
+        message="Deletion failed! Please try again."
       />
     </Card>
   );

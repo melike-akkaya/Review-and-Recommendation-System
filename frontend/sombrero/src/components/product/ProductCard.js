@@ -222,7 +222,6 @@ const ProductCard = ({ id, fetchedProduct, setFetchedProduct, editable }) => {
     } else {
       setLabels((prevLabels) => [...prevLabels, option]);
     }
-    console.log(labels);
   };
 
   return (

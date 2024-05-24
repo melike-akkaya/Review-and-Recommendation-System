@@ -24,6 +24,9 @@ import { fetchCountries } from "../commonMethods";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { Alert } from "../components/alert/Alert";
+import { sendSignUpRequest } from "../services/AuthenticationService";
+import { fileToBlob } from "../commonMethods";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -31,10 +34,12 @@ export default function SignUp() {
   const [surname, setSurname] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [image, setImage] = React.useState('/broken-image.jpg');
+  const [imageFile, setImageFile] = React.useState(null);
+  const [image, setImage] = React.useState("/broken-image.jpg");
   const [emailError, setEmailError] = React.useState(false);
   const [countries, setCountries] = React.useState([]);
   const [country, setCountry] = React.useState("");
+  const navigate = useNavigate();
   const [alert, setAlert] = React.useState({
     open: false,
     severity: "error",
@@ -73,6 +78,7 @@ export default function SignUp() {
       const reader = new FileReader();
       reader.onload = (e) => {
         setImage(e.target.result);
+        setImageFile(file);
       };
       reader.readAsDataURL(file);
     }
@@ -93,7 +99,8 @@ export default function SignUp() {
     return emailRegex.test(email);
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
+
     if (!name || !surname || !email || !password || !country) {
       setAlert({
         open: true,
@@ -119,8 +126,24 @@ export default function SignUp() {
       message: "Sign up successful!",
     });
 
-    // Add your actual sign up logic here
-    console.log(name, surname, email, password, country); 
+    try {
+      const blob = await fileToBlob(imageFile);
+      const formData = new FormData();
+      formData.append("image", blob);
+      const request = {
+        name: name,
+        surname: surname,
+        email: email,
+        password: password,
+        country: country,
+        role: "USER",
+      };
+      formData.append("signUpRequest", JSON.stringify(request));
+      await sendSignUpRequest(formData);
+      navigate("/login");
+    } catch (error) {
+      console.error("Sign up failed", error);
+    }
   };
 
   const handleAlertClose = () => {
@@ -136,7 +159,7 @@ export default function SignUp() {
   return (
     <Box
       sx={{
-        background: 'linear-gradient(45deg, #ffcc97, #4d7fff, #55e7fc)',
+        background: "linear-gradient(45deg, #ffcc97, #4d7fff, #55e7fc)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -153,7 +176,7 @@ export default function SignUp() {
           display: "flex",
           justifyContent: "center",
           padding: "10px",
-          border: '1px solid #4d7fff'
+          border: "1px solid #4d7fff",
         }}
       >
         <CardHeader
@@ -163,7 +186,7 @@ export default function SignUp() {
             textAlign: "center",
             marginTop: "10px",
             color: "#4d7fff",
-            fontWeight: 'bold',
+            fontWeight: "bold",
           }}
         />
         <CardContent
@@ -209,7 +232,9 @@ export default function SignUp() {
                   value={email}
                   onChange={handleEmailChange}
                   error={emailError}
-                  helperText={emailError ? "Please enter a valid email address" : ""}
+                  helperText={
+                    emailError ? "Please enter a valid email address" : ""
+                  }
                 />
               </div>
             </Box>
@@ -218,7 +243,7 @@ export default function SignUp() {
               <div>
                 <input
                   accept="image/*"
-                  style={{ display: 'none' }}
+                  style={{ display: "none" }}
                   id="contained-button-file"
                   type="file"
                   onChange={handleImageUpload}
@@ -243,7 +268,12 @@ export default function SignUp() {
                 </label>
               </div>
               <FormControl
-                sx={{ m: 1, width: "30ch", marginLeft: "25px" , marginBottom: "12px"}}
+                sx={{
+                  m: 1,
+                  width: "30ch",
+                  marginLeft: "25px",
+                  marginBottom: "12px",
+                }}
                 variant="outlined"
                 size="small"
               >
@@ -270,10 +300,20 @@ export default function SignUp() {
                   label="Password"
                 />
               </FormControl>
-              <FormControl fullWidth required size="small" sx={{ m: 1, width: "30ch", marginLeft: "25px", marginTop: "3px" }}>
+              <FormControl
+                fullWidth
+                required
+                size="small"
+                sx={{
+                  m: 1,
+                  width: "30ch",
+                  marginLeft: "25px",
+                  marginTop: "3px",
+                }}
+              >
                 <InputLabel>Country</InputLabel>
                 <Select
-                  value={country} 
+                  value={country}
                   onChange={handleCountryChange}
                   label="Country"
                   variant="outlined"
@@ -293,10 +333,10 @@ export default function SignUp() {
               sx={{
                 margin: "20px",
                 borderRadius: "8px",
-                backgroundColor: "#4d7fff", 
-                color: "#fff", 
-                '&:hover': {
-                  backgroundColor: "#3a63cc", 
+                backgroundColor: "#4d7fff",
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#3a63cc",
                 },
               }}
               size="medium"

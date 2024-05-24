@@ -12,7 +12,6 @@ const CategoryResults = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(categoryId);
     getProductsByCategory(categoryId)
       .then(setCategoryResults)
       .catch((error) => console.error("Error fetching products:", error));

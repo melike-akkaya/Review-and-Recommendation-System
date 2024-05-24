@@ -15,6 +15,7 @@ export const getProductsByMerchantId = async (merchantId) => {
   }
 };
 
+
 export const getProductById = async (productId) => {
   try {
     const response = await axios.get(
@@ -59,6 +60,7 @@ export const addLabel = (label) => {
 };
 
 export const getLastProductId = () => axios.get(`${BASE_URL}/products/lastId`);
+export const getLastFourProducts = () => axios.get(`${BASE_URL}/products/last4Ids`);
 
 export const setIsEditableFalse = () => {
   return axios.post(`${BASE_URL}/temp/setFalse`);

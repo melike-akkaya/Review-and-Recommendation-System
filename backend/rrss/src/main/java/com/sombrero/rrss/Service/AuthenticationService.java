@@ -29,6 +29,8 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.getRole());
         user.setCountry(request.getCountry());
+        user.setImage(request.getImage());
+        user.setMerchantName(request.getMerchantName());
         repository.save(user);
 
         var jwtToken = jwtAuthenticationFilterService.generateToken(new HashMap<>(), user);

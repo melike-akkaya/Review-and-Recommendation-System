@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @CrossOrigin("*")
@@ -38,6 +40,17 @@ public class ProductController {
             return new ResponseEntity<>(lastProductId, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println("Error retrieving last product ID: " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/last4Ids")
+    public ResponseEntity<List<Product>> getLastFourProductIds() {
+        try {
+            List<Product> products = productService.getLastFourProducts();
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println("Error retrieving last 4 product IDs: " + e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -115,14 +115,25 @@ const ResponsiveAppBar = () => {
   };
 
   const handleProfileClick = () => {
-    handleCloseUserMenu(); // Close the settings menu
-    navigate("/merchant"); // Redirect to the merchant page
+    if (user.role == "MERCHANT") {
+      navigate("/merchant/" + user.id);
+    }
+    if (user.role == "USER") {
+      navigate("/userprofile/" + user.id);
+    }
+    handleCloseUserMenu();
   };
 
   const handleLogoutClick = async () => {
     await sendLogOutRequest();
     localStorage.setItem("user", null);
     navigate("/login");
+  };
+  const handleModeratorPageClick = async () => {
+    navigate("/modpanel");
+  };
+  const handleAdminPageClick = async () => {
+    navigate("/adminpanel");
   };
 
   const handleRecommendationClick = async () => {
@@ -224,6 +235,14 @@ const ResponsiveAppBar = () => {
                   My Personalized Lists
                 </MenuItem>
                 <MenuItem onClick={handleRecommendationClick}>For You</MenuItem>
+                {user.role === "COMMUNITY_MODERATOR" && (
+                  <MenuItem onClick={handleModeratorPageClick}>
+                    Moderator Page
+                  </MenuItem>
+                )}
+                {user.role === "ADMIN" && (
+                  <MenuItem onClick={handleAdminPageClick}>Admin Page</MenuItem>
+                )}
                 <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
               </Menu>
             </Box>

@@ -16,6 +16,7 @@ import AdminPanel from "./pages/AdminPanel";
 import CommunityPage from "./pages/CommunityPage";
 import Homepage from "./pages/Homepage";
 import UserProfile from "./pages/UserProfile";
+import ModPanel from "./pages/ModPanel";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
   { path: "/adminpanel", element: <AdminPanel /> },
   { path: "/homepage", element: <Homepage /> },
   { path: "/userprofile", element: <UserProfile /> },
+  { path: "/modpanel", element: <ModPanel /> },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
