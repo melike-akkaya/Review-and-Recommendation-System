@@ -66,7 +66,7 @@ const PostCard = ({ post, replies, fetchPosts }) => {
       navigate("/login");
     } else {
       const newComment = {
-        authorId: user.id,
+        authorId: user?.id,
         postId: postId,
         comment: comment,
       };
@@ -77,7 +77,6 @@ const PostCard = ({ post, replies, fetchPosts }) => {
   };
 
   const handleDelete = async () => {
-    console.log("Delete clicked");
     await deletePost(postId);
     handleSettingClose();
   

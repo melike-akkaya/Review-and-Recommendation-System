@@ -76,7 +76,6 @@ export function ProductComments(props) {
   };
 
   const updateVotes = async () => {
-    console.log(votes);
     const formData = new FormData();
     formData.append("votes", votes);
     updateReviewVote(reviewId, formData);

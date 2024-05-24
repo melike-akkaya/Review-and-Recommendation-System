@@ -27,18 +27,14 @@ const AnalyticsDialog = ({ open, setOpen, products }) => {
               );
               const visitCountResponse = await getVisitCount(product.productId);
 
-              localWishListCounts.push(wishCountResponse);
-              if (visitCountResponse.data === "") {
-                localVisitCounts.push(0);
-              } else {
-                localVisitCounts.push(visitCountResponse.data);
-              }
+              localWishListCounts.push(wishCountResponse.data || 0);
+              localVisitCounts.push(visitCountResponse.data || 0);
             } catch (error) {
               console.error(
                 `Error getting counts for product ${product.productId}:`,
                 error
               );
-              // assuming 0 for simplicity:
+              // Assuming 0 for simplicity:
               localWishListCounts.push(0);
               localVisitCounts.push(0);
             }
