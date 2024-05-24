@@ -129,6 +129,12 @@ const ResponsiveAppBar = () => {
     localStorage.setItem("user", null);
     navigate("/login");
   };
+  const handleModeratorPageClick = async () => {
+    navigate("/modpanel");
+  };
+  const handleAdminPageClick = async () => {
+    navigate("/adminpanel");
+  };
 
   const handleRecommendationClick = async () => {
     navigate("/recommendations");
@@ -229,6 +235,14 @@ const ResponsiveAppBar = () => {
                   My Personalized Lists
                 </MenuItem>
                 <MenuItem onClick={handleRecommendationClick}>For You</MenuItem>
+                {user.role === "COMMUNITY MODERATOR" && (
+                  <MenuItem onClick={handleModeratorPageClick}>
+                    Moderator Page
+                  </MenuItem>
+                )}
+                {user.role === "ADMIN" && (
+                  <MenuItem onClick={handleAdminPageClick}>Admin Page</MenuItem>
+                )}
                 <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
               </Menu>
             </Box>
