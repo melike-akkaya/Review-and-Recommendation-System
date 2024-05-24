@@ -105,7 +105,7 @@ export default function SignUp() {
   };
 
   const handleSignUp = async () => {
-    if (!name || !surname || !email || !password || !country || !companyname) {
+    if (!name || !surname || !email || !password || !country || !companyname || !imageFile) {
         setAlert({
           open: true,
           severity: "error",
