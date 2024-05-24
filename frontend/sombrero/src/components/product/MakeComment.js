@@ -21,9 +21,6 @@ export default function MakeComment({ productId, fetchReviewsByProductId }) {
     if (user == null) {
       navigate("/login");
     } else {
-      setIsSent(true);
-      fetchReviewsByProductId(productId);
-
       const commentObject = {
         productId: productId.id,
         authorId: user.id,
@@ -37,6 +34,8 @@ export default function MakeComment({ productId, fetchReviewsByProductId }) {
         await addReview(commentObject);
         setText("");
         setRating(0);
+        fetchReviewsByProductId(productId); // Call to fetch the updated reviews
+        setIsSent(true);
       } catch (error) {
         console.error("Error adding review:", error);
       }
@@ -48,7 +47,9 @@ export default function MakeComment({ productId, fetchReviewsByProductId }) {
   };
 
   const handleRatingChange = (event, newValue) => {
+    
     setRating(newValue);
+    fetchReviewsByProductId(productId);
   };
 
   return (
