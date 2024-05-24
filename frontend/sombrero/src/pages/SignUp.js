@@ -23,6 +23,7 @@ import CreateIcon from "@mui/icons-material/Create";
 import { fetchCountries } from "../commonMethods";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import { Alert } from "../components/alert/Alert";
 import { sendSignUpRequest } from "../services/AuthenticationService";
 import { fileToBlob } from "../commonMethods";
 import { useNavigate } from "react-router-dom";
@@ -39,6 +40,11 @@ export default function SignUp() {
   const [countries, setCountries] = React.useState([]);
   const [country, setCountry] = React.useState("");
   const navigate = useNavigate();
+  const [alert, setAlert] = React.useState({
+    open: false,
+    severity: "error",
+    message: "",
+  });
 
   React.useEffect(() => {
     fetchCountries(setCountries);
@@ -94,6 +100,32 @@ export default function SignUp() {
   };
 
   const handleSignUp = async () => {
+
+    if (!name || !surname || !email || !password || !country || !imageFile) {
+      setAlert({
+        open: true,
+        severity: "error",
+        message: "Please fill in all the fields.",
+      });
+      return;
+    }
+
+    if (emailError) {
+      setAlert({
+        open: true,
+        severity: "error",
+        message: "Please enter a valid email address.",
+      });
+      return;
+    }
+
+    // Simulate a successful signup
+    setAlert({
+      open: true,
+      severity: "success",
+      message: "Sign up successful!",
+    });
+
     try {
       const blob = await fileToBlob(imageFile);
       const formData = new FormData();
@@ -112,6 +144,10 @@ export default function SignUp() {
     } catch (error) {
       console.error("Sign up failed", error);
     }
+  };
+
+  const handleAlertClose = () => {
+    setAlert({ ...alert, open: false });
   };
 
   const SmallAvatar = styled(Avatar)(({ theme }) => ({
@@ -331,6 +367,12 @@ export default function SignUp() {
           </Box>
         </CardContent>
       </Card>
+      <Alert
+        open={alert.open}
+        onClose={handleAlertClose}
+        severity={alert.severity}
+        message={alert.message}
+      />
     </Box>
   );
 }
