@@ -41,7 +41,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const PostCard = ({ post, replies, refresh }) => {
+const PostCard = ({ post, replies, fetchPosts }) => {
   const { authorId, type, date, title, content, image, postId } = post;
   const [userName, setUserName] = useState("");
   const [expanded, setExpanded] = useState(false);
@@ -66,7 +66,7 @@ const PostCard = ({ post, replies, refresh }) => {
       navigate("/login");
     } else {
       const newComment = {
-        authorId: user.id,
+        authorId: user?.id,
         postId: postId,
         comment: comment,
       };
@@ -79,7 +79,7 @@ const PostCard = ({ post, replies, refresh }) => {
   const handleDelete = async () => {
     await deletePost(postId);
     handleSettingClose();
-    refresh();
+  
   };
 
   const truncateContent = (text, length) => {
@@ -110,7 +110,7 @@ const PostCard = ({ post, replies, refresh }) => {
       JSON.stringify({ title: newTitle, content: newContent })
     );
     await updatePost(postId, updatedPost);
-    refresh();
+    fetchPosts();
   };
 
   const handleCancel = () => {

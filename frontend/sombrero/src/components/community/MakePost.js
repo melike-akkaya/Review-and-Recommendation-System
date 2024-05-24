@@ -20,7 +20,7 @@ const MakePost = () => {
     type: "",
     title: "",
     content: "",
-    authorId: user.id,
+    authorId: user?.id,
   };
   const [post, setPost] = useState(initialPostState);
 
@@ -39,7 +39,7 @@ const MakePost = () => {
 
   const handlePublishClick = async () => {
     try {
-      setPost({ type, content, title, authorId: user.id});
+      setPost({ type, content, title, authorId: user?.id });
       const formData = new FormData();
       formData.append("post", JSON.stringify(post));
       await addPost(formData);
