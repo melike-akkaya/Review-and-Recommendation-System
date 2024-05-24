@@ -21,7 +21,9 @@ export function MerchantInfo(initialMerchant) {
   const [editMode, setEditMode] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
-  const [editable, setEditable] = useState(initialMerchant.id === user.id);
+  const [editable, setEditable] = useState(
+    initialMerchant.merchant.id === user.id
+  );
 
   const handleEdit = () => {
     setEditMode(!editMode);
