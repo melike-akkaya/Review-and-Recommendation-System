@@ -77,7 +77,6 @@ const PostCard = ({ post, replies, refresh }) => {
   };
 
   const handleDelete = async () => {
-    console.log("Delete clicked");
     await deletePost(postId);
     handleSettingClose();
     refresh();

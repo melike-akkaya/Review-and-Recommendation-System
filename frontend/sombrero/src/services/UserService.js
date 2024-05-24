@@ -5,7 +5,6 @@ const REST_API_BASE_URL = "http://localhost:8080";
 export const getAllUsers = () => axios.get(`${REST_API_BASE_URL}/user/all`);
 
 export const getUser = (email, token) => {
-  console.log(email);
   return axios.get(`${REST_API_BASE_URL}/user/email/${email}`, {
     headers: {
       "Content-Type": "application/json",
@@ -39,12 +38,11 @@ export const getUserNameSurname = async (id) => {
   }
 };
 
-export const getUserById= async (id) => {
-    try {
-        console.log("id",id);
-        const response = await axios.get(`${REST_API_BASE_URL}/user/${id}`);
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
-}
+export const getUserById = async (id) => {
+  try {
+    const response = await axios.get(`${REST_API_BASE_URL}/user/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
