@@ -36,9 +36,9 @@ const CommentCard = (productId) => {
 
   const handleAddReview = async (review) => {
     try {
-      await addReview(review);
-      fetchReviewsByProductId(productId);
-      window.location.reload();
+      const newReview = await addReview(review);
+      setFetchedReviews((prevReviews) => [...prevReviews, newReview]);
+      fetchReviewsByProductId(productId)
     } catch (error) {
       console.error("Error adding review:", error);
     }
