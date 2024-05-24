@@ -53,35 +53,18 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
     public Optional<User> updateUser(Integer userId, User user) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User existingUser = optionalUser.get();
             existingUser.setName(user.getName());
             existingUser.setSurname(user.getSurname());
-            existingUser.setCountry(user.getCountry());
             existingUser.setEmail(user.getEmail());
             existingUser.setImage(user.getImage());
-            existingUser.setRole(user.getRole());
-
-            String[] words = user.getCountry().split("[-\\s]"); // split the country name by "-" or " "
-
-            StringBuilder capitalizedCountry = new StringBuilder();
-
-            for (int i = 0; i < words.length; i++) {
-                String word = words[i];
-                if (word.equalsIgnoreCase("and") || word.equalsIgnoreCase("of")) {
-                    capitalizedCountry.append(word.toLowerCase());
-                } else {
-                    capitalizedCountry.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1).toLowerCase());
-                }
-
-                if (i < words.length - 1) {
-                    capitalizedCountry.append(" ");
-                }
-            }
-
-            existingUser.setCountry(capitalizedCountry.toString());
 
             userRepository.save(existingUser);
             return Optional.of(existingUser);

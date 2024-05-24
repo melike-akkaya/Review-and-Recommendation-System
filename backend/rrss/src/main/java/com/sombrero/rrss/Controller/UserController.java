@@ -2,6 +2,7 @@ package com.sombrero.rrss.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sombrero.rrss.Model.Merchant;
+import com.sombrero.rrss.Model.Role;
 import com.sombrero.rrss.Model.User;
 import com.sombrero.rrss.Service.UserService;
 import lombok.AllArgsConstructor;
@@ -66,23 +67,26 @@ public class UserController {
 
     @PostMapping("/update/{userId}")
     public ResponseEntity<User> updateUser(@PathVariable Integer userId,
-                                           @RequestParam("user") String userJson,
+                                           @RequestPart String name,
+                                           @RequestPart String surname,
+                                           @RequestPart String email,
                                            @RequestPart byte [] image) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            User user = objectMapper.readValue(userJson, User.class);
+        Optional<User> optionalUser = userService.getById(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setName(name);
+            user.setSurname(surname);
+            user.setEmail(email);
 
             if (image != null) {
                 user.setImage(image);
             }
 
-            Optional<User> updatedUser = userService.updateUser(userId, user);
-            return updatedUser.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-        } catch (Exception e) {
-            System.out.println("Error updating user: " + e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            User updatedUser = userService.save(user);
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+
         }
+        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @DeleteMapping("/delete/{userId}")

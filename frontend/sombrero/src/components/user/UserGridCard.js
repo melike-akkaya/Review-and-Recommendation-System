@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
-import { Card, CardContent, Typography, Button, CardActions, TextField, IconButton } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SaveIcon from '@mui/icons-material/Save';
-import UploadIcon from '@mui/icons-material/Upload';
+import React, { useState } from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  CardActions,
+  TextField,
+  IconButton,
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SaveIcon from "@mui/icons-material/Save";
+import UploadIcon from "@mui/icons-material/Upload";
 import { deleteUser, updateUser } from "../../services/UserService";
-import { Alert } from '../alert/Alert';
+import { Alert } from "../alert/Alert";
 
 const UserGridCard = ({ user, isAdmin }) => {
   const [editMode, setEditMode] = useState(false);
@@ -34,14 +42,9 @@ const UserGridCard = ({ user, isAdmin }) => {
     setEditMode(false);
 
     const formData = new FormData();
-    const userData = { ...updatedUser };
-
-    delete userData.enabled;
-    delete userData.accountNonExpired;
-    delete userData.credentialsNonExpired;
-    delete userData.username;
-
-    formData.append("user", JSON.stringify(userData));
+    formData.append("name", JSON.stringify(updatedUser.name));
+    formData.append("surname", JSON.stringify(updatedUser.surname));
+    formData.append("email", JSON.stringify(updatedUser.email));
     if (updatedUser.image) {
       formData.append("image", updatedUser.image);
     }
@@ -62,7 +65,7 @@ const UserGridCard = ({ user, isAdmin }) => {
       reader.onloadend = () => {
         setUpdatedUser((prevUser) => ({
           ...prevUser,
-          image: reader.result.split(',')[1], // Get the base64 string
+          image: reader.result.split(",")[1], // Get the base64 string
         }));
       };
     } catch (error) {
@@ -90,31 +93,31 @@ const UserGridCard = ({ user, isAdmin }) => {
   };
 
   // Determine the background color based on the user's role
-  let roleColor = '#00e676'; // Green for user by default
+  let roleColor = "#00e676"; // Green for user by default
   switch (user.role) {
-    case 'INFLUENCER':
-      case 'MERCHANT':
-      roleColor = '#2962ff'; // Blue for influencer and merchant
+    case "INFLUENCER":
+    case "MERCHANT":
+      roleColor = "#2962ff"; // Blue for influencer and merchant
       break;
-    case 'ADMIN':
-    case 'COMMUNITY_MODERATOR':
-      roleColor = '#ff1744'; // Red for admin and moderator
+    case "ADMIN":
+    case "COMMUNITY_MODERATOR":
+      roleColor = "#ff1744"; // Red for admin and moderator
       break;
     default:
-      roleColor = '#00e676'; // Green for user
+      roleColor = "#00e676"; // Green for user
   }
 
   return (
-    <Card 
-      elevation={3} 
-      key={user.id} 
+    <Card
+      elevation={3}
+      key={user.id}
       sx={{
-        width: '100%',
-        backgroundColor: '#f0f0f0',
-        transition: 'background-color 0.3s',
-        '&:hover': {
-          backgroundColor: '#e0e0e0',
-          cursor: 'pointer',
+        width: "100%",
+        backgroundColor: "#f0f0f0",
+        transition: "background-color 0.3s",
+        "&:hover": {
+          backgroundColor: "#e0e0e0",
+          cursor: "pointer",
         },
       }}
     >
@@ -130,7 +133,13 @@ const UserGridCard = ({ user, isAdmin }) => {
               }}
             />
           ) : (
-            <div style={{ height: "240px", width: "100%", backgroundColor: "#ccc" }} />
+            <div
+              style={{
+                height: "240px",
+                width: "100%",
+                backgroundColor: "#ccc",
+              }}
+            />
           )}
           {editMode && (
             <>
@@ -157,7 +166,9 @@ const UserGridCard = ({ user, isAdmin }) => {
                   color: "#fff",
                   zIndex: 2,
                 }}
-                onClick={() => document.querySelector(`input[type='file']`).click()}
+                onClick={() =>
+                  document.querySelector(`input[type='file']`).click()
+                }
                 size="small"
               >
                 <UploadIcon />
@@ -207,21 +218,21 @@ const UserGridCard = ({ user, isAdmin }) => {
             `Email: ${user.email}`
           )}
         </Typography>
-        <Typography 
+        <Typography
           color="text.primary"
           sx={{
             backgroundColor: roleColor,
-            display: 'inline',
-            padding: '2px 6px',
-            borderRadius: '4px',
-            marginTop: '8px',
+            display: "inline",
+            padding: "2px 6px",
+            borderRadius: "4px",
+            marginTop: "8px",
           }}
         >
           {user.role.toUpperCase()}
         </Typography>
       </CardContent>
       {isAdmin && (
-        <CardActions style={{ justifyContent: 'flex-end' }}>
+        <CardActions style={{ justifyContent: "flex-end" }}>
           {!editMode ? (
             <Button
               size="small"
