@@ -73,13 +73,14 @@ const PostCard = ({ post, replies, fetchPosts }) => {
       const formData = new FormData();
       formData.append("comment", JSON.stringify(newComment));
       addReply(formData);
+      //reset textfield
+      setComment("");
     }
   };
 
   const handleDelete = async () => {
     await deletePost(postId);
     handleSettingClose();
-  
   };
 
   const truncateContent = (text, length) => {
@@ -221,16 +222,18 @@ const PostCard = ({ post, replies, fetchPosts }) => {
         </div>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="share">
+        {/* <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>
         <IconButton aria-label="bookmark">
           <BookmarkIcon />
-        </IconButton>
+        </IconButton> */}
         <div>
-          <IconButton aria-label="settings" onClick={handleSettingClick}>
-            <MoreVertIcon />
-          </IconButton>
+          {String(user.id) === authorId && (
+            <IconButton aria-label="settings" onClick={handleSettingClick}>
+              <MoreVertIcon />
+            </IconButton>
+          )}
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
