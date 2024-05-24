@@ -1,11 +1,29 @@
-import React, { useState } from 'react';
-import { Box, Typography, TextField, Button, InputAdornment, IconButton } from '@mui/material';
-import { Edit as EditIcon, Save as SaveIcon, Delete as DeleteIcon } from '@mui/icons-material';
-import { deleteReply, getReplies } from '../../services/CommunityService';
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  InputAdornment,
+  IconButton,
+} from "@mui/material";
+import {
+  Edit as EditIcon,
+  Save as SaveIcon,
+  Delete as DeleteIcon,
+} from "@mui/icons-material";
+import { deleteReply, getReplies } from "../../services/CommunityService";
+import { useLocalStorageUser } from "../../commonMethods";
 
-const ReplyCard = ({ replies, comment, handleCommentChange, handleCommentSubmit }) => {
+const ReplyCard = ({
+  replies,
+  comment,
+  handleCommentChange,
+  handleCommentSubmit,
+}) => {
   const [editingReplyId, setEditingReplyId] = useState(null);
-  const [updatedReply, setUpdatedReply] = useState('');
+  const [updatedReply, setUpdatedReply] = useState("");
+  const user = useLocalStorageUser();
 
   const handleEdit = (replyId, replyContent) => {
     setEditingReplyId(replyId);
@@ -13,27 +31,31 @@ const ReplyCard = ({ replies, comment, handleCommentChange, handleCommentSubmit 
   };
 
   const handleSave = (replyId) => {
-    console.log('Updated reply:', updatedReply);
-
     setEditingReplyId(null);
   };
 
   const handleCancel = () => {
     setEditingReplyId(null);
-    setUpdatedReply('');
+    setUpdatedReply("");
   };
 
   const handleDelete = (repl) => {
     deleteReply(repl);
-    console.log('Delete clicked');
   };
-
 
   return (
     <div>
       <Box mt={2}>
-        {replies.map(reply => (
-          <Box key={reply.id} sx={{ mt: 1, pl: 2, borderLeft: '2px solid #ccc', position: 'relative' }}>
+        {replies.map((reply) => (
+          <Box
+            key={reply.id}
+            sx={{
+              mt: 1,
+              pl: 2,
+              borderLeft: "2px solid #ccc",
+              position: "relative",
+            }}
+          >
             {editingReplyId === reply.id ? (
               <>
                 <TextField
@@ -42,17 +64,17 @@ const ReplyCard = ({ replies, comment, handleCommentChange, handleCommentSubmit 
                   value={updatedReply}
                   onChange={(e) => setUpdatedReply(e.target.value)}
                   sx={{
-                    borderRadius: '20px',
-                    '& fieldset': {
-                      borderRadius: '20px',
-                    }
+                    borderRadius: "20px",
+                    "& fieldset": {
+                      borderRadius: "20px",
+                    },
                   }}
                 />
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => handleSave(reply.id)}
-                  sx={{ marginLeft: '10px' }}
+                  sx={{ marginLeft: "10px" }}
                 >
                   <SaveIcon />
                 </Button>
@@ -60,7 +82,7 @@ const ReplyCard = ({ replies, comment, handleCommentChange, handleCommentSubmit 
                   variant="outlined"
                   color="secondary"
                   onClick={handleCancel}
-                  sx={{ marginLeft: '10px' }}
+                  sx={{ marginLeft: "10px" }}
                 >
                   Cancel
                 </Button>
@@ -70,20 +92,34 @@ const ReplyCard = ({ replies, comment, handleCommentChange, handleCommentSubmit 
                 <Typography variant="body2" color="text.secondary">
                   <strong>{reply.authorName}: </strong> {reply.comment}
                 </Typography>
-                <IconButton
-                  aria-label="edit"
-                  onClick={() => handleEdit(reply.commentId, reply.content)}
-                  sx={{ position: 'absolute', top: '50%', right: '36px', transform: 'translateY(-50%)' }}
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
-                  aria-label="delete"
-                  onClick={() => handleDelete(reply.commentId)}
-                  sx={{ position: 'absolute', top: '50%', right: '12px', transform: 'translateY(-50%)' }}
-                >
-                  <DeleteIcon />
-                </IconButton>
+                {user.id === reply.authorId && (
+                  <>
+                    <IconButton
+                      aria-label="edit"
+                      onClick={() => handleEdit(reply.commentId, reply.content)}
+                      sx={{
+                        position: "absolute",
+                        top: "50%",
+                        right: "36px",
+                        transform: "translateY(-50%)",
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      aria-label="delete"
+                      onClick={() => handleDelete(reply.commentId)}
+                      sx={{
+                        position: "absolute",
+                        top: "50%",
+                        right: "12px",
+                        transform: "translateY(-50%)",
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </>
+                )}
               </>
             )}
           </Box>
@@ -97,10 +133,10 @@ const ReplyCard = ({ replies, comment, handleCommentChange, handleCommentSubmit 
         onChange={handleCommentChange}
         sx={{
           mt: 2,
-          borderRadius: '20px',
-          '& fieldset': {
-            borderRadius: '20px',
-          }
+          borderRadius: "20px",
+          "& fieldset": {
+            borderRadius: "20px",
+          },
         }}
         InputProps={{
           endAdornment: (
@@ -110,10 +146,10 @@ const ReplyCard = ({ replies, comment, handleCommentChange, handleCommentSubmit 
                 color="primary"
                 onClick={handleCommentSubmit}
                 sx={{
-                  borderRadius: '20px',
-                  marginRight: '-1px',
+                  borderRadius: "20px",
+                  marginRight: "-1px",
                   backgroundColor: "#feb31d",
-                  '&:hover': { backgroundColor: "#ffca28" }
+                  "&:hover": { backgroundColor: "#ffca28" },
                 }}
               >
                 Submit

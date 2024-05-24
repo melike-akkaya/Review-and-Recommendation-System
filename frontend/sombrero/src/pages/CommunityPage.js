@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Typography, Paper, Box, Button, ButtonGroup } from "@mui/material";
 import PostCard from "../components/community/PostCard";
 import Header from "./Header";
@@ -12,7 +12,6 @@ const customTheme = extendTheme({
       background: "linear-gradient(-30deg, #ff7f00, #ffdf00)",
       WebkitBackgroundClip: "text",
       WebkitTextFillColor: "transparent",
-      fontStyle: "italic",
     },
   },
 });
@@ -21,6 +20,7 @@ const CommunityPage = () => {
   const [selectedType, setSelectedType] = useState("All");
   const [posts, setPosts] = useState([]);
   const [replies, setReplies] = useState([]);
+
   const handleButtonClick = (type) => {
     setSelectedType(type);
   };
@@ -35,7 +35,7 @@ const CommunityPage = () => {
     }
   };
 
-  const fethReplies = async () => {
+  const fetchReplies = async () => {
     try {
       const response = await getReplies();
       setReplies(response);
@@ -44,10 +44,10 @@ const CommunityPage = () => {
     }
   };
 
-  useState(() => {
+  useEffect(() => {
     fetchPosts();
-    fethReplies();
-  }, [posts, replies]);
+    fetchReplies();
+  }, []);
 
   const filteredPosts =
     selectedType === "All"
@@ -76,7 +76,9 @@ const CommunityPage = () => {
           RRSS COMMUNITY
         </Box>
       </CssVarsProvider>
-      <Box sx={{ my: 5, width: "100%", marginLeft: "100px" }}>
+      <Box
+        sx={{ my: 5, width: "100%", display: "flex", justifyContent: "center" }}
+      >
         <Paper
           elevation={3}
           sx={{ p: 4, borderRadius: "20px", width: "55%", overflowY: "auto" }}
@@ -84,7 +86,9 @@ const CommunityPage = () => {
           <MakePost />
         </Paper>
       </Box>
-      <Box sx={{ my: 3, width: "100%", marginLeft: "100px" }}>
+      <Box
+        sx={{ my: 3, width: "100%", display: "flex", justifyContent: "center" }}
+      >
         <Paper
           elevation={3}
           sx={{
@@ -164,7 +168,7 @@ const CommunityPage = () => {
                 replies={replies.filter(
                   (reply) => reply.postId === post.postId
                 )}
-                fetchPosts={fetchPosts()}
+                fetchPosts={fetchPosts}
               />
             </Box>
           ))}
