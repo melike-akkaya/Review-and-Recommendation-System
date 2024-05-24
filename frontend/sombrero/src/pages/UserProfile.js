@@ -1,60 +1,88 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Box, CardHeader, CardContent, CardActions, Typography, Button, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import { fetchCountries } from "../commonMethods";
+import { fetchCountries, useLocalStorageUser,} from "../commonMethods";
 import Header from "./Header";
-
+import { fileToBlob } from "../commonMethods";
+import {updateUser} from "../services/UserService";
 
 const placeholderImage = 'https://via.placeholder.com/150';
 
 function UserProfile() {
   const [isEditing, setIsEditing] = useState(false);
-  const [countries, setCountries] = React.useState([]);
-  const [user, setUser] = useState({
-    name: 'John',
-    surname: 'Doe',
-    country: 'USA',
-    email: 'john.doe@example.com',
-    profileImage: placeholderImage,
-  });
+  const [countries, setCountries] = useState([]);
+  const [user, setUser] = useState(useLocalStorageUser());
+  const [updatedUser, setUpdatedUser] = useState({ ...user });
+
+  useEffect(() => {
+    fetchCountries(setCountries);
+  }, []);
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
-  const handleCountryChange = (event) => {
-    setUser({ ...user, country: event.target.value });
-  };
+  const handleUploadImage = async () => {
+    const input = document.createElement("input");
 
-  React.useEffect(() => {
-    fetchCountries(setCountries);
-  }, []);
+    input.type = "file";
+    input.accept = "image/*";
 
-  const handleSave = () => {
-    setIsEditing(false);
-    // You can add logic here to save the changes, e.g., send them to a server.
-  };
+    input.onchange = async (event) => {
+      try {
+        const file = event.target.files[0];
+        const blob = await fileToBlob(file);
 
-  const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setUser({ ...user, profileImage: reader.result });
+        setUpdatedUser((prevUser) => ({
+          ...prevUser,
+          profileImage: URL.createObjectURL(file), // Display the selected image in the UI
+          imageBlob: blob, // Store the blob to be sent in the form data
+        }));
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
     };
-    if (file) {
-      reader.readAsDataURL(file);
+
+    input.click();
+  };
+
+  const handleSave = async () => {
+    setIsEditing(false);
+
+    try {
+      const formData = new FormData();
+      formData.append("name", updatedUser.name);
+      formData.append("surname", updatedUser.surname);
+      formData.append("country", updatedUser.country);
+      formData.append("email", updatedUser.email);
+      if (updatedUser.imageBlob) {
+        formData.append("profileImage", updatedUser.imageBlob);
+      }
+
+      const response = await updateUser(user.id, formData);
+      console.log("User updated successfully:", response.data);
+      // You can update the local storage user or fetch the updated user from the backend
+    } catch (error) {
+      console.error("Error updating user:", error);
+      // You can display an error message to the user
     }
   };
 
+  const handleChange = (e) => {
+    setUpdatedUser({ ...updatedUser, [e.target.name]: e.target.value });
+  };
+
+  const handleCountryChange = (event) => {
+    setUpdatedUser({ ...updatedUser, country: event.target.value });
+  };
+
+  const editable = user.id === updatedUser.id; // Define the editable variable
+
   return (
     <div style={{ background: "linear-gradient(45deg, #e9dabd, #e8ddf7)", minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 20, gap: 20 }}>
-      <Header/>
+      <Header />
       <Card sx={{ width: 800, borderRadius: 16, overflow: 'hidden', margin: 'auto' }}>
         <CardHeader
-          title={<Typography sx={{marginLeft:"60px"}} variant="h3">User Profile</Typography>}
+          title={<Typography sx={{ marginLeft: "60px" }} variant="h3">User Profile</Typography>}
           sx={{ background: "#9776c3", color: '#ffffff', margin: 'auto' }}
         />
         <div style={{ display: 'flex', justifyContent: 'space-between', padding: 20 }}>
@@ -65,7 +93,7 @@ function UserProfile() {
                 {isEditing ? (
                   <TextField
                     name="name"
-                    value={user.name}
+                    value={updatedUser.name}
                     onChange={handleChange}
                     fullWidth
                     variant="outlined"
@@ -79,7 +107,7 @@ function UserProfile() {
                 {isEditing ? (
                   <TextField
                     name="surname"
-                    value={user.surname}
+                    value={updatedUser.surname}
                     onChange={handleChange}
                     fullWidth
                     variant="outlined"
@@ -91,21 +119,21 @@ function UserProfile() {
               <div style={{ marginBottom: 20 }}>
                 <Typography variant="body1" style={{ fontSize: 19, color: '#3f51b5', fontWeight: 'bold' }}>Country:</Typography>
                 {isEditing ? (
-                <FormControl fullWidth required size="small" sx={{ m: 1, width: "30ch", marginLeft: "25px", marginTop: "3px" }}>
+                  <FormControl fullWidth required size="small" sx={{ m: 1, width: "30ch", marginLeft: "25px", marginTop: "3px" }}>
                     <InputLabel>Country</InputLabel>
                     <Select
-                        value={user.country} 
-                        onChange={handleCountryChange}
-                        label="Country"
-                        variant="outlined"
+                      value={updatedUser.country}
+                      onChange={handleCountryChange}
+                      label="Country"
+                      variant="outlined"
                     >
-                        {countries.map((option) => (
+                      {countries.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
-                            {option.label}
+                          {option.label}
                         </MenuItem>
-                        ))}
+                      ))}
                     </Select>
-                    </FormControl>
+                  </FormControl>
                 ) : (
                   <Typography variant="body1">{user.country}</Typography>
                 )}
@@ -115,7 +143,7 @@ function UserProfile() {
                 {isEditing ? (
                   <TextField
                     name="email"
-                    value={user.email}
+                    value={updatedUser.email}
                     onChange={handleChange}
                     fullWidth
                     variant="outlined"
@@ -126,29 +154,32 @@ function UserProfile() {
               </div>
             </CardContent>
             <CardActions style={{ padding: '20px', justifyContent: 'center' }}>
-              <Button 
-                onClick={isEditing ? handleSave : handleEdit}
-                variant="contained"
-                style={{ borderRadius: 16 }}
-              >
-                {isEditing ? 'Save' : 'Edit'}
-              </Button>
+              {editable && (
+                <>
+                  <Button
+                    onClick={isEditing ? handleSave : handleEdit}
+                    variant="contained"
+                    style={{ borderRadius: 16 }}
+                  >
+                    {isEditing ? 'Save' : 'Edit'}
+                  </Button>
+                  <Button
+                    onClick={handleUploadImage}
+                    variant="contained"
+                    style={{ borderRadius: 16, marginLeft: 10 }}
+                  >
+                    Upload Image
+                  </Button>
+                </>
+              )}
             </CardActions>
           </Box>
           <Box sx={{ width: '45%' }}>
             <CardContent>
-              <img 
-                src={user.profileImage} 
-                alt="Profile" 
+              <img
+                src={updatedUser.profileImage || placeholderImage}
+                alt="Profile"
                 style={{ borderRadius: '50%', width: '65%', height: 'auto', maxWidth: '65%', marginLeft: 80 }}
-                onClick={isEditing ? () => document.getElementById('fileInput').click() : null}
-              />
-              <input
-                type="file"
-                id="fileInput"
-                accept="image/*"
-                style={{ display: 'none' }}
-                onChange={handleImageChange}
               />
             </CardContent>
           </Box>
@@ -156,7 +187,7 @@ function UserProfile() {
       </Card>
       <Card sx={{ width: 800, borderRadius: 16, overflow: 'hidden', margin: 'auto' }}>
         <CardHeader
-          title={<Typography sx={{marginLeft:"60px", color:"#9776c3"}} variant="h5">Wish Lists</Typography>}
+          title={<Typography sx={{ marginLeft: "60px", color: "#9776c3" }} variant="h5">Wish Lists</Typography>}
         />
         <CardContent></CardContent>
       </Card>
