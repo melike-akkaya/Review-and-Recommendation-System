@@ -65,7 +65,9 @@ public class UserController {
     }
 
     @PostMapping("/update/{userId}")
-    public ResponseEntity<User> updateUser(@PathVariable Integer userId, @RequestParam("user") String userJson, @RequestPart byte [] image) {
+    public ResponseEntity<User> updateUser(@PathVariable Integer userId,
+                                           @RequestParam("user") String userJson,
+                                           @RequestPart byte [] image) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             User user = objectMapper.readValue(userJson, User.class);

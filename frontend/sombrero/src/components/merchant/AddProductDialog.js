@@ -12,13 +12,14 @@ import {
   addProduct,
   getLastProductId,
 } from "../../services/ProductService";
-import { fileToBlob } from "../../commonMethods";
+import { fileToBlob, useLocalStorageUser } from "../../commonMethods";
 import { Alert } from "../alert/Alert";
 
 export default function AddProductDialog({ open, setOpen, refreshProducts }) {
   const [categories, setCategories] = React.useState([]);
   const labels = ["elegant", "luxury", "ergonomic", "antique", "modern"];
   const [fileName, setFileName] = React.useState("");
+  const user = useLocalStorageUser();
 
   const [successAlertOpen, setSuccessAlertOpen] = useState(false);
   const [errorAlertOpen, setErrorAlertOpen] = useState(false);
@@ -101,7 +102,7 @@ export default function AddProductDialog({ open, setOpen, refreshProducts }) {
 
       productWithoutLabel.image = null;
       productWithoutLabel.category = categoryId;
-      productWithoutLabel.user = 1;
+      productWithoutLabel.user = user.id;
 
       const formData = new FormData();
       formData.append("image", product.image);

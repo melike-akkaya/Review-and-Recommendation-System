@@ -27,7 +27,7 @@ export default function ProductProfile() {
     if (user == null) {
       setEditable(false);
     } else {
-      if (fetchedProduct.merchant === user.id) {
+      if (fetchedProduct.user === user.id) {
         setEditable(true);
       } else {
         setEditable(false);
