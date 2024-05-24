@@ -7,7 +7,7 @@ import UserGridCard from "../components/user/UserGridCard";
 import ProductGridCard from "../components/product/ProductGridCard";
 
 const SearchResults = () => {
-  const [searchType, setSearchType] = useState("product");
+  const [productSearch, setProductSearch] = useState(true);
   const [results, setResults] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
@@ -17,53 +17,55 @@ const SearchResults = () => {
       try {
         const query = new URLSearchParams(location.search).get("q");
         let response;
-        switch (searchType) {
-          case "product":
-            response = await searchProducts(query);
-            break;
-          case "user":
-            response = await searchUsers(query);
-            break;
-          default:
-            response = { data: [] };
+        if (productSearch) {
+          response = await searchProducts(query);
+        } else {
+          response = await searchUsers(query);
         }
         setResults(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
+        setResults([]);
       }
     };
 
     fetchData();
-  }, [location.search, searchType]);
+  }, [location.search, productSearch]);
 
   const handleCardClick = (resultId) => {
-    switch (searchType) {
-      case "product":
-        navigate(`/product/${resultId}`);
-        break;
-      case "user":
-        navigate(`/user/${resultId}`);
-        break;
-      default:
-        break;
+    if (productSearch) {
+      navigate(`/product/${resultId}`);
+    } else {
+      navigate(`/merchant/${resultId}`);
     }
   };
 
-  let renderCard;
-  switch (searchType) {
-    case "product":
-      renderCard = (product) => (
-        <ProductGridCard product={product} handleCardClick={handleCardClick} />
+  const renderCard = (result) => {
+    if (productSearch) {
+      return (
+        <ProductGridCard
+          key={result.id}
+          product={result}
+          handleCardClick={handleCardClick}
+        />
       );
-      break;
-    case "user":
-      renderCard = (user) => (
-        <UserGridCard user={user} handleCardClick={handleCardClick} />
+    } else {
+      return (
+        <UserGridCard
+          key={result.id}
+          user={result}
+          handleCardClick={handleCardClick}
+        />
       );
-      break;
-    default:
-      renderCard = () => null;
-  }
+    }
+  };
+
+  const handleSearchTypeChange = (event, newValue) => {
+    console.log(newValue);
+    if (newValue !== null) {
+      setProductSearch(newValue);
+    }
+  };
 
   return (
     <Header>
@@ -73,19 +75,15 @@ const SearchResults = () => {
         sx={{ marginTop: "20px", paddingLeft: "50px" }}
       >
         <ToggleButtonGroup
-          value={searchType}
+          value={productSearch}
           exclusive
-          onChange={(event, newSearchType) => {
-            if (newSearchType !== null) {
-              setSearchType(newSearchType);
-            }
-          }}
+          onChange={handleSearchTypeChange}
           aria-label="search type"
         >
-          <ToggleButton value="product" aria-label="products">
+          <ToggleButton value={true} aria-label="products">
             Products
           </ToggleButton>
-          <ToggleButton value="user" aria-label="users">
+          <ToggleButton value={false} aria-label="users">
             Users
           </ToggleButton>
         </ToggleButtonGroup>
