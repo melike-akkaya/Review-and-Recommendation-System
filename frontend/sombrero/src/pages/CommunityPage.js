@@ -45,9 +45,9 @@ const CommunityPage = () => {
   };
 
   useState(() => {
-    fethReplies();
     fetchPosts();
-  }, []);
+    fethReplies();
+  }, [posts, replies]);
 
   const filteredPosts =
     selectedType === "All"
@@ -164,7 +164,7 @@ const CommunityPage = () => {
                 replies={replies.filter(
                   (reply) => reply.postId === post.postId
                 )}
-                refresh={() => fetchPosts()}
+                fetchPosts={fetchPosts()}
               />
             </Box>
           ))}
