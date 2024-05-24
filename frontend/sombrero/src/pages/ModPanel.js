@@ -46,7 +46,9 @@ const ModPanel = () => {
 
   const handleSave = async () => {
     try {
-      await updatePost(selectedPost.postId, { post: JSON.stringify(selectedPost) });
+      const formData = new FormData();
+      formData.append("post", JSON.stringify(selectedPost));
+      await updatePost(selectedPost.postId, formData);
       fetchPosts();
       handleClose();
     } catch (error) {
