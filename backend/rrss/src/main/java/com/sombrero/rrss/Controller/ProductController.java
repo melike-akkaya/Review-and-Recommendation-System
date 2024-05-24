@@ -50,7 +50,7 @@ public class ProductController {
             List<Product> products = productService.getLastFourProducts();
             return new ResponseEntity<>(products, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("Error retrieving last 4 product IDs: " + e.getMessage());
+            System.out.println("Error retrieving last 8 product IDs: " + e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

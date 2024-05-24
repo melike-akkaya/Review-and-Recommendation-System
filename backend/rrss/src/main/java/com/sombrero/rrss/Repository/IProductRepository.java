@@ -16,7 +16,7 @@ public interface IProductRepository extends JpaRepository<Product, Integer> {
     @Query(value = "SELECT MAX(productId) FROM Product")
     Integer findMaxProductId();
 
-    @Query(value = "SELECT * FROM Product ORDER BY product_id DESC LIMIT 4", nativeQuery = true)
+    @Query(value = "SELECT * FROM Product ORDER BY product_id DESC LIMIT 8", nativeQuery = true)
 
     List<Product> findTop4ByOrderByIdDesc();
 

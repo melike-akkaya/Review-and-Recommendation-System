@@ -167,7 +167,7 @@ const Homepage = () => {
       </Box>
       <Box display="flex" justifyContent="center" alignItems="center">
         {newProducts
-          .slice(currentProductIndexNew, currentProductIndexNew + 3)
+          .slice(currentProductIndexNew, currentProductIndexNew + 4)
           .map((product) => {
             const { productId, image, name, price, description } = product;
             const imageURL = `data:image/jpeg;base64,${image}`;

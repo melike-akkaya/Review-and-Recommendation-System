@@ -60,6 +60,7 @@ export const addLabel = (label) => {
 };
 
 export const getLastProductId = () => axios.get(`${BASE_URL}/products/lastId`);
+
 export const getLastFourProducts = () => axios.get(`${BASE_URL}/products/last4Ids`);
 
 export const setIsEditableFalse = () => {
