@@ -235,7 +235,7 @@ const ResponsiveAppBar = () => {
                   My Personalized Lists
                 </MenuItem>
                 <MenuItem onClick={handleRecommendationClick}>For You</MenuItem>
-                {user.role === "COMMUNITY MODERATOR" && (
+                {user.role === "COMMUNITY_MODERATOR" && (
                   <MenuItem onClick={handleModeratorPageClick}>
                     Moderator Page
                   </MenuItem>
