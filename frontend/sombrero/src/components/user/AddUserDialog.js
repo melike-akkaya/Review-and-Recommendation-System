@@ -6,7 +6,7 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { Autocomplete } from "@mui/material";
 import { Alert } from "../alert/Alert";
-import { addUser } from "../../services/UserService";
+import { sendSignUpRequest } from "../../services/AuthenticationService";
 import { fetchCountries, fileToBlob, roles } from "../../commonMethods";
 
 export default function AddUserDialog({ open, setOpen, refreshUsers }) {
@@ -77,9 +77,9 @@ export default function AddUserDialog({ open, setOpen, refreshUsers }) {
       const userWithoutImage = { ...user, image: null };
       const formData = new FormData();
       formData.append("image", user.image);
-      formData.append("user", JSON.stringify(userWithoutImage));
+      formData.append("signUpRequest", JSON.stringify(userWithoutImage));
 
-      await addUser(formData);
+      await sendSignUpRequest(formData);
 
       setSuccessAlertOpen(true);
       handleClose();
