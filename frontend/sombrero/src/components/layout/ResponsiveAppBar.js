@@ -115,8 +115,13 @@ const ResponsiveAppBar = () => {
   };
 
   const handleProfileClick = () => {
-    handleCloseUserMenu(); // Close the settings menu
-    navigate("/merchant"); // Redirect to the merchant page
+    if (user.role == "MERCHANT") {
+      navigate("/merchant/" + user.id);
+    }
+    if (user.role == "USER") {
+      navigate("/userprofile/" + user.id);
+    }
+    handleCloseUserMenu();
   };
 
   const handleLogoutClick = async () => {
