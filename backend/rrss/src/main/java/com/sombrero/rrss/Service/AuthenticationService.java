@@ -28,7 +28,25 @@ public class AuthenticationService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.getRole());
-        user.setCountry(request.getCountry());
+
+        String[] words = request.getCountry().split("[-\\s]"); // split the country name by "-" or " "
+
+        StringBuilder capitalizedCountry = new StringBuilder();
+
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            if (word.equalsIgnoreCase("and") || word.equalsIgnoreCase("of")) {
+                capitalizedCountry.append(word.toLowerCase());
+            } else {
+                capitalizedCountry.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1).toLowerCase());
+            }
+
+            if (i < words.length - 1) {
+                capitalizedCountry.append(" ");
+            }
+        }
+
+        user.setCountry(capitalizedCountry.toString());
         user.setImage(request.getImage());
         user.setMerchantName(request.getMerchantName());
         repository.save(user);
