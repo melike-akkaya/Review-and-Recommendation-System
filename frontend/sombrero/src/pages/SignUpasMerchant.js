@@ -23,6 +23,7 @@ import CreateIcon from "@mui/icons-material/Create";
 import { fetchCountries } from "../commonMethods";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import { Alert } from "../components/alert/Alert";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -34,7 +35,12 @@ export default function SignUp() {
   const [image, setImage] = React.useState('/broken-image.jpg');
   const [emailError, setEmailError] = React.useState(false);
   const [countries, setCountries] = React.useState([]);
-  const [country, setCountry] = React.useState(""); 
+  const [country, setCountry] = React.useState("");
+  const [alert, setAlert] = React.useState({
+    open: false,
+    severity: "error",
+    message: "",
+  });
 
   React.useEffect(() => {
     fetchCountries(setCountries);
@@ -61,7 +67,7 @@ export default function SignUp() {
   const handleCompanyNameChange = (event) => {
     setCompanyname(event.target.value);
   };
- 
+
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
@@ -93,7 +99,37 @@ export default function SignUp() {
   };
 
   const handleSignUp = () => {
-    console.log(name, surname, email, password, country); 
+    if (!name || !surname || !email || !password || !country || !companyname) {
+      setAlert({
+        open: true,
+        severity: "error",
+        message: "Please fill in all the fields.",
+      });
+      return;
+    }
+
+    if (emailError) {
+      setAlert({
+        open: true,
+        severity: "error",
+        message: "Please enter a valid email address.",
+      });
+      return;
+    }
+
+    // Simulate a successful signup
+    setAlert({
+      open: true,
+      severity: "success",
+      message: "Sign up successful!",
+    });
+
+    // Add your actual sign up logic here
+    console.log(name, surname, companyname, email, password, country); 
+  };
+
+  const handleAlertClose = () => {
+    setAlert({ ...alert, open: false });
   };
 
   const SmallAvatar = styled(Avatar)(({ theme }) => ({
@@ -308,6 +344,12 @@ export default function SignUp() {
           </Box>
         </CardContent>
       </Card>
+      <Alert
+        open={alert.open}
+        onClose={handleAlertClose}
+        severity={alert.severity}
+        message={alert.message}
+      />
     </Box>
   );
 }

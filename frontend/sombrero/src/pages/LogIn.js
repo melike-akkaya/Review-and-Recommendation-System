@@ -14,12 +14,11 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Link from "@mui/material/Link";
 import Divider from "@mui/material/Divider";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
 import Header from "./Header";
 import { sendLogInRequest } from "../services/AuthenticationService";
 import { getUser } from "../services/UserService";
 import { useNavigate } from "react-router-dom";
+import { Alert } from "../components/alert/Alert";
 
 export default function LogIn() {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -41,27 +40,57 @@ export default function LogIn() {
   };
 
   const handleLogIn = async () => {
-    //const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    //  if (!emailRegex.test(email)) {
-    //    setEmailError("Invalid e-mail address");
-    //    return;
-    //  }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!email || !password) {
+      setAlert({
+        open: true,
+        severity: "error",
+        message: "Please enter both email and password.",
+      });
+      return;
+    }
+
+    if (!emailRegex.test(email)) {
+      setAlert({
+        open: true,
+        severity: "error",
+        message: "Invalid email format.",
+      });
+      return;
+    }
+
     try {
       const response = await sendLogInRequest({
         email: email,
         password: password,
       });
 
-      const userResponse = await getUser(email);
-
-      const userData = userResponse.data;
-
-      localStorage.setItem("user", JSON.stringify(userData));
+      if (response.status === 200) {
+        const userResponse = await getUser(email);
+        const userData = userResponse.data;
+        localStorage.setItem("user", JSON.stringify(userData));
+        setAlert({
+          open: true,
+          severity: "success",
+          message: "Login successful!",
+        });
+        navigate("/");
+      } else {
+        setAlert({
+          open: true,
+          severity: "error",
+          message: "Invalid email or password.",
+        });
+      }
     } catch (error) {
       console.error("Error:", error);
+      setAlert({
+        open: true,
+        severity: "error",
+        message: "Wrong or missing credentials. Please try again.",
+      });
     }
-
-    navigate("/");
   };
 
   const handleEmailChange = (event) => {
@@ -246,21 +275,12 @@ export default function LogIn() {
           </Box>
         </CardContent>
       </Card>
-      <Snackbar
+      <Alert
         open={alert.open}
-        autoHideDuration={5000}
         onClose={handleAlertClose}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <MuiAlert
-          elevation={6}
-          variant="filled"
-          onClose={handleAlertClose}
-          severity={alert.severity}
-        >
-          {alert.message}
-        </MuiAlert>
-      </Snackbar>
+        severity={alert.severity}
+        message={alert.message}
+      />
     </Box>
   );
 }
