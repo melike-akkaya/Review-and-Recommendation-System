@@ -1,21 +1,52 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/8l0a6UeB)
+# Review and Recommendation System (RRSS) for ShopSmart
 
-front end:
-node js kurulmalımanız gerekiyor:
-https://nodejs.org/en/blog/release/v18.17.1
-çalışan terminal:
-npm -version
-10.5.0                                                                                                                                                                                                                  node -v
-v18.17.1
+## Overview
+The RRSS for ShopSmart enhances the shopping experience by providing valuable insights and personalized product recommendations based on user reviews and behavior analytics. This system is built using React JS, Spring Boot, Spring Security, and MUI UI kit.
 
-back end:
-jdk21 kullanıldı
+## Prerequisites
+- Node.js v18.17.1: [Download & Installation Guide](https://nodejs.org/en/blog/release/v18.17.1)
+- JDK 21
 
-database:
-bu bağlantı linki yoluyla erişilebilir:
+### Frontend
+1. Clone the repository to your local machine.
+2. Navigate to the `sombrero` directory.
+3. Install dependencies:
+npm install
+
+4. Verify Node.js installation:
+node -v
+Ensure it displays `v18.17.1`.
+5. Verify npm installation:
+Ensure it displays `v18.17.1`.
+5. Verify npm installation:
+Ensure it displays `10.5.0`.
+
+### Backend
+Ensure JDK 21 is installed by checking:
+java -version
+
+The output should confirm the version as JDK 21.
+
+### Database
+Access the PostgreSQL database using the following JDBC URL:
 jdbc:postgresql://ep-cool-sound-a42fptxh.us-east-1.aws.neon.tech/rrss?user=rrss_owner&password=C4ZRAxnX3NIo&sslmode=require
-Link DataGrip'te url kısmına yapıştırıldığında direkt açılabiliyor
-![image](https://github.com/HU-BBM384-24/bbm384-project-sombrero/assets/91731736/685a1aa5-8ee1-414f-8b93-f3b01fd3a7f0)
 
-projeyi çalıştırırken:
-front end için githubdan terminale çekildikten sonra (sombrero klasörü açılmalı) "npm install" ile node projeye eklenmeli. 
+This link can be directly used in DataGrip or similar tools by pasting it into the URL section.
+
+## Running the Project
+1. Navigate to the frontend directory:
+cd sombrero
+
+2. Start the frontend server:
+npm start
+
+
+## Security
+This application uses Spring Security for robust authentication and authorization to ensure data privacy and system integrity.
+
+## Contributors
+- Berkay Karakaya: Software Architect
+- Melike Akkaya: Software Project Manager
+- Rauf Yanmaz: Software Tester
+- Sena Yalçın: Software Analyst
+- Oğuzhan Deniz: Software Configuration Manager
